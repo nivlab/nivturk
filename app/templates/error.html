@@ -14,11 +14,23 @@
                 <hr />
 
                 <div class="alert alert-danger">
-                {% if errornum == 1008 %}
-                    
+                {% if errornum == 1006 %}
+
+                        <p>We are sorry you do not wish to complete this HIT.</p>
+                        <p>Please return the HIT so someone else can perform the experiment.</p>
+
+                {% elif errornum == 1008 %}
+
                         <p>Sorry, our records indicate that you have attempted to complete this HIT, but quit before finishing.</p>
                         <p>Because this is a psychology experiment, you can only complete this HIT once.</p>
                         <p>Please return the HIT so someone else can perform the experiment.</p>
+
+                        <p>
+                            If you would like to receive partial compensation or feel you
+                            have reached this page in error, please email
+                            <a href="mailto:{{contact_address}}">{{contact_address}}</a>
+                            and send the following information:
+                        </p>
 
                 {% elif errornum == 1010 %}
 
@@ -26,20 +38,29 @@
                         <p>Because this is a psychology experiment, you can only complete this HIT once.</p>
                         <p>Please release the HIT so someone else can perform the experiment.</p>
 
-                {% else %}
-
-                        <p>Sorry, there was an unexpected error in our processing of your HIT.</p>
-
-                {% endif %}
                         <p>
                             If you would like to receive partial compensation or feel you
                             have reached this page in error, please email
                             <a href="mailto:{{contact_address}}">{{contact_address}}</a>
                             and send the following information:
                         </p>
+
+                {% else %}
+
+                        <p>Sorry, there was an unexpected error in our processing of your HIT.</p>
+
+                        <p>
+                            If you would like to receive partial compensation or feel you
+                            have reached this page in error, please email
+                            <a href="mailto:{{contact_address}}">{{contact_address}}</a>
+                            and send the following information:
+                        </p>
+
+                {% endif %}
+
                         <hr />
                         <p>
-                            <b>Error</b>: {{ errornum }}<br />
+                            <b>Error</b>: {{ errornum }} <br />
                             <b>Description</b>: {{ errordesc }}<br />
                             {% if hitId %}<b>HITId</b>: #{{ hitId }}<br /> {% endif %}
                             {% if assignId %}<b>AssignmentId</b>: #{{ assignId }}<br /> {% endif %}
@@ -49,7 +70,6 @@
                 </div>
 
                 <hr />
-                <h3>Our sincere apologies!</h3>
             </div>
         </div>
     </body>

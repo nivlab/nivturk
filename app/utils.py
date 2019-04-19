@@ -1,4 +1,5 @@
 import random, string
+from flask import request
 
 def gen_code(N):
     """Generate random completion code."""
