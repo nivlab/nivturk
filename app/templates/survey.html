@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo Survey</title>
+        <script src="../static/lib/jquery-3.3.1/jquery.min.js"></script>
+        <script src="../static/lib/jspsych-6.0.5/jspsych.js"></script>
+        <script type="text/javascript" src="../static/js/jspsych-return-data.js"></script>
+        <script src="../static/lib/jspsych-6.0.5/plugins/jspsych-survey-likert.js"></script>
+        <link href="../static/lib/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body></body>
+    <script>
+
+    // Initialize timeline.
+    var timeline = [];
+
+    // Define example survey.
+    var scale = ["Yes", "No"];
+
+    var likert_page = {
+        type: 'survey-likert',
+        questions: [{prompt: "Are you seeing something right now?", labels: scale}],
+    };
+    timeline.push(likert_page);
+
+    jsPsych.init({
+        timeline: timeline,
+        on_finish: function() {
+          return_data();
+        }
+    })
+
+    </script>
+</html>
