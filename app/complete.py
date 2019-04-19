@@ -1,12 +1,8 @@
-import os, random, string
 from flask import (Blueprint, redirect, request, render_template, url_for)
 from pandas import read_json
+from .utils import gen_code
 
 bp = Blueprint('complete', __name__)
-
-def gen_code(N):
-    """Generate random completion code."""
-    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=N))
 
 @bp.route('/complete')
 def complete():

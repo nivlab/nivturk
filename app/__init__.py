@@ -1,5 +1,5 @@
 import os
-from flask import (Flask, render_template, request)
+from flask import (Flask, render_template, request, session)
 
 def create_app():
     """Create and configure an instance of the Flask application."""
@@ -13,13 +13,14 @@ def create_app():
     except OSError:
         pass
 
-    ## apply the blueprints to the app
-    from app import consent, experiment, complete
+    ## Apply blueprints to application.
+    from app import complete, consent, experiment, error
+    app.register_blueprint(complete.bp)
     app.register_blueprint(consent.bp)
     app.register_blueprint(experiment.bp)
-    app.register_blueprint(complete.bp)
+    app.register_blueprint(error.bp)
 
-    ## Redirect to consent form.
+    ## Set consent form as starting point.
     app.add_url_rule('/', endpoint='consent')
 
     return app
