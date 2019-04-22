@@ -1,21 +1,31 @@
-import os, sys
+import os, sys, configparser
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from pandas import read_json
+from .io import save_anon_data
 from .utils import gen_code
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-### Main application.
+### Define directories.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+## Define application directory.
+ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+## Load and parse configuration file.
+cfg = configparser.ConfigParser()
+cfg.read(os.path.join(ROOT_DIR, 'app.ini'))
+
+## Unpack configuration.
+DB_DIR = os.path.join(ROOT_DIR, cfg['IO']['DB'])
+DATA_DIR = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
+TASK = cfg['IO']['TASK']
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### Initialize application.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 ## Initialize Flask application.
-app = Flask(__name__, instance_relative_config=True)
-app.secret_key = os.urandom(24).hex()
-
-## ensure the instance folder exists
-try:
-    os.makedirs(app.instance_path)
-except OSError:
-    pass
+app = Flask(__name__)
+app.secret_key = cfg['FLASK']['SECRET_KEY']
 
 ## Set consent form as starting point.
 app.add_url_rule('/', endpoint='consent')
@@ -34,7 +44,7 @@ def consent_post():
     """Process participant repsonse to consent form."""
     subj_consent = int(request.form['subj_consent'])
     if subj_consent:
-        session['auth'] = gen_code(40)
+        session['auth'] = gen_code(80)
         return redirect(url_for('experiment', auth=session['auth']))
     else:
         return redirect(url_for('error', errornum=1006))
@@ -56,7 +66,7 @@ def experiment():
     if not VALID:
         return redirect(url_for('error', errornum=1008))
     else:
-        session['auth'] = gen_code(40)
+        session['auth'] = gen_code(80)
         return render_template('experiment.html')
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -66,8 +76,7 @@ def experiment():
 @app.route('/complete')
 def complete():
     """Present completion screen to participant."""
-    code = gen_code(16)
-    return render_template('complete.html', value=code)
+    return render_template('complete.html', value=session['complete'])
 
 @app.route('/datadump', methods = ['POST'])
 def datadump():
@@ -75,11 +84,10 @@ def datadump():
     ## Parse and save jsPsych data.
     if request.is_json:
 
-        ## TODO: setup data writing program
+        JSON = request.get_json()
+        save_anon_data(JSON, TASK, DATA_DIR)
 
-        data = request.get_json()
-        data = read_json(data)
-        data.to_csv('test.csv', index=False)
+    session['complete'] = gen_code(16)
 
     return redirect(url_for('complete'))
 
