@@ -1,5 +1,5 @@
-import sys
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
+from .db import db_insert
 from .utils import gen_code
 
 ## Initialize blueprint.
@@ -17,9 +17,19 @@ def consent_post():
     ## Retrieve participant response.
     subj_consent = int(request.form['subj_consent'])
 
-    ## Conditional response.
+    ## Check participant response.
     if subj_consent:
+
+        ## Store participant info in database.
+        db_insert(session['db'], session['workerId'], session['assignmentId'],
+                  session['hitId'], session['ipAddress'])
+
+        ## Generate authorization code.
         session['auth'] = gen_code(80)
+
+        ## Redirect participant to experiment.
         return redirect(url_for('experiment.experiment', auth=session['auth']))
+
     else:
+
         return redirect(url_for('error.error', errornum=1006))

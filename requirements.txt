@@ -1,3 +1,4 @@
 numpy
 pandas
+sqlite3
 flask==1.0.2

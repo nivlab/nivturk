@@ -1,6 +1,8 @@
 import os, sys, configparser
 from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, experiment, complete, error
+from .db import db_check
+from .utils import ip2long
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -24,9 +26,18 @@ app.register_blueprint(error.bp)
 def index():
 
     ## Store directories in session object.
-    session['ROOT_DIR'] = ROOT_DIR
-    session['DB_DIR'] = os.path.join(session['ROOT_DIR'], cfg['IO']['DB'])
-    session['DATA_DIR'] = os.path.join(session['ROOT_DIR'], cfg['IO']['DATA'])
-    session['TASK'] = cfg['IO']['TASK']
+    session['db']   = os.path.join(ROOT_DIR, cfg['IO']['DB'])
+    session['data'] = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
+    session['task'] = cfg['IO']['TASK']
 
-    return redirect(url_for('consent.consent'))
+    ## Store Turker info.
+    session['workerId']     = request.args.get('workerId')
+    session['assignmentId'] = request.args.get('assignmentId')
+    session['hitId']        = request.args.get('hitId')
+    session['ipAddress']    = ip2long(request.remote_addr)
+
+    ## Check database for matches.
+    if db_check(session['db'], session['workerId']):
+        return redirect(url_for('error.error', errornum=1010))
+    else:
+        return redirect(url_for('consent.consent'))
