@@ -1,6 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
-from .db import db_update
-from .io import save_anon_data
+from .io import write_data, write_metadata
 from .utils import gen_code, compute_bonus
 
 ## Initialize blueprint.
@@ -21,10 +20,11 @@ def datadump():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
-        save_anon_data(JSON, session['task'], session['data'])
+        write_data(JSON, session)
 
-    ## Update participant entry in database.
-    db_update(session['db'], session['workerId'], compute_bonus())
+    ## Update participant metadata.
+    session['bonus'] = compute_bonus()
+    write_metadata(session, ['bonus'], 'a')
 
     ## Generate completion code.
     session['complete'] = gen_code(16)

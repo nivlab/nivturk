@@ -1,5 +1,4 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
-from .db import db_insert
 from .utils import gen_code
 
 ## Initialize blueprint.
@@ -19,10 +18,6 @@ def consent_post():
 
     ## Check participant response.
     if subj_consent:
-
-        ## Store participant info in database.
-        db_insert(session['db'], session['workerId'], session['assignmentId'],
-                  session['hitId'], session['ipAddress'])
 
         ## Generate authorization code.
         session['auth'] = gen_code(80)

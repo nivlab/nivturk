@@ -1,38 +1,36 @@
 import os
 from pandas import read_json
 
-def save_anon_data(json, task, data_dir):
-    """Save behavior data to disk.
+def write_metadata(session, keys, mode='w'):
+    """Write metadata to disk.
 
     Parameters
     ----------
-    json : object
-        Data object returned by jsPsych.
-    task : str
-        Name of activity performed by the participant.
-    data_dir : str
-        Path to data directory.
-
-    Notes
-    -----
-    Data always saved to new participant folder.
+    session : flask session
+        Current user session.
+    keys : list
+        Session keys to write to file.
+    mode : r | w | a
+        Open file mode. 
     """
 
-    ## Error-catching.
-    if not os.path.isdir(data_dir):
-        os.makedirs(data_dir)
+    ## Write metadata to disk.
+    fout = os.path.join(session['metadata'], session['workerId'])
+    with open(fout, mode) as f:
+        for k in keys:
+            f.write(f'{k}\t{session[k]}\n')
 
-    ## Convert JSON to Pandas DataFrame.
-    df = read_json(json)
+def write_data(session, json):
+    """Write jsPsych output to disk.
 
-    ## Determine subject number.
-    n_sub = len(os.listdir(data_dir))
-    subno = n_sub + 1
+    Parameters
+    ----------
+    session : flask session
+        Current user session.
+    json : object
+        Data object returned by jsPsych.
+    """
 
-    ## Make subject folder.
-    sub_dir = os.path.join(data_dir, 'sub-%0.5d' %subno)
-    os.makedirs(sub_dir)
-
-    ## Save data.
-    f = os.path.join(sub_dir, 'sub-%0.5d_task-%s_beh.csv' %(subno,task))
-    df.to_csv(f, index=False)
+    ## Write data to disk.
+    fout = os.path.join(session['data'], f"{session['subId']}.json")
+    with open(fout, 'w') as f: f.write(json)
