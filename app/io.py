@@ -11,7 +11,7 @@ def write_metadata(session, keys, mode='w'):
     keys : list
         Session keys to write to file.
     mode : r | w | a
-        Open file mode. 
+        Open file mode.
     """
 
     ## Write metadata to disk.
@@ -32,5 +32,5 @@ def write_data(session, json):
     """
 
     ## Write data to disk.
-    fout = os.path.join(session['data'], f"{session['subId']}.json")
+    fout = os.path.join(session['data'], '%s.json' %session['subId'])
     with open(fout, 'w') as f: f.write(json)

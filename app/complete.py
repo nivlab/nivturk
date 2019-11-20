@@ -20,7 +20,7 @@ def datadump():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
-        write_data(JSON, session)
+        write_data(session, JSON)
 
     ## Update participant metadata.
     session['bonus'] = compute_bonus()
