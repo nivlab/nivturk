@@ -1,5 +1,4 @@
 import os
-from pandas import read_json
 
 def write_metadata(session, keys, mode='w'):
     """Write metadata to disk.
