@@ -14,3 +14,4 @@ build/
 *~
 *.db
 *.csv
+.DS_Store
