@@ -8,7 +8,12 @@ bp = Blueprint('complete', __name__)
 @bp.route('/complete')
 def complete():
     """Present completion screen to participant."""
-    return render_template('complete.html', value=session['complete'])
+
+    ## DEV NOTE:
+    ## If you want a custom completion code, replace the return statement with:
+    ## > render_template('complete.html', value=session['complete'])
+
+    return render_template('complete.html')
 
 @bp.route('/datadump', methods = ['POST'])
 def datadump():
@@ -26,7 +31,8 @@ def datadump():
     session['bonus'] = compute_bonus()
     write_metadata(session, ['bonus'], 'a')
 
-    ## Generate completion code.
-    session['complete'] = gen_code(16)
+    ## DEV NOTE:
+    ## To pass a custom completion code, include the following line of code:
+    ## > session['complete'] = gen_code(16)
 
     return redirect(url_for('complete.complete'))
