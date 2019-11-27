@@ -36,9 +36,15 @@ def index():
     session['metadata'] = meta_dir
 
     ## Store Turker info.
-    session['workerId']     = request.args.get('workerId')
-    session['assignmentId'] = request.args.get('assignmentId')
-    session['hitId']        = request.args.get('hitId')
+    session['workerId']     = request.args.get('workerId')        # MTurk metadata
+    session['assignmentId'] = request.args.get('assignmentId')    # MTurk metadata
+    session['hitId']        = request.args.get('hitId')           # MTurk metadata
+    session['a']            = request.args.get('a')               # TurkPrime metadata
+    session['tp_a']         = request.args.get('tp_a')            # TurkPrime metadata
+    session['b']            = request.args.get('b')               # TurkPrime metadata
+    session['tp_b']         = request.args.get('tp_b')            # TurkPrime metadata
+    session['c']            = request.args.get('c')               # TurkPrime metadata
+    session['tp_c']         = request.args.get('tp_c')            # TurkPrime metadata
 
     ## Check database for matches.
     if session['workerId'] is None:

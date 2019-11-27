@@ -26,7 +26,9 @@
     jsPsych.init({
         timeline: timeline,
         on_finish: function() {
-          return_data();
+          return_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}",
+                      "{{a}}", "{{tp_a}}", "{{b}}", "{{tp_b}}",
+                      "{{c}}", "{{tp_c}}");
         }
     })
 
