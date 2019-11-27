@@ -1,9 +1,8 @@
 function return_data(workerId, assignmentId, hitId, a, tp_a, b, tp_b, c, tp_c) {
 
   // Concatenate metadata into complete URL (returned on success).
-  var url = "/complete?workerId=" + workerId + "&assignmentId=" +
-            assignmentId + "&hitId=" + hitId + "&a=" + a + "&tp_a=" + tp_a +
-            "&b=" + b + "&tp_b=" + tp_b + "&c=" + c + "&tp_c=" + tp_c;
+  var url = "/complete?workerId=" + workerId + "&assignmentId=" + assignmentId + "&hitId=" + hitId + "&a=" + a + "&tp_a=" + tp_a + "&b=" + b + "&tp_b=" + tp_b + "&c=" + c + "&tp_c=" + tp_c;
+  console.log(url);
 
   $.ajax({
     url: "datadump",

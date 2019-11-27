@@ -18,8 +18,4 @@ def experiment():
         return redirect(url_for('error.error', errornum=1008))
     else:
         session['auth'] = gen_code(80)
-        return render_template('experiment.html', workerId=session['workerId'],
-                               assignmentId=session['assignmentId'], hitId=session['hitId'],
-                               a=session['a'], tp_a=session['tp_a'],
-                               b=session['b'], tp_b=session['tp_b'],
-                               c=session['c'], tp_c=session['tp_c'])
+        return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
