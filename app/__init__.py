@@ -1,4 +1,4 @@
-import os, sys, configparser
+import os, sys, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, experiment, complete, error
 from .io import write_metadata
@@ -16,6 +16,11 @@ data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
 if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
+
+## Check Flask password.
+if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
+    msg = "WARNING: Flask password is currently default. This should be changed prior to production."
+    warnings.warn(msg)
 
 ## Initialize Flask application.
 app = Flask(__name__)
