@@ -36,38 +36,44 @@ app.register_blueprint(error.bp)
 @app.route('/')
 def index():
 
-    ## Error-catching: screen for previous visits.
+    ## Record incoming metadata.
+    info = dict(
+        workerId     = request.args.get('workerId'),        # MTurk metadata
+        assignmentId = request.args.get('assignmentId'),    # MTurk metadata
+        hitId        = request.args.get('hitId'),           # MTurk metadata
+        subId        = gen_code(24),                        # NivTurk metadata
+        a            = request.args.get('a'),               # TurkPrime metadata
+        tp_a         = request.args.get('tp_a'),            # TurkPrime metadata
+        b            = request.args.get('b'),               # TurkPrime metadata
+        tp_b         = request.args.get('tp_b'),            # TurkPrime metadata
+        c            = request.args.get('c'),               # TurkPrime metadata
+        tp_c         = request.args.get('tp_c')             # TurkPrime metadata
+    )
+
+    ## Error-catching: screen for previous session.
     if 'workerId' in session:
 
+        ## Define error message.
+        if info['workerId'] is not None and session['workerId'] != info['workerId']:
+            errmsg = "1004: Revisited index. [WARNING] workerId tampering detected."
+        else:
+            errmsg = "1004: Revisited index."
+
         ## Update metadata.
-        session['ERROR'] = "1004: Revisited index."
+        session['ERROR'] = errmsg
         write_metadata(session, ['ERROR'], 'a')
 
         ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1004))
 
-    ## Store directories in session object.
-    session['data'] = data_dir
-    session['metadata'] = meta_dir
-
-    ## Store Turker info.
-    session['workerId']     = request.args.get('workerId')        # MTurk metadata
-    session['assignmentId'] = request.args.get('assignmentId')    # MTurk metadata
-    session['hitId']        = request.args.get('hitId')           # MTurk metadata
-    session['a']            = request.args.get('a')               # TurkPrime metadata
-    session['tp_a']         = request.args.get('tp_a')            # TurkPrime metadata
-    session['b']            = request.args.get('b')               # TurkPrime metadata
-    session['tp_b']         = request.args.get('tp_b')            # TurkPrime metadata
-    session['c']            = request.args.get('c')               # TurkPrime metadata
-    session['tp_c']         = request.args.get('tp_c')            # TurkPrime metadata
-
     ## Error-catching: screen for valid workerId.
-    if session['workerId'] is None:
+    elif info['workerId'] is None:
 
         ## Redirect participant to error (admin error).
         return redirect(url_for('error.error', errornum=1000))
 
-    elif session['workerId'] in os.listdir(session['metadata']):
+    ## Error-catching: screen for workerId in database.
+    elif info['workerId'] in os.listdir(meta_dir):
 
         ## Update metadata.
         session['ERROR'] = "1004: Revisited index."
@@ -78,8 +84,12 @@ def index():
 
     else:
 
+        ## Store directories in session object.
+        session['data'] = data_dir
+        session['metadata'] = meta_dir
+
         ## Update metadata.
-        session['subId'] = gen_code(12)
+        for k, v in info.items(): session[k] = v
         write_metadata(session, ['workerId','hitId','assignmentId','subId'], 'w')
 
         ## Redirect participant to consent form.
