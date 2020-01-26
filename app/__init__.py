@@ -36,6 +36,16 @@ app.register_blueprint(error.bp)
 @app.route('/')
 def index():
 
+    ## Error-catching: screen for previous visits.
+    if 'workerId' in session:
+
+        ## Update metadata.
+        session['ERROR'] = "1004: Revisited index."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1004))
+
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
@@ -51,14 +61,34 @@ def index():
     session['c']            = request.args.get('c')               # TurkPrime metadata
     session['tp_c']         = request.args.get('tp_c')            # TurkPrime metadata
 
-    ## Check database for matches.
+    ## Error-catching: screen for valid workerId.
     if session['workerId'] is None:
-        return redirect(url_for('error.error', errornum=1004))
+
+        ## Redirect participant to error (admin error).
+        return redirect(url_for('error.error', errornum=1000))
 
     elif session['workerId'] in os.listdir(session['metadata']):
-        return redirect(url_for('error.error', errornum=1010))
+
+        ## Update metadata.
+        session['ERROR'] = "1004: Revisited index."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1004))
 
     else:
+
+        ## Update metadata.
         session['subId'] = gen_code(12)
         write_metadata(session, ['workerId','hitId','assignmentId','subId'], 'w')
+
+        ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
+
+## DEV NOTE:
+## The following route is strictly for development purposes and should be
+## commented out before deployment.
+# @app.route('/clear')
+# def clear():
+#     session.clear()
+#     return 'Complete!'

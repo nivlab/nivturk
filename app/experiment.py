@@ -1,4 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
+from .io import write_metadata
 from .utils import gen_code
 
 ## Initialize blueprint.
@@ -8,14 +9,21 @@ bp = Blueprint('experiment', __name__)
 def experiment():
     """Present jsPsych experiment to participant."""
 
-    ## Validate session (prevents duplicate respondents).
-    EXTERNAL_CODE = request.args.get('auth')
-    INTERNAL_CODE = session['auth']
-    VALID = EXTERNAL_CODE == INTERNAL_CODE
+    ## Error-catching: screen for previous visits.
+    if 'experiment' in session:
 
-    ## Process target code.
-    if not VALID:
+        ## Update participant metadata.
+        session['ERROR'] = "1008: Revisited experiment."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1008))
+
     else:
-        session['auth'] = gen_code(80)
+        
+        ## Update participant metadata.
+        session['experiment'] = True
+        write_metadata(session, ['experiment'], 'a')
+
+        ## Present experiment.
         return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
