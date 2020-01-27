@@ -36,6 +36,10 @@ app.register_blueprint(error.bp)
 @app.route('/')
 def index():
 
+    ## Store directories in session object.
+    session['data'] = data_dir
+    session['metadata'] = meta_dir
+
     ## Record incoming metadata.
     info = dict(
         workerId     = request.args.get('workerId'),        # MTurk metadata
@@ -83,10 +87,6 @@ def index():
         return redirect(url_for('error.error', errornum=1004))
 
     else:
-
-        ## Store directories in session object.
-        session['data'] = data_dir
-        session['metadata'] = meta_dir
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
