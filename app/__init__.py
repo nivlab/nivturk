@@ -1,6 +1,6 @@
 import os, sys, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from app import consent, experiment, complete, error
+from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
 
@@ -28,6 +28,7 @@ app.secret_key = cfg['FLASK']['SECRET_KEY']
 
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
+app.register_blueprint(alert.bp)
 app.register_blueprint(experiment.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)

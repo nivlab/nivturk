@@ -1,6 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_metadata
-from .utils import gen_code
 
 ## Initialize blueprint.
 bp = Blueprint('consent', __name__)
@@ -39,7 +38,7 @@ def consent_post():
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to experiment.
-        return redirect(url_for('experiment.experiment'))
+        return redirect(url_for('alert.alert'))
 
     else:
 

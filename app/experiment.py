@@ -1,6 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_metadata
-from .utils import gen_code
 
 ## Initialize blueprint.
 bp = Blueprint('experiment', __name__)
@@ -20,7 +19,7 @@ def experiment():
         return redirect(url_for('error.error', errornum=1008))
 
     else:
-        
+
         ## Update participant metadata.
         session['experiment'] = True
         write_metadata(session, ['experiment'], 'a')
