@@ -1,5 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
-from .utils import gen_code
+from .io import write_metadata
 
 ## Initialize blueprint.
 bp = Blueprint('consent', __name__)
@@ -7,7 +7,21 @@ bp = Blueprint('consent', __name__)
 @bp.route('/consent')
 def consent():
     """Present consent form to participant."""
-    return render_template('consent.html')
+
+    ## Error-catching: screen for previous visits.
+    if 'consent' in session:
+
+        ## Update participant metadata.
+        session['ERROR'] = "1006: Revisited consent form."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1006))
+
+    else:
+
+        ## Present consent form.
+        return render_template('consent.html')
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():
@@ -19,12 +33,18 @@ def consent_post():
     ## Check participant response.
     if subj_consent:
 
-        ## Generate authorization code.
-        session['auth'] = gen_code(80)
+        ## Update participant metadata.
+        session['consent'] = True
+        write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to experiment.
-        return redirect(url_for('experiment.experiment', auth=session['auth']))
+        return redirect(url_for('alert.alert'))
 
     else:
 
-        return redirect(url_for('error.error', errornum=1006))
+        ## Update participant metadata.
+        session['consent'] = False
+        write_metadata(session, ['consent'], 'a')
+
+        ## Redirect participant to error (decline consent).
+        return redirect(url_for('error.error', errornum=1002))

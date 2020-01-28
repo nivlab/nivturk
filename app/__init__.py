@@ -1,6 +1,6 @@
 import os, sys, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from app import consent, experiment, complete, error
+from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
 
@@ -28,6 +28,7 @@ app.secret_key = cfg['FLASK']['SECRET_KEY']
 
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
+app.register_blueprint(alert.bp)
 app.register_blueprint(experiment.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)
@@ -40,25 +41,65 @@ def index():
     session['data'] = data_dir
     session['metadata'] = meta_dir
 
-    ## Store Turker info.
-    session['workerId']     = request.args.get('workerId')        # MTurk metadata
-    session['assignmentId'] = request.args.get('assignmentId')    # MTurk metadata
-    session['hitId']        = request.args.get('hitId')           # MTurk metadata
-    session['a']            = request.args.get('a')               # TurkPrime metadata
-    session['tp_a']         = request.args.get('tp_a')            # TurkPrime metadata
-    session['b']            = request.args.get('b')               # TurkPrime metadata
-    session['tp_b']         = request.args.get('tp_b')            # TurkPrime metadata
-    session['c']            = request.args.get('c')               # TurkPrime metadata
-    session['tp_c']         = request.args.get('tp_c')            # TurkPrime metadata
+    ## Record incoming metadata.
+    info = dict(
+        workerId     = request.args.get('workerId'),        # MTurk metadata
+        assignmentId = request.args.get('assignmentId'),    # MTurk metadata
+        hitId        = request.args.get('hitId'),           # MTurk metadata
+        subId        = gen_code(24),                        # NivTurk metadata
+        a            = request.args.get('a'),               # TurkPrime metadata
+        tp_a         = request.args.get('tp_a'),            # TurkPrime metadata
+        b            = request.args.get('b'),               # TurkPrime metadata
+        tp_b         = request.args.get('tp_b'),            # TurkPrime metadata
+        c            = request.args.get('c'),               # TurkPrime metadata
+        tp_c         = request.args.get('tp_c')             # TurkPrime metadata
+    )
 
-    ## Check database for matches.
-    if session['workerId'] is None:
+    ## Error-catching: screen for previous session.
+    if 'workerId' in session:
+
+        ## Define error message.
+        if info['workerId'] is not None and session['workerId'] != info['workerId']:
+            errmsg = "1004: Revisited index. [WARNING] workerId tampering detected."
+        else:
+            errmsg = "1004: Revisited index."
+
+        ## Update metadata.
+        session['ERROR'] = errmsg
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1004))
 
-    elif session['workerId'] in os.listdir(session['metadata']):
-        return redirect(url_for('error.error', errornum=1010))
+    ## Error-catching: screen for valid workerId.
+    elif info['workerId'] is None:
+
+        ## Redirect participant to error (admin error).
+        return redirect(url_for('error.error', errornum=1000))
+
+    ## Error-catching: screen for workerId in database.
+    elif info['workerId'] in os.listdir(meta_dir):
+
+        ## Update metadata.
+        session['ERROR'] = "1004: Revisited index."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1004))
 
     else:
-        session['subId'] = gen_code(12)
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
         write_metadata(session, ['workerId','hitId','assignmentId','subId'], 'w')
+
+        ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
+
+## DEV NOTE:
+## The following route is strictly for development purposes and should be
+## commented out before deployment.
+# @app.route('/clear')
+# def clear():
+#     session.clear()
+#     return 'Complete!'
