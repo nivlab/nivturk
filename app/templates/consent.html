@@ -8,11 +8,6 @@ The consent.html displays the text of an IRB-approved consent form.
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Decision Making Experiment - Informed Consent Form</title>
   <link rel="stylesheet" href="/static/css/tacit-css.min.css"/>
-  <script type="text/javascript">
-  function onexit() {
-    self.close();
-  }
-  </script>
 </head>
 <body>
   <div id="container-consent">
@@ -73,7 +68,7 @@ The consent.html displays the text of an IRB-approved consent form.
           </ol>
 
 
-          <button type="button" class="btn btn-default btn-sm" onClick="window.print();">
+          <button type="button" class="btn btn-default btn-sm" onClick="window.print();" style="background-color: #E8E8E8">
             <span class="glyphicon glyphicon-print"></span> Print a copy of this
           </button>
         </div>
@@ -84,12 +79,33 @@ The consent.html displays the text of an IRB-approved consent form.
 
         <center>
           <form method="post">
-            <button type="submit" name="subj_consent" style="background-color: #ffb347;" value=1>I accept</button>
-            <button type="submit" name="subj_consent" style="background-color: #ffb347;" value=0>No thank you</button>
+
+            <div class="recontact">
+              <p>Would you like to be re-contacted for future studies?</p>
+              <p>
+                <input type="radio" name="future_contact" value="Yes">Yes
+                <input type="radio" name="future_contact" value="No">No
+              </p>
+            </div>
+
+            <button type="submit" name="subj_consent" value=1>I accept</button>
+            <button type="submit" name="subj_consent" value=0>No thank you</button>
+
           </form>
         </center>
 
       </div>
     </div>
   </body>
+  <style>
+  .recontact {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    z-index: -1;
+  }
+  </style>
   </html>

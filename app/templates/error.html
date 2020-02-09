@@ -18,6 +18,11 @@
 
         <p>You don't have a workerId? What are you, a developer?</p>
 
+        {% elif errornum == 1001 %}
+
+        <p>We have detected unusual activity from your account.</p>
+        <p>Please return the HIT so someone else can perform the experiment.</p>
+
         {% elif errornum == 1002 %}
 
         <p>We are sorry you do not wish to complete this HIT.</p>

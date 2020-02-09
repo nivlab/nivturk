@@ -29,9 +29,20 @@ def consent_post():
 
     ## Retrieve participant response.
     subj_consent = int(request.form['subj_consent'])
+    bot_check = request.form.get('future_contact', False)
+
+    ## Check for suspicious responding.
+    if bot_check:
+
+        ## Update participant metadata.
+        session['consent'] = 'BOT'
+        write_metadata(session, ['consent'], 'a')
+
+        ## Redirect participant to experiment.
+        return redirect(url_for('error.error', errornum=1001))
 
     ## Check participant response.
-    if subj_consent:
+    elif subj_consent:
 
         ## Update participant metadata.
         session['consent'] = True
