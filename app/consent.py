@@ -39,7 +39,7 @@ def consent_post():
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to experiment.
-        return redirect(url_for('error.error', errornum=1001))
+        return redirect(url_for('error.error', errornum=1002))
 
     ## Check participant response.
     elif subj_consent:
@@ -58,4 +58,4 @@ def consent_post():
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to error (decline consent).
-        return redirect(url_for('error.error', errornum=1002))
+        return redirect(url_for('error.error', errornum=1003))

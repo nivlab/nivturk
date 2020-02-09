@@ -52,7 +52,10 @@ def index():
         b            = request.args.get('b'),               # TurkPrime metadata
         tp_b         = request.args.get('tp_b'),            # TurkPrime metadata
         c            = request.args.get('c'),               # TurkPrime metadata
-        tp_c         = request.args.get('tp_c')             # TurkPrime metadata
+        tp_c         = request.args.get('tp_c'),            # TurkPrime metadata
+        browser      = request.user_agent.browser,          # User metadata
+        platform     = request.user_agent.platform,         # User metadata
+        version      = request.user_agent.version,          # User metadata
     )
 
     ## Error-catching: screen for previous session.
@@ -91,7 +94,7 @@ def index():
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId'], 'w')
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
