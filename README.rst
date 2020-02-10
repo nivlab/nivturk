@@ -4,7 +4,7 @@
 .. image:: https://img.shields.io/github/license/mashape/apistatus.svg
         :target: https://github.com/nivlab/NivLink/blob/master/LICENSE
 
-NivLink
+NivTurk
 =======
 
 Niv lab tools for securely serving and storing data from online computational psychiatry experiments.
