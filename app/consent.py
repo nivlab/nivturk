@@ -21,7 +21,7 @@ def consent():
         session['WARNING'] = "Revisited consent form."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to error (previous participation).
+        ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
 
     ## Case 3: repeat visit, previous non-consent.
@@ -31,7 +31,7 @@ def consent():
         session['WARNING'] = "Revisited consent form."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to error (previous participation).
+        ## Redirect participant to error (decline consent).
         return redirect(url_for('error.error', errornum=1003))
 
 
@@ -50,7 +50,7 @@ def consent_post():
         session['consent'] = 'BOT'
         write_metadata(session, ['consent'], 'a')
 
-        ## Redirect participant to experiment.
+        ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
 
     ## Check participant response.
@@ -60,7 +60,7 @@ def consent_post():
         session['consent'] = True
         write_metadata(session, ['consent'], 'a')
 
-        ## Redirect participant to experiment.
+        ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
 
     else:
