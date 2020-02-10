@@ -12,11 +12,11 @@ def experiment():
     if 'experiment' in session:
 
         ## Update participant metadata.
-        session['ERROR'] = "1008: Revisited experiment."
+        session['ERROR'] = "1004: Revisited experiment."
         write_metadata(session, ['ERROR'], 'a')
 
         ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1008))
+        return redirect(url_for('error.error', errornum=1004))
 
     else:
 

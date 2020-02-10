@@ -8,20 +8,32 @@ bp = Blueprint('consent', __name__)
 def consent():
     """Present consent form to participant."""
 
-    ## Error-catching: screen for previous visits.
-    if 'consent' in session:
-
-        ## Update participant metadata.
-        session['ERROR'] = "1006: Revisited consent form."
-        write_metadata(session, ['ERROR'], 'a')
-
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1006))
-
-    else:
+    ## Case 1: first visit.
+    if not 'consent' in session:
 
         ## Present consent form.
         return render_template('consent.html')
+
+    ## Case 2: repeat visit, previous consent.
+    elif session['consent']:
+
+        ## Update participant metadata.
+        session['WARNING'] = "Revisited consent form."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('alert.alert'))
+
+    ## Case 3: repeat visit, previous non-consent.
+    else:
+
+        ## Update participant metadata.
+        session['WARNING'] = "Revisited consent form."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1003))
+
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():

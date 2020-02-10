@@ -58,43 +58,40 @@ def index():
         version      = request.user_agent.version,          # User metadata
     )
 
-    ## Error-catching: screen for previous session.
-    if 'workerId' in session:
+    ## Case 1: mobile user.
+    if info['platform'] in ['android','iphone','ipad','wii']:
 
-        ## Define error message.
-        if info['workerId'] is not None and session['workerId'] != info['workerId']:
-            errmsg = "1004: Revisited index. [WARNING] workerId tampering detected."
-        else:
-            errmsg = "1004: Revisited index."
+        ## Redirect participant to error (admin error).
+        return redirect(url_for('error.error', errornum=1001))
 
-        ## Update metadata.
-        session['ERROR'] = errmsg
-        write_metadata(session, ['ERROR'], 'a')
-
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1004))
-
-    ## Error-catching: screen for valid workerId.
-    elif info['workerId'] is None:
+    ## Case 2: first visit, workerId absent.
+    elif not 'workerId' in session and info['workerId'] is None:
 
         ## Redirect participant to error (admin error).
         return redirect(url_for('error.error', errornum=1000))
 
-    ## Error-catching: screen for workerId in database.
-    elif info['workerId'] in os.listdir(meta_dir):
-
-        ## Update metadata.
-        session['ERROR'] = "1004: Revisited index."
-        write_metadata(session, ['ERROR'], 'a')
-
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1004))
-
-    else:
+    ## Case 3: first visit, workerId present.
+    elif not 'workerId' in session:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
         write_metadata(session, ['workerId','hitId','assignmentId','subId','browser','platform','version'], 'w')
+
+        ## Redirect participant to consent form.
+        return redirect(url_for('consent.consent'))
+
+    ## Case 4: repeat visit, manually changed workerId.
+    elif session['workerId'] != info['workerId'] and info['workerId'] is not None:
+
+        ## Update metadata.
+        session['ERROR'] = '1002: workerId tampering detected.'
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (unusual activity).
+        return redirect(url_for('error.error', errornum=1002))
+
+    ## Case 5: all else.
+    else:
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))

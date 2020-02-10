@@ -14,6 +14,7 @@
       <hr>
 
       <div class="alert alert-danger">
+        
         {% if errornum == 1000 %}
 
         <p>You don't have a workerId? What are you, a developer?</p>
@@ -33,7 +34,7 @@
         <p>We are sorry you do not wish to complete this HIT.</p>
         <p>Please return the HIT so someone else can perform the experiment.</p>
 
-        {% elif errornum == 1004 or errornum == 1006 or errornum == 1008 %}
+        {% elif errornum == 1004 %}
 
         <p>Sorry, our records indicate that you have already completed (or attempted to complete) this HIT. Because this is a psychology experiment, you can only complete this HIT once. Please return the HIT so someone else can perform the experiment.</p>
 
