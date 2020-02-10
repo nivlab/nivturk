@@ -99,7 +99,7 @@ def index():
 ## DEV NOTE:
 ## The following route is strictly for development purposes and should be
 ## commented out before deployment.
-@app.route('/clear')
-def clear():
-    session.clear()
-    return 'Complete!'
+# @app.route('/clear')
+# def clear():
+#     session.clear()
+#     return 'Complete!'
