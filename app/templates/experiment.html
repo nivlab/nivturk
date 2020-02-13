@@ -1,34 +1,177 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Demo Survey</title>
-        <script src="/static/lib/jquery-3.3.1/jquery.min.js"></script>
-        <script src="/static/lib/jspsych-6.1.0/jspsych.js"></script>
-        <script src="/static/js/jspsych-return-data.js" type="text/javascript"></script>
-        <script src="/static/lib/jspsych-6.1.0/plugins/jspsych-survey-likert.js"></script>
-        <link href="/static/lib/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-    </head>
-    <body></body>
-    <script>
+  <head>
+    <meta charset="UTF-8">
+    <script src="../static/lib/jspsych-6.1.0/jspsych.js"></script>
+    <script src="../static/js/comprehension-check.js"></script>
+    <script src="../static/js/turk-pit.js"></script>
+    <script src="../static/js/practice-trial.js"></script>
+    <script src="../static/js/turk-pit-runsheet.js"></script>
+    <script src="../static/js/turk-pit-images.js"></script>
+    <script src="../static/js/turk-pit-instructions.js"></script>
+    <script src="../static/js/turk-pit-surveys.js"></script>
+    <script src="../static/lib/jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="../static/lib/jspsych-6.1.0/plugins/jspsych-survey-multi-choice.js"></script>
+    <script src="../static/lib/jspsych-6.1.0/plugins/jspsych-survey-text.js"></script>
+    <script src="../static/lib/jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+    <script src="../static/lib/jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <link href="../static/lib/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  <body></body>
+  <script>
 
-    // Initialize timeline.
-    var timeline = [];
 
-    // Define example survey.
-    var scale = ["Yes", "No"];
+  // randomise allocation of different robots
+  var image_allocation = jsPsych.randomization.sampleWithoutReplacement([...Array(robot_images.length).keys()], robot_images.length);
 
-    var likert_page = {
-        type: 'survey-likert',
-        questions: [{prompt: "Are you seeing something right now?", labels: scale}],
-    };
-    timeline.push(likert_page);
+  // define welcome message
+  var welcome = {
+    type: "html-keyboard-response",
+    stimulus: '<div style="max-width:600px;"><p>Welcome to the HIT. In this HIT, you will complete three blocks of a learning task. Each block will take approximately 6 minutes.</p><p>If you do not take any breaks, the HIT as a whole should take approximately 25 minutes.</p><p>Press any key to get started.</p></div>',
+  };
 
-    jsPsych.init({
-        timeline: timeline,
-        on_finish: function() {
-          return_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}",  "{{a}}", "{{tp_a}}", "{{b}}", "{{tp_b}}", "{{c}}", "{{tp_c}}");
-        }
-    })
+  // define experiment end message
+  var block_end = {
+    type: "html-keyboard-response",
+    stimulus: "End of block. Take a short break, and press any key to continue when you are ready."
+  };
 
-    </script>
+  // define begin experiment message
+  var well_done = {
+    type: "html-keyboard-response",
+    stimulus: "Well done, you got all the questions correct. Press any key to start the task."
+  };
+
+  // define experiment end message
+  var expt_end = {
+    type: "html-keyboard-response",
+    stimulus: "End of HIT. Press any key to get the completion code."
+  };
+
+  // define instructions
+  var instructions_press = {
+    type: 'instructions',
+    pages: instruction_pages_press,
+    show_clickable_nav: true,
+    show_page_number: false
+  }
+  var instructions_no_press = {
+    type: 'instructions',
+    pages: instruction_pages_no_press,
+    show_clickable_nav: true,
+    show_page_number: false
+  }
+  var instructions_feedback = {
+    type: 'instructions',
+    pages: instruction_pages_feedback,
+    show_clickable_nav: true,
+    show_page_number: false
+  }
+
+  // define functions to turn fullscreen on/off
+  var fullscreen_on = {
+    type: "fullscreen",
+    fullscreen_mode: true,
+    message: '<p>The experiment will switch to full screen mode when you press the button below.</p><p>Where possible, please stay in full screen mode for the entire experiment.</p>'
+  };
+
+  var fullscreen_off = {
+    type: "fullscreen",
+    fullscreen_mode: false
+  };
+
+  var practice_press = {
+    type: 'practice-trial',
+    robot_images: practice_images,
+    randomize_order: false,
+    timeline_variables: [
+      {robot_number: 0, preferred_action: 'go', incorrect_text: 'Please try to press the SPACE button.'},
+      {robot_number: 0, preferred_action: 'go', incorrect_text: 'Please try to press the SPACE button.'},
+      {robot_number: 0, preferred_action: 'go', incorrect_text: 'Please try to press the SPACE button.'},
+      {robot_number: 0, preferred_action: 'go', incorrect_text: 'Please try to press the SPACE button.'}
+    ],
+    timeline: [{
+      robot_number: jsPsych.timelineVariable('robot_number'),
+      preferred_action: jsPsych.timelineVariable('preferred_action'),
+      incorrect_text: jsPsych.timelineVariable('incorrect_text')
+    }]
+  };
+
+  var practice_no_press = {
+    type: 'practice-trial',
+    robot_images: practice_images,
+    randomize_order: false,
+    timeline_variables: [
+      {robot_number: 1, preferred_action: 'no go', incorrect_text: 'Please try not to press the SPACE button.'},
+      {robot_number: 1, preferred_action: 'no go', incorrect_text: 'Please try not to press the SPACE button.'},
+      {robot_number: 1, preferred_action: 'no go', incorrect_text: 'Please try not to press the SPACE button.'},
+      {robot_number: 1, preferred_action: 'no go', incorrect_text: 'Please try not to press the SPACE button.'}
+    ],
+    timeline: [{
+      robot_number: jsPsych.timelineVariable('robot_number'),
+      preferred_action: jsPsych.timelineVariable('preferred_action'),
+      incorrect_text: jsPsych.timelineVariable('incorrect_text')
+    }]
+  };
+
+  var pit = {
+    type: 'turk-pit',
+    robot_images: robot_images,
+    feedback_images: feedback_images,
+    image_allocation: image_allocation,
+    randomize_order: true,
+    timeline_variables: runsheet,
+    timeline: [{
+      robot_number: jsPsych.timelineVariable('robot_number'),
+      robot_type: jsPsych.timelineVariable('robot_type'),
+      preferred_action: jsPsych.timelineVariable('preferred_action')
+    }]
+  };
+
+  // Add variables to timeline in relevant order
+  var timeline = [
+    welcome,                              // experiment landing page
+    fullscreen_on,                        // turn fullscreen on
+    instructions_press,                   // give instructions on go trials
+    practice_press,                       // 4 practice trials for a robot that prefers go
+    instructions_no_press,                // give instructions on no-go trials
+    practice_no_press,                    // 4 practice trials for a robot that prefers no-go
+    instructions_feedback,                // give instructions on the different types of feedback
+    comprehension_check,                  // do the comprehension check
+    well_done,                            // pre-experiment message
+    pit,                                  // block 1 of task
+    block_end,                            // end block 1
+    pit,                                  // block 2 of task
+    block_end,                            // end block 2
+    pit,                                  // block 3 of task
+    survey_introduction,                  // text to let the participant know they will do the surveys
+    demographics_survey_partA,            // present multi-choice portion of debriefing
+    demographics_survey_partB,            // present free-text portion of debriefing
+    expt_end,                             // post-experiment landing page
+    fullscreen_off                        // turn fullscreen off
+  ];
+
+  // set up block and trial counters
+  var counter = {};
+  counter.block = 1;
+  counter.trial = 1;
+  counter.n_blocks = 3;
+  counter.n_trials = pit.timeline_variables.length;
+
+  // set up and run the experiment
+  jsPsych.init({
+    timeline: timeline,
+    show_preload_progress_bar: true,
+    preload_images: [robot_images, feedback_images],
+    on_finish: function() {
+
+      // add interactions to the data variable
+      var interaction_data = jsPsych.data.getInteractionData();
+      jsPsych.data.get().addToLast({interactions: interaction_data.json()});
+      jsPsych.data.displayData('json');
+
+    }
+  });
+
+  </script>
 </html>

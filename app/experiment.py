@@ -8,6 +8,7 @@ bp = Blueprint('experiment', __name__)
 def experiment():
     """Present jsPsych experiment to participant."""
 
+    '''
     ## Error-catching: screen for previous visits.
     if 'experiment' in session:
 
@@ -17,12 +18,13 @@ def experiment():
 
         ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1004))
+        '''
 
-    else:
+        #else:
 
-        ## Update participant metadata.
-        session['experiment'] = True
-        write_metadata(session, ['experiment'], 'a')
+    ## Update participant metadata.
+    session['experiment'] = True
+    write_metadata(session, ['experiment'], 'a')
 
-        ## Present experiment.
-        return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
+    ## Present experiment.
+    return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
