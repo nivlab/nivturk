@@ -97,8 +97,7 @@ def index():
         return redirect(url_for('consent.consent'))
 
 ## DEV NOTE:
-## The following route is strictly for development purposes and should be
-## commented out before deployment.
+## The following route is strictly for development purposes and should be commented out before deployment.
 # @app.route('/clear')
 # def clear():
 #     session.clear()
