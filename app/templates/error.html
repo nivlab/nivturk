@@ -40,6 +40,11 @@
 
         <p>If you would like to receive partial compensation, or feel you have reached this page in error, please email <a href="mailto:ccnp.turk@gmail.com">ccnp.turk@gmail.com</a> and send the following information: <b>Error {{ errornum }}</b>.</p>
 
+        {% elif errornum == 1011 %}
+
+        <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
+        <p>Please return the HIT so someone else can perform the experiment.</p>
+
         {% else %}
 
         <p>Sorry, there was an unexpected error in our processing of your HIT.</p>
