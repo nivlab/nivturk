@@ -1,6 +1,6 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_data, write_metadata
-from .utils import gen_code, compute_bonus
+from .utils import gen_code
 
 ## Initialize blueprint.
 bp = Blueprint('complete', __name__)
@@ -29,8 +29,7 @@ def datadump():
 
     ## Update participant metadata.
     session['complete'] = True
-    session['bonus'] = compute_bonus()
-    write_metadata(session, ['complete','bonus'], 'a')
+    write_metadata(session, ['complete'], 'a')
 
     ## DEV NOTE:
     ## To pass a custom completion code, include the following line of code:
