@@ -35,4 +35,10 @@ def datadump():
     ## To pass a custom completion code, include the following line of code:
     ## > session['complete'] = gen_code(16)
 
-    return redirect(url_for('complete.complete'))
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## The jsPsych function `return-data` handles the redirect.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)
