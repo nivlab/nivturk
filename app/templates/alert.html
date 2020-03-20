@@ -3,59 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <title>Decision Making Experiment - Alert</title>
-  <link href="/static/lib/jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <link href="/static/css/tacit-css.min.css" rel="stylesheet" type="text/css"></link>
 </head>
 <style>
 
-  .alert-container {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto auto auto;
-    position: fixed;
-    top: 20%;
-    left: 20%;
-    right: 80%;
-    width: 60%;
-  }
+.alert-wrap {
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+}
 
-  .alert-header {
-    text-align: center;
-    font-size: 36px;
-    background-color: orange;
-    border-radius: 8px;
-  }
-
-  .alert-body {
-    text-align: center;
-    padding: 0px 4px 0px 4px;
-    font-size: 24px;
-  }
-
+.alert-message-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: 50%;
+  width: 60%;
+  font-size: 2.75vh;
+  line-height: 1.5em;
+}
 
 </style>
 <body>
-  <div class="alert-container">
+  <div class="alert-wrap">
 
-    <!-- Header -->
-    <div class="alert-header"><b>Attention</b></div>
+    <div class="alert-message-container">
 
-    <!-- Body -->
-    <p class="alert-body">
+      <!-- Header -->
+      <h3 style="font-size: 1.5em; text-align: center; margin: 0 0 5px 0;">Attention</h3>
 
-      While completing this experiment, please do not use the <b>BACK</b> or <b>REFRESH</b> buttons. This is to ensure that all workers access the experiment only once.
-      <br>
-      <br>
-      If you press one of these buttons, you will be directed to an error page and will not be able to complete the HIT.
+      <hr>
 
-    </p>
+        <!-- Body -->
+        <p>
+          Please take a moment to review these two important notes as they <b>may affect your payment</b>:
 
-    <!-- Button -->
-    <form method="post">
-      <center><button class="" type="submit" name="alert-check" style="font-size:16px; border-radius: 4px" value=1>I understand</button></center>
-    </form>
+          <ol>
+            <li>During the experiment, please do not use the <b>BACK</b> or <b>REFRESH</b> buttons. This is to ensure that all workers complete the experiment only once. If you press one of these buttons, you will be directed to an error page and will not be able to complete the HIT.</li>
+            <br>
+            <li>We will not compensate participants whose performance shows evidence of random responding or lack of engagement with the task. Please note that if we detect such behavior from your account, you may be permanently excluded from all of our future experiments.</li>
+          </ol>
+
+        </p>
 
 
+      <!-- Button -->
+      <form method="post">
+        <center><button class="" type="submit" name="alert-check" value=1 style="font-size: 2.25vh; margin: 10px 0 0 0; padding: 0.25em 1em;">I understand</button></center>
+      </form>
+
+
+    </div>
   </div>
 
-
 </body>
+<script>
+  window.scrollTo(0,0);
+</script>
