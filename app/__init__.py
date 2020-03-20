@@ -3,6 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
+__version__ = 0.9
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -16,6 +17,8 @@ data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
 if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
+reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
+if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
 
 ## Check Flask password.
 if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
@@ -40,6 +43,7 @@ def index():
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
+    session['reject'] = reject_dir
 
     ## Record incoming metadata.
     info = dict(

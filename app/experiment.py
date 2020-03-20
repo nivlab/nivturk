@@ -1,5 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
-from .io import write_metadata
+from .io import write_data, write_metadata
 
 ## Initialize blueprint.
 bp = Blueprint('experiment', __name__)
@@ -26,3 +26,48 @@ def experiment():
 
         ## Present experiment.
         return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
+
+@bp.route('/data_pass', methods = ['POST'])
+def data_pass():
+    """Save complete jsPsych dataset to disk."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        JSON = request.get_json()
+
+        ## Save jsPsch data to disk.
+        write_data(session, JSON, method='pass')
+
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## The jsPsych function `return-data` handles the redirect.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)
+
+@bp.route('/data_reject', methods = ['POST'])
+def data_reject():
+    """Save rejected jsPsych dataset to disk."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        JSON = request.get_json()
+
+        ## Save jsPsch data to disk.
+        write_data(session, JSON, method='reject')
+
+    ## Update participant metadata.
+    session['complete'] = True
+    session['ERROR'] = "1011: Noncompliant behavior."
+    write_metadata(session, ['complete','ERROR'], 'a')
+
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## The jsPsych function `return-data` handles the redirect.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)

@@ -17,5 +17,6 @@ build/
 .DS_Store
 
 # project specific
-metadata/**
 data/**
+metadata/**
+reject/**

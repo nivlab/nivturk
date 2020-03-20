@@ -23,7 +23,7 @@ def write_metadata(session, keys, mode='w'):
         for k in keys:
             f.write(f'{timestamp}\t{k}\t{session[k]}\n')
 
-def write_data(session, json):
+def write_data(session, json, method='pass'):
     """Write jsPsych output to disk.
 
     Parameters
@@ -32,8 +32,14 @@ def write_data(session, json):
         Current user session.
     json : object
         Data object returned by jsPsych.
+    method : pass | reject
+        Designates target folder for data.
     """
 
     ## Write data to disk.
-    fout = os.path.join(session['data'], '%s.json' %session['subId'])
+    if method == 'pass':
+        fout = os.path.join(session['data'], '%s.json' %session['subId'])
+    elif method == 'reject':
+        fout = os.path.join(session['reject'], '%s.json' %session['subId'])
+
     with open(fout, 'w') as f: f.write(json)
