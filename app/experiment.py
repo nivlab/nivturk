@@ -27,6 +27,26 @@ def experiment():
         ## Present experiment.
         return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], a=session['a'], tp_a=session['tp_a'], b=session['b'], tp_b=session['tp_b'], c=session['c'], tp_c=session['tp_c'])
 
+@bp.route('/experiment', methods=['POST'])
+def experiment_post():
+    """Write jsPsych message to metadata."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        msg = request.get_json()
+
+        ## Update participant metadata.
+        session['MESSAGE'] = msg
+        write_metadata(session, ['MESSAGE'], 'a')
+
+        ## DEV NOTE:
+        ## This function returns the HTTP response status code: 200
+        ## Code 200 signifies the POST request has succeeded.
+        ## For a full list of status codes, see:
+        ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+        return ('', 200)
+
 @bp.route('/data_pass', methods = ['POST'])
 def data_pass():
     """Save complete jsPsych dataset to disk."""
