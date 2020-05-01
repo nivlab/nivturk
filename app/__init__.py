@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.3'
+__version__ = '0.9.4'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -62,30 +62,20 @@ def index():
         version      = request.user_agent.version,          # User metadata
     )
 
-    ## Case 1: mobile user.
-    if info['platform'] in ['android','iphone','ipad','wii']:
-
-        ## Redirect participant to error (admin error).
-        return redirect(url_for('error.error', errornum=1001))
-
-    ## Case 2: first visit, workerId absent.
-    elif not 'workerId' in session and info['workerId'] is None:
+    ## Case 1: workerId absent.
+    if info['workerId'] is None:
 
         ## Redirect participant to error (admin error).
         return redirect(url_for('error.error', errornum=1000))
 
-    ## Case 3: first visit, workerId present.
-    elif not 'workerId' in session:
+    ## Case 2: mobile user.
+    elif info['platform'] in ['android','iphone','ipad','wii']:
 
-        ## Update metadata.
-        for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','browser','platform','version'], 'w')
+        ## Redirect participant to error (admin error).
+        return redirect(url_for('error.error', errornum=1001))
 
-        ## Redirect participant to consent form.
-        return redirect(url_for('consent.consent'))
-
-    ## Case 4: repeat visit, manually changed workerId.
-    elif session['workerId'] != info['workerId'] and info['workerId'] is not None:
+    ## Case 3: repeat visit, manually changed workerId.
+    elif 'workerId' in session and session['workerId'] != info['workerId']:
 
         ## Update metadata.
         session['ERROR'] = '1002: workerId tampering detected.'
@@ -94,8 +84,23 @@ def index():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
 
-    ## Case 5: all else.
+    ## Case 4: repeat visit, preexisting activity.
+    elif 'workerId' in session or info['workerId'] in os.listdir(meta_dir):
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
+        session['ERROR'] = "1004: Revisited home."
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (previous participation).
+        return redirect(url_for('error.error', errornum=1004))
+
+    ## Case 5: first visit, workerId present.
     else:
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
