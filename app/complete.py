@@ -19,10 +19,4 @@ def complete():
 
         ## Update participant metadata.
         session['complete'] = True
-        write_metadata(session, ['complete'], 'a')
-
-    ## DEV NOTE:
-    ## If you want a custom completion code, replace the return statement with:
-    ## > render_template('complete.html', value=session['complete'])
-
-    return render_template('complete.html')
+        return redirect("http://www.google.com")
