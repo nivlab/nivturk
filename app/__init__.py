@@ -47,16 +47,10 @@ def index():
 
     ## Record incoming metadata.
     info = dict(
-        workerId     = request.args.get('workerId'),        # MTurk metadata
-        assignmentId = request.args.get('assignmentId'),    # MTurk metadata
-        hitId        = request.args.get('hitId'),           # MTurk metadata
+        workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata; renamed for consistency with MTurk
+        assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata; renamed for consistency with MTurk
+        hitId        = request.args.get('STUDY_ID'),        # Prolific metadata; renamed for consistency with MTurk
         subId        = gen_code(24),                        # NivTurk metadata
-        a            = request.args.get('a'),               # TurkPrime metadata
-        tp_a         = request.args.get('tp_a'),            # TurkPrime metadata
-        b            = request.args.get('b'),               # TurkPrime metadata
-        tp_b         = request.args.get('tp_b'),            # TurkPrime metadata
-        c            = request.args.get('c'),               # TurkPrime metadata
-        tp_c         = request.args.get('tp_c'),            # TurkPrime metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
