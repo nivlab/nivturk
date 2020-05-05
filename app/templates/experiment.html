@@ -24,11 +24,12 @@
 
     // Display alert message on back/refresh.
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
-    window.addEventListener("beforeunload", function (e) {
+    function verify_unload(e){
       e.preventDefault();
       (e || window.event).returnValue = null;
       return null;
-    });
+    };
+    window.addEventListener("beforeunload", verify_unload);
 
     // Define example survey.
     var likert_page = {
@@ -45,6 +46,9 @@
     jsPsych.init({
         timeline: timeline,
         on_finish: function() {
+
+          // Remove requirement to verify redirect
+          window.removeEventListener("beforeunload", verify_unload);
 
           // Add interactions to the data variable
           var interaction_data = jsPsych.data.getInteractionData();
