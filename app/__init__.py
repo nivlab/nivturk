@@ -105,8 +105,8 @@ def index():
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
 
-# # DEV NOTE:
-# # The following route is strictly for development purpose and should be commented out before deployment.
+## DEV NOTE:
+## The following route is strictly for development purpose and should be commented out before deployment.
 # @app.route('/clear')
 # def clear():
 #     session.clear()
