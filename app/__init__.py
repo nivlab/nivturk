@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.6'
+__version__ = '0.9.7'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -89,11 +89,11 @@ def index():
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        session['ERROR'] = "1004: Revisited home."
-        write_metadata(session, ['ERROR'], 'a')
+        session['WARNING'] = "Revisited home."
+        write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1004))
+        ## Redirect participant to consent form.
+        return redirect(url_for('consent.consent'))
 
     ## Case 5: first visit, workerId present.
     else:
