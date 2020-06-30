@@ -92,7 +92,7 @@ def index():
         session['WARNING'] = "Revisited home."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to error (previous participation).
+        ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
 
     ## Case 5: first visit, workerId present.
