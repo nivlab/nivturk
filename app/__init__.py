@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.7'
+__version__ = '0.9.8'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -25,6 +25,11 @@ if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
     msg = "WARNING: Flask password is currently default. This should be changed prior to production."
     warnings.warn(msg)
 
+## Check Flask mode.
+if cfg['FLASK']['DEBUG'] != "FALSE":
+    msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
+    warnings.warn(msg)
+
 ## Initialize Flask application.
 app = Flask(__name__)
 app.secret_key = cfg['FLASK']['SECRET_KEY']
@@ -44,6 +49,7 @@ def index():
     session['data'] = data_dir
     session['metadata'] = meta_dir
     session['reject'] = reject_dir
+    session['debug'] = cfg['FLASK']['DEBUG'] != "FALSE"
 
     ## Record incoming metadata.
     info = dict(
