@@ -9,7 +9,7 @@ def experiment():
     """Present jsPsych experiment to participant."""
 
     ## Error-catching: screen for previous visits.
-    if 'experiment' in session:
+    if not session['debug'] and 'experiment' in session:
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."
