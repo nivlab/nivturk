@@ -53,6 +53,9 @@ def data_pass():
 
     if request.is_json:
 
+        ## Flag experiment as complete.
+        session['complete'] = True
+
         ## Retrieve jsPsych data.
         JSON = request.get_json()
 

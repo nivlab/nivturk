@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.9'
+__version__ = '0.9.9.2'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -50,7 +50,10 @@ def index():
     session['data'] = data_dir
     session['metadata'] = meta_dir
     session['reject'] = reject_dir
+
+    ## Flags for debug mode and experiment completion.
     session['debug'] = cfg['FLASK']['DEBUG'] != "FALSE"
+    session['complete'] = False
 
     ## Record incoming metadata.
     info = dict(

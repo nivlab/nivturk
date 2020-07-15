@@ -15,20 +15,25 @@ cfg.read(os.path.join(ROOT_DIR, 'app.ini'))
 ## Specify completion URL.
 complete_url = "https://app.prolific.co/submissions/complete?cc=" + cfg['FLASK']['COMPLETION_CODE']
 
+## Specify decoy completion URL.
+decoy_url = "https://app.prolific.co/submissions/complete?cc=" + 'REJECT_ME'
+
 @bp.route('/complete')
 def complete():
     """Present completion screen to participant."""
 
     ## Error-catching: screen for previous visits.
-    if 'complete' in session:
+    ## Case 1: navigation to completion page without completion flag
+    if 'complete' not in session or session['complete'] == False::
 
         ## Update participant metadata.
-        session['WARNING'] = "Revisited complete page."
-        write_metadata(session, ['WARNING'], 'a')
+        session['ERROR'] = "1012: Visited completion page without valid completion flag."
+        write_metadata(session, ['ERROR'], 'a')
+        return redirect(decoy_url)
 
+    ## Case 2: data_pass
     else:
 
         ## Update participant metadata.
-        session['complete'] = True
         write_metadata(session, ['complete'], 'a')
         return redirect(complete_url)
