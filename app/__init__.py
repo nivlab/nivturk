@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.8'
+__version__ = '0.9.9'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -25,10 +25,11 @@ if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
     msg = "WARNING: Flask password is currently default. This should be changed prior to production."
     warnings.warn(msg)
 
-## Check Flask mode.
+## Check Flask mode; if debug mode, clear session variable.
 if cfg['FLASK']['DEBUG'] != "FALSE":
     msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
     warnings.warn(msg)
+    session.clear()
 
 ## Initialize Flask application.
 app = Flask(__name__)
@@ -88,7 +89,6 @@ def index():
     elif 'workerId' in session or info['workerId'] in os.listdir(meta_dir):
 
         ## Update metadata.
-        for k, v in info.items(): session[k] = v
         session['WARNING'] = "Revisited home."
         write_metadata(session, ['WARNING'], 'a')
 
@@ -104,10 +104,3 @@ def index():
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
-
-## DEV NOTE:
-## The following route is strictly for development purpose and should be commented out before deployment.
-# @app.route('/clear')
-# def clear():
-#     session.clear()
-#     return 'Complete!'
