@@ -55,10 +55,6 @@ def index():
     session['metadata'] = meta_dir
     session['reject'] = reject_dir
 
-    ## Flags for debug mode and experiment completion.
-    session['debug'] = debug
-    session['complete'] = False
-
     ## Record incoming metadata.
     info = dict(
         workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata; renamed for consistency with MTurk

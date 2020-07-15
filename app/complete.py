@@ -21,7 +21,6 @@ decoy_url = url_stem + cfg['FLASK']['DECOY_CODE']
 def complete():
     """Present completion screen to participant."""
 
-    ## Error-catching: screen for previous visits.
     ## Case 1: navigation to completion page without completion flag
     if 'complete' not in session or session['complete'] == False:
 

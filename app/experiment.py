@@ -83,9 +83,8 @@ def data_reject():
         write_data(session, JSON, method='reject')
 
     ## Update participant metadata.
-    session['complete'] = True
     session['ERROR'] = "1011: Noncompliant behavior."
-    write_metadata(session, ['complete','ERROR'], 'a')
+    write_metadata(session, ['ERROR'], 'a')
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200
