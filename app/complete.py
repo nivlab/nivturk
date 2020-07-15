@@ -15,7 +15,7 @@ cfg.read(os.path.join(ROOT_DIR, 'app.ini'))
 ## Specify completion URLs (real and decoy).
 url_stem = "https://app.prolific.co/submissions/complete?cc="
 complete_url = url_stem + cfg['FLASK']['COMPLETION_CODE']
-decoy_url = url_stem + 'CHECKDATA'
+decoy_url = url_stem + cfg['FLASK']['DECOY_CODE']
 
 @bp.route('/complete')
 def complete():
