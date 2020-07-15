@@ -24,7 +24,7 @@ def complete():
 
     ## Error-catching: screen for previous visits.
     ## Case 1: navigation to completion page without completion flag
-    if 'complete' not in session or session['complete'] == False::
+    if 'complete' not in session or session['complete'] == False:
 
         ## Update participant metadata.
         session['ERROR'] = "1012: Visited completion page without valid completion flag."
