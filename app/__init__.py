@@ -20,14 +20,15 @@ if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
 reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
 if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
 
+## Check Flask mode; if debug mode, clear session variable.
+debug = cfg['FLASK']['DEBUG'] != "FALSE"
+if debug:
+    msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
+    warnings.warn(msg)
+
 ## Check Flask password.
 if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
     msg = "WARNING: Flask password is currently default. This should be changed prior to production."
-    warnings.warn(msg)
-
-## Check Flask mode.
-if cfg['FLASK']['DEBUG'] != "FALSE":
-    msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
     warnings.warn(msg)
 
 ## Initialize Flask application.
@@ -45,8 +46,8 @@ app.register_blueprint(error.bp)
 @app.route('/')
 def index():
 
-    ## Clear session variable in debug mode.
-    if cfg['FLASK']['DEBUG'] != "FALSE":
+    ## Debug mode: clear session.
+    if debug:
         session.clear()
 
     ## Store directories in session object.
@@ -55,7 +56,7 @@ def index():
     session['reject'] = reject_dir
 
     ## Flags for debug mode and experiment completion.
-    session['debug'] = cfg['FLASK']['DEBUG'] != "FALSE"
+    session['debug'] = debug
     session['complete'] = False
 
     ## Record incoming metadata.
@@ -81,7 +82,18 @@ def index():
         ## Redirect participant to error (admin error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 3: repeat visit, manually changed workerId.
+    ## Case 3: repeat visit, preexisting log but no session data (suspected incognito).
+    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
+
+        ## Update metadata.
+        session['workerId'] = info['workerId']
+        session['ERROR'] = '1004: suspected incognito user.'
+        write_metadata(session, ['ERROR'], 'a')
+
+        ## Redirect participant to error (unusual activity).
+        return redirect(url_for('error.error', errornum=1004))
+
+    ## Case 4: repeat visit, manually changed workerId.
     elif 'workerId' in session and session['workerId'] != info['workerId']:
 
         ## Update metadata.
@@ -91,8 +103,8 @@ def index():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
 
-    ## Case 4: repeat visit, preexisting activity.
-    elif 'workerId' in session or info['workerId'] in os.listdir(meta_dir):
+    ## Case 5: repeat visit, preexisting activity.
+    elif 'workerId' in session:
 
         ## Update metadata.
         session['WARNING'] = "Revisited home."
@@ -101,7 +113,7 @@ def index():
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
 
-    ## Case 5: first visit, workerId present.
+    ## Case 6: first visit, workerId present.
     else:
 
         ## Update metadata.

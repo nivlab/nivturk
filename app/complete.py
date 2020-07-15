@@ -16,7 +16,7 @@ cfg.read(os.path.join(ROOT_DIR, 'app.ini'))
 complete_url = "https://app.prolific.co/submissions/complete?cc=" + cfg['FLASK']['COMPLETION_CODE']
 
 ## Specify decoy completion URL.
-decoy_url = "https://app.prolific.co/submissions/complete?cc=" + 'REJECT_ME'
+decoy_url = "https://app.prolific.co/submissions/complete?cc=" + 'CHECKDATA'
 
 @bp.route('/complete')
 def complete():
