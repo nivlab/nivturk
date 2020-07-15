@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '0.9.8'
+__version__ = '0.9.9.3'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -57,6 +57,7 @@ def index():
         assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata; renamed for consistency with MTurk
         hitId        = request.args.get('STUDY_ID'),        # Prolific metadata; renamed for consistency with MTurk
         subId        = gen_code(24),                        # NivTurk metadata
+        address      = request.remote_addr,                 # NivTurk metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
