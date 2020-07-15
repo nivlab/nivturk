@@ -1,7 +1,7 @@
 function pass_data(workerId, assignmentId, hitId) {
 
   // Concatenate metadata into complete URL (returned on success).
-  var url = "/complete?workerId=" + workerId + "&assignmentId=" + assignmentId + "&hitId=" + hitId;
+  var url = "/complete";
 
   $.ajax({
     url: "/data_pass",

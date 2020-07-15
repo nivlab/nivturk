@@ -9,7 +9,7 @@ def experiment():
     """Present jsPsych experiment to participant."""
 
     ## Error-catching: screen for previous visits.
-    if not session['debug'] and 'experiment' in session:
+    if 'experiment' in session:
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."
@@ -53,6 +53,9 @@ def data_pass():
 
     if request.is_json:
 
+        ## Flag experiment as complete.
+        session['complete'] = True
+
         ## Retrieve jsPsych data.
         JSON = request.get_json()
 
@@ -80,9 +83,8 @@ def data_reject():
         write_data(session, JSON, method='reject')
 
     ## Update participant metadata.
-    session['complete'] = True
     session['ERROR'] = "1011: Noncompliant behavior."
-    write_metadata(session, ['complete','ERROR'], 'a')
+    write_metadata(session, ['ERROR'], 'a')
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200
