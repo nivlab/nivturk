@@ -25,11 +25,10 @@ if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
     msg = "WARNING: Flask password is currently default. This should be changed prior to production."
     warnings.warn(msg)
 
-## Check Flask mode; if debug mode, clear session variable.
+## Check Flask mode.
 if cfg['FLASK']['DEBUG'] != "FALSE":
     msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
     warnings.warn(msg)
-    session.clear()
 
 ## Initialize Flask application.
 app = Flask(__name__)
@@ -45,6 +44,10 @@ app.register_blueprint(error.bp)
 ## Define root node.
 @app.route('/')
 def index():
+
+    ## Clear session variable in debug mode.
+    if cfg['FLASK']['DEBUG'] != "FALSE":
+        session.clear()
 
     ## Store directories in session object.
     session['data'] = data_dir
