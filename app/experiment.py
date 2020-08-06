@@ -8,8 +8,14 @@ bp = Blueprint('experiment', __name__)
 def experiment():
     """Present jsPsych experiment to participant."""
 
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
+
+         ## Redirect participant to error (previous participation).
+         return redirect(url_for('error.error', errornum=1000))
+
     ## Error-catching: screen for previous visits.
-    if 'experiment' in session:
+    elif 'experiment' in session:
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."

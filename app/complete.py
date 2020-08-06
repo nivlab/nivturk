@@ -21,8 +21,14 @@ decoy_url = url_stem + cfg['FLASK']['DECOY_CODE']
 def complete():
     """Present completion screen to participant."""
 
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
+
+         ## Redirect participant to error (previous participation).
+         return redirect(url_for('error.error', errornum=1000))
+
     ## Case 1: navigation to completion page without completion flag
-    if 'complete' not in session or session['complete'] == False:
+    elif 'complete' not in session or session['complete'] == False:
 
         ## Update participant metadata.
         session['ERROR'] = "1012: Visited completion page without valid completion flag."

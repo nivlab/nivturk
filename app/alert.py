@@ -8,8 +8,14 @@ bp = Blueprint('alert', __name__)
 def alert():
     """Present alert to participant."""
 
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
+
+         ## Redirect participant to error (previous participation).
+         return redirect(url_for('error.error', errornum=1000))
+
     ## Case 1: first visit.
-    if not 'alert' in session:
+    elif not 'alert' in session:
 
         ## Update participant metadata.
         session['alert'] = True

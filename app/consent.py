@@ -8,8 +8,14 @@ bp = Blueprint('consent', __name__)
 def consent():
     """Present consent form to participant."""
 
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
+
+         ## Redirect participant to error (previous participation).
+         return redirect(url_for('error.error', errornum=1000))
+
     ## Case 1: first visit.
-    if not 'consent' in session:
+    elif not 'consent' in session:
 
         ## Present consent form.
         return render_template('consent.html')
