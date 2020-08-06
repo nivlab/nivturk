@@ -115,7 +115,7 @@ def index():
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','browser','platform','version'], 'w')
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','address', 'browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
