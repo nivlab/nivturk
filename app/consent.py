@@ -14,18 +14,18 @@ def consent():
         ## Present consent form.
         return render_template('consent.html')
 
-    ## Case 2: repeat visit, previous consent.
-    elif session['consent']:
+    ## Case 2: repeat visit, previous bot-detection.
+    elif session['consent'] == 'BOT':
 
         ## Update participant metadata.
         session['WARNING'] = "Revisited consent form."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to alert page.
-        return redirect(url_for('alert.alert'))
+        ## Redirect participant to error (unusual activity).
+        return redirect(url_for('error.error', errornum=1002))
 
     ## Case 3: repeat visit, previous non-consent.
-    else:
+    elif session['consent'] == False:
 
         ## Update participant metadata.
         session['WARNING'] = "Revisited consent form."
@@ -34,6 +34,15 @@ def consent():
         ## Redirect participant to error (decline consent).
         return redirect(url_for('error.error', errornum=1003))
 
+    ## Case 4: repeat visit, previous consent.
+    else:
+
+        ## Update participant metadata.
+        session['WARNING'] = "Revisited consent form."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to alert page.
+        return redirect(url_for('alert.alert'))
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():
