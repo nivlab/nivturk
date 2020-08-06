@@ -57,14 +57,16 @@ def index():
 
     ## Record incoming metadata.
     info = dict(
-        workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata; renamed for consistency with MTurk
-        assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata; renamed for consistency with MTurk
-        hitId        = request.args.get('STUDY_ID'),        # Prolific metadata; renamed for consistency with MTurk
+        workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata
+        assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata
+        hitId        = request.args.get('STUDY_ID'),        # Prolific metadata
         subId        = gen_code(24),                        # NivTurk metadata
         address      = request.remote_addr,                 # NivTurk metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
+        code_success = gen_code(8).upper(),                 # NivTurk metadata
+        code_reject  = gen_code(8).upper()                  # NivTurk metadata
     )
 
     ## Case 1: workerId absent.
