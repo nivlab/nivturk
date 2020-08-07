@@ -21,19 +21,18 @@ reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
 if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
 
 ## Check Flask mode; if debug mode, clear session variable.
-debug = cfg['FLASK']['DEBUG'] != "FALSE"
+debug = cfg['FLASK'].getboolean('DEBUG')
 if debug:
-    msg = "WARNING: Flask currently in debug mode. This should be changed prior to production."
-    warnings.warn(msg)
+    warnings.warn("WARNING: Flask currently in debug mode. This should be changed prior to production.")
 
 ## Check Flask password.
-if cfg['FLASK']['SECRET_KEY'] == "PLEASE_CHANGE_THIS":
-    msg = "WARNING: Flask password is currently default. This should be changed prior to production."
-    warnings.warn(msg)
+secret_key = cfg['FLASK']['SECRET_KEY']
+if secret_key == "PLEASE_CHANGE_THIS":
+    warnings.warn("WARNING: Flask password is currently default. This should be changed prior to production.")
 
 ## Initialize Flask application.
 app = Flask(__name__)
-app.secret_key = cfg['FLASK']['SECRET_KEY']
+app.secret_key = secret_key
 
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
@@ -65,8 +64,8 @@ def index():
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
-        code_success = gen_code(8).upper(),                 # NivTurk metadata
-        code_reject  = gen_code(8).upper()                  # NivTurk metadata
+        code_success = cfg['PROLIFIC'].get('CODE_SUCCESS', gen_code(8).upper()),
+        code_reject  = cfg['PROLIFIC'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
     ## Case 1: workerId absent.
