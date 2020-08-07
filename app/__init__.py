@@ -80,23 +80,43 @@ def index():
         ## Redirect participant to error (admin error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 3: repeat visit, preexisting log but no session data (suspected incognito).
+    ## Case 3: repeat visit, preexisting log but no session data.
     elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
 
-        ## Update metadata.
-        session['workerId'] = info['workerId']
-        session['ERROR'] = '1004: suspected incognito user.'
-        write_metadata(session, ['ERROR'], 'a')
+        ## Consult log file.
+        with open(os.path.join(session['metadata'], info['workerId']),'r') as f:
+            logs = f.read()
 
-        ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1004))
+        ## Case 3a: previously started experiment.
+        if 'experiment' in logs:
+
+            ## Update metadata.
+            session['workerId'] = info['workerId']
+            session['ERROR'] = '1004: suspected incognito user.'
+            session['complete'] = 'error'
+            write_metadata(session, ['ERROR','complete'], 'a')
+
+            ## Redirect participant to error (unusual activity).
+            return redirect(url_for('error.error', errornum=1004))
+
+        ## Case 3b: no previous experiment starts.
+        else:
+
+            ## Update metadata.
+            for k, v in info.items(): session[k] = v
+            session['WARNING'] = "INCOGNITO: Assigned new subId."
+            write_metadata(session, ['subId','WARNING'], 'a')
+
+            ## Redirect participant to consent form.
+            return redirect(url_for('consent.consent'))
 
     ## Case 4: repeat visit, manually changed workerId.
     elif 'workerId' in session and session['workerId'] != info['workerId']:
 
         ## Update metadata.
         session['ERROR'] = '1002: workerId tampering detected.'
-        write_metadata(session, ['ERROR'], 'a')
+        session['complete'] = 'error'
+        write_metadata(session, ['ERROR','complete'], 'a')
 
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
