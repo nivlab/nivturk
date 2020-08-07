@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Code Architecture
-parent: Overview
+title: Code architecture
+parent: Detailed documentation
 nav_order: 2
 ---
 
@@ -20,7 +20,7 @@ The following is a high-level overview of the application architecture:
     ├── app                     <- folder containing the Flask application.
     │   ├── static              <- contains static content (e.g. jspsych package)
     │   ├── templates           <- contains html templates
-    │   
+    │
     │   ├── __init__.py         <- main Flask script which runs application
     │   ├── app.ini             <- configuration file
     │   ├── complete.py         <- code for serving experiment completion screen
@@ -29,11 +29,11 @@ The following is a high-level overview of the application architecture:
     │   ├── experiment.py       <- code for serving jsPsych experiments
     │   ├── io.py               <- functions for reading/writing data & metadata
     │   ├── utils.py            <- miscellaneous functions
-    │   
+    │
     ├── data                    <- contains saved behavioral data
-    │   
+    │
     ├── metadata                <- contains worker metadata
-    │   
+    │
     ├── requirements.txt        <- required python packages
 
 Complete experimental data is stored in the **data** folder, and worker metadata is stored in the **metadata** folder. The actual application is stored in the **app** folder. As you can see, the application is comprised of a series of modular python scripts, each with a very particular function. We describe each in the order in which participants will encounter them.

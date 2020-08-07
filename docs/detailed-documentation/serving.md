@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Serving Experiments
-parent: Overview
-nav_order: 1
+parent: Detailed documentation
+nav_order: 3
 ---
 
 # Serving Experiments
@@ -41,7 +41,7 @@ Next you need to clone NivTurk onto the server:
 
 ```bash
 git clone https://github.com/nivlab/nivturk.git
-```  
+```
 
 Finally, install the required packages:
 
