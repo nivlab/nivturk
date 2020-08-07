@@ -8,24 +8,40 @@ bp = Blueprint('consent', __name__)
 def consent():
     """Present consent form to participant."""
 
-    ## Case 1: first visit.
-    if not 'consent' in session:
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
+
+         ## Redirect participant to error (previous participation).
+         return redirect(url_for('error.error', errornum=1000))
+
+    ## Case 1: previously completed experiment.
+    elif 'complete' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited consent page."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
+
+    ## Case 2: first visit.
+    elif not 'consent' in session:
 
         ## Present consent form.
         return render_template('consent.html')
 
-    ## Case 2: repeat visit, previous consent.
-    elif session['consent']:
+    ## Case 3: repeat visit, previous bot-detection.
+    elif session['consent'] == 'BOT':
 
         ## Update participant metadata.
         session['WARNING'] = "Revisited consent form."
         write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to alert page.
-        return redirect(url_for('alert.alert'))
+        ## Redirect participant to error (unusual activity).
+        return redirect(url_for('error.error', errornum=1002))
 
-    ## Case 3: repeat visit, previous non-consent.
-    else:
+    ## Case 4: repeat visit, previous non-consent.
+    elif session['consent'] == False:
 
         ## Update participant metadata.
         session['WARNING'] = "Revisited consent form."
@@ -34,6 +50,15 @@ def consent():
         ## Redirect participant to error (decline consent).
         return redirect(url_for('error.error', errornum=1003))
 
+    ## Case 5: repeat visit, previous consent.
+    else:
+
+        ## Update participant metadata.
+        session['WARNING'] = "Revisited consent form."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to alert page.
+        return redirect(url_for('alert.alert'))
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():
