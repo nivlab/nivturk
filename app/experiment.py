@@ -14,7 +14,17 @@ def experiment():
          ## Redirect participant to error (previous participation).
          return redirect(url_for('error.error', errornum=1000))
 
-    ## Error-catching: screen for previous visits.
+    ## Case 1: previously completed experiment.
+    elif 'complete' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited experiment page."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
+
+    ## Case 2: repeat visit.
     elif 'experiment' in session:
 
         ## Update participant metadata.
@@ -24,6 +34,7 @@ def experiment():
         ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1004))
 
+    ## Case 3: first visit.
     else:
 
         ## Update participant metadata.

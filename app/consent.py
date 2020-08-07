@@ -14,13 +14,23 @@ def consent():
          ## Redirect participant to error (previous participation).
          return redirect(url_for('error.error', errornum=1000))
 
-    ## Case 1: first visit.
+    ## Case 1: previously completed experiment.
+    elif 'complete' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited consent page."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
+
+    ## Case 2: first visit.
     elif not 'consent' in session:
 
         ## Present consent form.
         return render_template('consent.html')
 
-    ## Case 2: repeat visit, previous bot-detection.
+    ## Case 3: repeat visit, previous bot-detection.
     elif session['consent'] == 'BOT':
 
         ## Update participant metadata.
@@ -30,7 +40,7 @@ def consent():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
 
-    ## Case 3: repeat visit, previous non-consent.
+    ## Case 4: repeat visit, previous non-consent.
     elif session['consent'] == False:
 
         ## Update participant metadata.
@@ -40,7 +50,7 @@ def consent():
         ## Redirect participant to error (decline consent).
         return redirect(url_for('error.error', errornum=1003))
 
-    ## Case 4: repeat visit, previous consent.
+    ## Case 5: repeat visit, previous consent.
     else:
 
         ## Update participant metadata.

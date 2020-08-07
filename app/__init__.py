@@ -101,7 +101,17 @@ def index():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1002))
 
-    ## Case 5: repeat visit, preexisting activity.
+    ## Case 5: repeat visit, previously completed experiment.
+    elif 'complete' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited home."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
+
+    ## Case 6: repeat visit, preexisting activity.
     elif 'workerId' in session:
 
         ## Update metadata.
@@ -111,12 +121,12 @@ def index():
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
 
-    ## Case 6: first visit, workerId present.
+    ## Case 7: first visit, workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','address', 'browser','platform','version'], 'w')
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
