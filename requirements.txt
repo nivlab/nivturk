@@ -1,3 +1,0 @@
-numpy
-flask==1.1.2
-gunicorn
