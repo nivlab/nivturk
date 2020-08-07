@@ -37,6 +37,6 @@ pip install -r requirements.txt
 gunicorn -b 0.0.0.0:<port-number> -w <n-workers> app:app
 ```
 
-<sub>On our virtual machines, we use a `port-number` between 9000 and 9009. `n-workers` should be adjusted based on the expected server load, but 4 has been a reasonable default value in our usage to date.</sub>
+<sub>On our virtual machines, we use a `port-number` between 9000 and 9010. `n-workers` should be adjusted based on the expected server load, but 4 has been a reasonable default value in our usage to date.</sub>
 
 {: .fs-6 .fw-300 }
