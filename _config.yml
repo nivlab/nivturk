@@ -21,9 +21,6 @@ url: "https://nivlab.github.io" # the base hostname & protocol for your site, e.
 permalink: pretty
 exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
 
-# Set a path/url to a logo that will be displayed instead of the title
-#logo: "/assets/images/just-the-docs.png"
-
 # Enable or disable the site search
 # Supports true (default) or false
 search_enabled: true
@@ -84,12 +81,12 @@ last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https:/
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/nivlab/nivlink" # the github URL for your repo
+gh_edit_repository: "https://github.com/nivlab/nivturk" # the github URL for your repo
 gh_edit_branch: "docs" # the branch that your docs is served from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
 
 # Color scheme currently only supports "dark", "light"/nil (default), or a custom scheme that you define
-color_scheme: nil
+color_scheme: "nivturk"
 
 # Google Analytics Tracking (optional)
 # e.g, UA-1234567-89
