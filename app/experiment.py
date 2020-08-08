@@ -11,8 +11,8 @@ def experiment():
     ## Error-catching: screen for missing session.
     if not 'workerId' in session:
 
-         ## Redirect participant to error (previous participation).
-         return redirect(url_for('error.error', errornum=1000))
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('error.error', errornum=1000))
 
     ## Case 1: previously completed experiment.
     elif 'complete' in session:

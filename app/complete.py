@@ -12,14 +12,14 @@ def complete():
     ## Error-catching: screen for missing session.
     if not 'workerId' in session:
 
-         ## Redirect participant to error (previous participation).
-         return redirect(url_for('error.error', errornum=1000))
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('error.error', errornum=1000))
 
     ## Case 1: visit complete page without previous completion.
     elif 'complete' not in session:
 
         ## Flag experiment as complete.
-        session['ERROR'] = "1012: Visited completion page without valid completion flag."
+        session['ERROR'] = "1005: Visited complete page before completion."
         session['complete'] = 'reject'
         write_metadata(session, ['ERROR','complete','code_reject'], 'a')
 
@@ -57,4 +57,4 @@ def complete():
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1011))
+        return redirect(url_for('error.error', errornum=1005))

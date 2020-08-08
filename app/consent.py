@@ -11,8 +11,8 @@ def consent():
     ## Error-catching: screen for missing session.
     if not 'workerId' in session:
 
-         ## Redirect participant to error (previous participation).
-         return redirect(url_for('error.error', errornum=1000))
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('error.error', errornum=1000))
 
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
@@ -38,7 +38,7 @@ def consent():
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1002))
+        return redirect(url_for('error.error', errornum=1005))
 
     ## Case 4: repeat visit, previous non-consent.
     elif session['consent'] == False:
@@ -48,7 +48,7 @@ def consent():
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to error (decline consent).
-        return redirect(url_for('error.error', errornum=1003))
+        return redirect(url_for('error.error', errornum=1002))
 
     ## Case 5: repeat visit, previous consent.
     else:
@@ -73,10 +73,12 @@ def consent_post():
 
         ## Update participant metadata.
         session['consent'] = 'BOT'
-        write_metadata(session, ['consent'], 'a')
+        session['experiment'] = False    # Prevents incognito users
+        session['complete'] = 'error'
+        write_metadata(session, ['consent','experiment','complete'], 'a')
 
         ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1002))
+        return redirect(url_for('error.error', errornum=1005))
 
     ## Check participant response.
     elif subj_consent:
@@ -95,4 +97,4 @@ def consent_post():
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to error (decline consent).
-        return redirect(url_for('error.error', errornum=1003))
+        return redirect(url_for('error.error', errornum=1002))

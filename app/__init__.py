@@ -71,13 +71,13 @@ def index():
     ## Case 1: workerId absent.
     if info['workerId'] is None:
 
-        ## Redirect participant to error (admin error).
+        ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
 
     ## Case 2: mobile user.
     elif info['platform'] in ['android','iphone','ipad','wii']:
 
-        ## Redirect participant to error (admin error).
+        ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
 
     ## Case 3: repeat visit, preexisting log but no session data.
@@ -92,11 +92,11 @@ def index():
 
             ## Update metadata.
             session['workerId'] = info['workerId']
-            session['ERROR'] = '1004: suspected incognito user.'
+            session['ERROR'] = '1004: Suspected incognito user.'
             session['complete'] = 'error'
             write_metadata(session, ['ERROR','complete'], 'a')
 
-            ## Redirect participant to error (unusual activity).
+            ## Redirect participant to error (previous participation).
             return redirect(url_for('error.error', errornum=1004))
 
         ## Case 3b: no previous experiment starts.
@@ -104,7 +104,7 @@ def index():
 
             ## Update metadata.
             for k, v in info.items(): session[k] = v
-            session['WARNING'] = "INCOGNITO: Assigned new subId."
+            session['WARNING'] = "Assigned new subId."
             write_metadata(session, ['subId','WARNING'], 'a')
 
             ## Redirect participant to consent form.
@@ -114,12 +114,12 @@ def index():
     elif 'workerId' in session and session['workerId'] != info['workerId']:
 
         ## Update metadata.
-        session['ERROR'] = '1002: workerId tampering detected.'
+        session['ERROR'] = '1005: workerId tampering detected.'
         session['complete'] = 'error'
         write_metadata(session, ['ERROR','complete'], 'a')
 
         ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1002))
+        return redirect(url_for('error.error', errornum=1005))
 
     ## Case 5: repeat visit, previously completed experiment.
     elif 'complete' in session:

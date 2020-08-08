@@ -13,7 +13,7 @@
 
   {% if errornum == 1000 %}
 
-  <p>Missing workerId. Please restart experiment from Prolific link.</p>
+  <p>Sorry, we are missing your Prolific ID. Please start the experiment over from the Prolific link.</p>
 
   {% elif errornum == 1001 %}
 
@@ -23,15 +23,15 @@
 
   {% elif errornum == 1002 %}
 
-  <p>We have detected unusual activity from your account.</p>
+  <p>We are sorry you do not wish to complete this study.</p>
 
   <p>Please return the study so someone else can perform the experiment.</p>
 
   {% elif errornum == 1003 %}
 
-  <p>We are sorry you do not wish to complete this study.</p>
+  <p>Sorry, there was a technical error in our processing of your study. Most likely this means an important component of the experiment failed to load.</p>
 
-  <p>Please return the study so someone else can perform the experiment.</p>
+  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
 
   {% elif errornum == 1004 %}
 
@@ -39,7 +39,7 @@
 
   <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
 
-  {% elif errornum == 1011 %}
+  {% elif errornum == 1005 %}
 
   <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly or showing a lack of engagement with the task. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
 
