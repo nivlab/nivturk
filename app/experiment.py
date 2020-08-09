@@ -29,7 +29,8 @@ def experiment():
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."
-        write_metadata(session, ['ERROR'], 'a')
+        session['complete'] = 'error'
+        write_metadata(session, ['ERROR','complete'], 'a')
 
         ## Redirect participant to error (previous participation).
         return redirect(url_for('error.error', errornum=1004))
