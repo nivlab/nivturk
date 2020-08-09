@@ -8,18 +8,24 @@ bp = Blueprint('alert', __name__)
 def alert():
     """Present alert to participant."""
 
-    ## Case 1: first visit.
-    if not 'alert' in session:
+    ## Error-catching: screen for missing session.
+    if not 'workerId' in session:
 
-        ## Update participant metadata.
-        session['alert'] = True
-        write_metadata(session, ['alert'], 'a')
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('error.error', errornum=1000))
 
-        ## Present alert page.
-        return render_template('alert.html')
+    ## Case 1: previously completed experiment.
+    elif 'complete' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited alert page."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
-    else:
+    elif 'alert' in session:
 
         ## Update participant metadata.
         session['WARNING'] = "Revisited alert page."
@@ -27,6 +33,16 @@ def alert():
 
         ## Redirect participant to error (previous participation).
         return redirect(url_for('experiment.experiment'))
+
+    ## Case 3: first visit.
+    else:
+
+        ## Update participant metadata.
+        session['alert'] = True
+        write_metadata(session, ['alert'], 'a')
+
+        ## Present alert page.
+        return render_template('alert.html')
 
 @bp.route('/alert', methods=['POST'])
 def alert_post():
