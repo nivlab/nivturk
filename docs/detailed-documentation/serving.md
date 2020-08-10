@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Serving Experiments
+title: Serving experiments
 parent: Detailed documentation
 nav_order: 3
 ---
 
-# Serving Experiments
+# Serving experiments
 
 ## Accessing the Server
 
