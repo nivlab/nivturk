@@ -1,0 +1,30 @@
+#!/bin/sh
+# monitor - basic script to monitor incoming data
+# Author: Sam Zorowitz
+
+# Check for arguments: time to sleep
+local wait="${1:-30s}"
+
+# Main loop
+while
+do
+
+  # Clear screen / print timestamp
+  clear;
+  echo "Current Status";
+  echo "-------------------";
+  date +"%Y-%m-%d %H:%M:%S"
+  echo "-------------------";
+
+  # Print
+  echo "experiment:" $(grep -il "experiment" metadata/** | wc -l)
+  echo "success:" $(grep -il "success" metadata/** | wc -l)
+  echo "reject:" $(grep -il "reject" metadata/** | wc -l)
+  echo "error:" $(grep -il "error" metadata/** | wc -l)
+  echo "data:" $(ls data | wc -l)
+  echo "\nUpdating every $wait, press Ctrl-C to interrupt."
+
+  # Pause update
+  sleep $wait
+
+done

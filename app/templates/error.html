@@ -7,59 +7,57 @@
   <link rel="stylesheet" href="/static/css/tacit-css.min.css"/>
 </head>
 <body>
-  <div id="container-error">
 
-    <div id="error">
-      <h1>Sorry, there was an error.</h1>
-      <hr>
+  <h1>Sorry, there was an error.</h1>
+  <hr>
 
-      <div class="alert alert-danger">
+  {% if errornum == 1000 %}
 
-        {% if errornum == 1000 %}
+  <p>Sorry, we are missing your Prolific ID. Please start the experiment over from the Prolific link.</p>
 
-        <p>You don't have a workerId? What are you, a developer?</p>
+  {% elif errornum == 1001 %}
 
-        {% elif errornum == 1001 %}
+  <p>We have detected you may be using a mobile or tablet device. Our experiment requires a desktop device.</p>
 
-        <p>We have detected you may be using a mobile or tablet device. Our experiment requires a desktop device.</p>
-        <p>Please return the HIT or try again on a desktop computer or laptop.</p>
+  <p>Please return the study or try again on a desktop computer or laptop.</p>
 
-        {% elif errornum == 1002 %}
+  {% elif errornum == 1002 %}
 
-        <p>We have detected unusual activity from your account.</p>
-        <p>Please return the HIT so someone else can perform the experiment.</p>
+  <p>We are sorry you do not wish to complete this study.</p>
 
-        {% elif errornum == 1003 %}
+  <p>Please return the study so someone else can perform the experiment.</p>
 
-        <p>We are sorry you do not wish to complete this HIT.</p>
-        <p>Please return the HIT so someone else can perform the experiment.</p>
+  {% elif errornum == 1003 %}
 
-        {% elif errornum == 1004 %}
+  <p>Sorry, there was a technical error in our processing of your study. Most likely this means an important component of the experiment failed to load.</p>
 
-        <p>Sorry, our records indicate that you have already completed (or attempted to complete) this HIT. Because this is a psychology experiment, you can only complete this HIT once. Please return the HIT so someone else can perform the experiment.</p>
+  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
 
-        <p>If you would like to receive partial compensation, or feel you have reached this page in error, please email <a href="mailto:ccnp.turk2@gmail.com">ccnp.turk2@gmail.com</a> and send the following information: <b>Error {{ errornum }}</b>.</p>
+  {% elif errornum == 1004 %}
 
-        {% elif errornum == 1011 %}
+  <p>Sorry, our records indicate that you have already completed (or attempted to complete) this study. If you have not previously completed the study, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
 
-        <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly or showing a lack of engagement with the task. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
+  <p>Because this is a psychology experiment, you can only complete this study once, and you cannot restart the study if you have previously begun it. Please return the study so someone else can perform the experiment.</p>
 
-        <p>If you feel you have reached this page in error, please email <a href="mailto:ccnp.turk2@gmail.com">ccnp.turk2@gmail.com</a> and send the following information: <b>Error {{ errornum }}</b>.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
 
-        <p>Please return the HIT so someone else can perform the experiment.</p>
+  {% elif errornum == 1005 %}
 
-        {% else %}
+  <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly or showing a lack of engagement with the task. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
 
-        <p>Sorry, there was an unexpected error in our processing of your HIT.</p>
+  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
 
-        <p>If you would like to receive partial compensation, or feel you have reached this page in error, please email <a href="mailto:ccnp.turk2@gmail.com">ccnp.turk2@gmail.com</a> and send the following information: <b>Error {{ errornum }}</b>.</p>
+  <p>Please return the study so someone else can perform the experiment.</p>
 
-        {% endif %}
+  {% else %}
 
-      </div>
+  <p>Sorry, there was an unexpected error in our processing of your study.</p>
 
-      <hr>
-    </div>
-  </div>
+  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
+
+  {% endif %}
+
+  <hr>
+
 </body>
 </html>
