@@ -80,14 +80,22 @@ This script contains functions for reading/writing data and metadata files. See 
 
 This script contains miscellaneous functions. This script is a good place for users to write and store experiment-specific functions (e.g. computing bonus).
 
-## TurkPrime Integration
+## Prolific and TurkPrime Integration
 
 In `experiment.py`, you'll see that when we render `experiment.html` we're passing several pieces of metadata (workerId, assignmentId, etc.). These pieces of metadata are initially stored in the Flask Session object when the participant first arrives at the experiment. When we pass those variables `to experiment.html`, they are now accessible within the HTML environment. To reference them, we use curly brackets. For example, in the `pass_data` function:
 
 ```html
+{% raw %}
+# for TurkPrime:
 pass_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}",  "{{a}}", "{{tp_a}}", "{{b}}", "{{tp_b}}", "{{c}}", "{{tp_c}}");
+
+# for Prolific:
+pass_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}");
+{% endraw %}
 ```
 
 Note the variables are enclosed in double-quotation marks to denote that, in this case, we want the variable to become a string.
 
-The function `pass_data` function works such that, on successful writing of the jsPsych JSON data to disk, the function changes the URL to `/complete?workerId={{workerId}}&assignmentId={{assignmentId}}](/complete?workerId={{workerId}}&assignmentId={{assignmentId}}`... This URL change is needed for the TurkPrime function to work. Specifically, the TurkPrime function needs the final six pieces of information (a, b, c, etc.) in order to verify the original worker and to return their corresponding completion code.
+Note also that we collect and pass different metadata depending on whether we are using TurkPrime or Prolific. This is because of the different completion dynamics of the two recruitment pages; see the [Using Prolific](../turkprime) and [Using TurkPrime](../turkprime) pages for more information.
+
+The function `pass_data` function works such that, on successful writing of the jsPsych JSON data to disk, the function changes the URL to the appropriate completion URL for the recruitment website, with the appropriate pieces of metadata.
