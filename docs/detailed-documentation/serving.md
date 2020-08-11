@@ -11,11 +11,11 @@ nav_order: 3
 
 To serve online experiments, IT has set up for us several virtual machines (VMs). To access a VM, open a terminal and SSH in:
 
-```
+```bash
 ssh <user-name>@<server-name>.princeton.edu
 ```
 
-For security reasons, we will not list the server names here. Please ask Dan, Sam, or Angela R. for the server name directly.
+For security reasons, we will not list the server names here. Please ask an administrator (e.g., Sam or Branson) for the server name directly.
 
 ## Installation & Environment Setup
 
@@ -50,7 +50,7 @@ cd nivturk
 pip install -r requirements.txt
 ```
 
-**Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment.
+**Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment. This password encrypts the cookies so that they cannot be read by the user (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit), for instance).
 
 ## Serving via [Flask](https://flask.palletsprojects.com/en/1.1.x/) (Development)
 
@@ -84,8 +84,14 @@ The `-b` argument specifies the host and port. Again, we are requesting an exter
 With the web server running, you (or a participant) should be able to reach the experiment by navigating to:
 
 ```
-http://<ip-address>:9000/?workerId=<xxx>&assignmentId=<yyy>&hitId=<zzz>
+# for Prolific
+http://<ip-address>:9000/?PROLIFIC_PID=<xxx>
+
+# for TurkPrime
+http://<ip-address>:9000/?workerId=<xxx>
 ```
+
+For testing purposes, you will need to provide a dummy ID name so that the server lets you in.zo
 
 To check the IP address of the server, run the following command:
 
@@ -93,7 +99,9 @@ To check the IP address of the server, run the following command:
 curl ipecho.net/plain; echo
 ```
 
-To note, the URL arguments `workerId`, `assignmentId`, & `hitId` are not strictly necessary to reach the page. However, without a `workerId`, the application will automatically redirect a user to the error page.
+To note, the URL arguments `workerId` (on TurkPrime), `PROLIFIC_PID` (on Prolific), are not strictly necessary to reach the page. However, without a `workerId`/`PROLIFIC_PID`, the application will automatically redirect a user to the error page.
+
+In addition, there are several additional URL arguments that specify the task ID, etc. that the webpage will receive from the recruitment website. However, if these arguments are absent NivTurk will not prevent the user from progressing.  
 
 ## Using `screen`
 
