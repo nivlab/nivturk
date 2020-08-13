@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Multiple Stages
+title: Multiple stages
 parent: Cookbook
 nav_order: 2
 ---

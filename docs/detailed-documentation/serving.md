@@ -2,7 +2,7 @@
 layout: default
 title: Serving experiments
 parent: Detailed documentation
-nav_order: 3
+nav_order: 4
 ---
 
 # Serving experiments
@@ -50,9 +50,9 @@ cd nivturk
 pip install -r requirements.txt
 ```
 
-**Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment. This password encrypts the cookies so that they cannot be read by the user (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit), for instance).
+**Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment. This password encrypts the cookies so that they cannot be read by the user (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit){:target="_blank"}, for instance).
 
-## Serving via [Flask](https://flask.palletsprojects.com/en/1.1.x/) (Development)
+## Serving via [Flask](https://flask.palletsprojects.com/en/1.1.x/){:target="_blank"} (Development)
 
 To test out the application (but **not** to serve an actual experiment, see next section) we can use Flask's default web server. **From the nivturk folder**, run the following commands on the VM:
 
@@ -65,7 +65,7 @@ flask run --host=0.0.0.0
 
 The first two lines tell Flask what application and in what mode to run. The third line specifies the port number. Our VMs are configured to run on ports 9000-9010. The final line starts the web server, and the `host` argument specifies to use an [externally visible server](https://flask.palletsprojects.com/en/1.1.x/quickstart/).
 
-The example code above puts the experiment on port 9000. If you are unsure which ports are currently free for you to use, you can refer to [the relevant section](https://github.com/nivlab/nivturk/wiki/Troubleshooting#determining-if-a-port-is-in-use) of the Troubleshooting page.
+The example code above puts the experiment on port 9000. If you are unsure which ports are currently free for you to use, you can refer to [the relevant section](../../troubleshooting/#determining-if-a-port-is-in-use) of the Troubleshooting page.
 
 ## Serving via [Gunicorn](https://gunicorn.org/) (Production)
 
@@ -101,7 +101,7 @@ curl ipecho.net/plain; echo
 
 To note, the URL arguments `workerId` (on TurkPrime), `PROLIFIC_PID` (on Prolific), are not strictly necessary to reach the page. However, without a `workerId`/`PROLIFIC_PID`, the application will automatically redirect a user to the error page.
 
-In addition, there are several additional URL arguments that specify the task ID, etc. that the webpage will receive from the recruitment website. However, if these arguments are absent NivTurk will not prevent the user from progressing.  
+In addition, there are several additional URL arguments that specify the task ID, etc. that the webpage will receive from the recruitment website. However, if these arguments are absent NivTurk will not prevent the user from progressing.
 
 ## Using `screen`
 

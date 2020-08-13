@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Message Passing
+title: Message passing
 parent: Cookbook
 nav_order: 1
 ---

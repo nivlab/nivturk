@@ -16,9 +16,11 @@ The NivTurk software that is documented on this website is designed to help with
 ## The NivTurk server
 
 #### What is a server, and how do I set it up?
-A server is a bundle of software code that presents ('serves') your experiment website to participants when they arrive at it from a recruitment website like Prolific or Amazon Mechanical Turk. NivTurk is a software bundle that is written using [Flask](https://flask.palletsprojects.com/en/1.1.x/). Its goal is to guide participants through a standard sequence of websites (consent form, alert page, experiment, et cetera) in a robust way.
+A server is a bundle of software code that presents ('serves') your experiment website to participants when they arrive at it from a recruitment website like Prolific or Amazon Mechanical Turk. NivTurk is a software bundle that is written using [Flask](https://flask.palletsprojects.com/en/1.1.x/){:target="_blank"}. Its goal is to guide participants through a standard sequence of websites (consent form, alert page, experiment, et cetera) in a robust way.
 
 To get this working, the NivTurk server code needs to be running on a computer that has ports open to the external world. For the most part we run the code on virtual machines set up by PNI IT, but in principle as long as you have IRB approval there is no reason why the NivTurk code could not run on a different virtual machine (e.g., one hosted by AWS) or even a physical machine sitting in an office somewhere.
+
+To download NivTurk, follow the instructions on the [Download](../download) page.
 
 To set up your server, follow the instructions on the [Serving experiments](../serving/) page.
 
@@ -57,6 +59,6 @@ Note that metadata and data files are stored separately by design. This maximise
 
 In general, you can use any framework or language that you like to write the experiment code. As long as this code can be loaded within an html page (specifically, the html page called `experiment.html` and located in the `app` folder), NivTurk should be able to recognise it and run it.
 
-In practice, for our experiments to date, we have used [JSPsych](https://www.jspsych.org/). JSPsych is a framework for presenting psychological experiments within a web browser, developed and maintained by Josh de Leeuw.
+In practice, for our experiments to date, we have used [JSPsych](https://www.jspsych.org/){:target="_blank"}. JSPsych is a framework for presenting psychological experiments within a web browser, developed and maintained by Josh de Leeuw.
 
-If you are new to JavaScript, you can find plenty of resources for getting started on the web. Two examples are [DigitalOcean](https://www.digitalocean.com/community/tutorial_series/how-to-code-in-javascript) and [W3Schools](https://www.w3schools.com/js/).
+If you are new to JavaScript, you can find plenty of resources for getting started on the web. Two examples are [DigitalOcean](https://www.digitalocean.com/community/tutorial_series/how-to-code-in-javascript){:target="_blank"} and [W3Schools](https://www.w3schools.com/js/){:target="_blank"}.

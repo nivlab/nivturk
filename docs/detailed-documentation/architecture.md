@@ -11,7 +11,7 @@ nav_order: 2
 
 In this section we review the Flask code, which is the scaffolding for our web-based experiments. Specifically, we will detail how the code is organized, what each script does, and how they fit together to create the experimental workflow.
 
-This section will not explain how Flask itself works in great detail. For good explanations of Flask, please see its [Flask documentation](https://flask.palletsprojects.com/en/1.1.x/), its [quickstart guide](https://flask.palletsprojects.com/en/1.1.x/quickstart/#quickstart), and the [Flask mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux).
+This section will not explain how Flask itself works in great detail. For good explanations of Flask, please see its [Flask documentation](https://flask.palletsprojects.com/en/1.1.x/){:target="_blank"} , its [quickstart guide](https://flask.palletsprojects.com/en/1.1.x/quickstart/#quickstart){:target="_blank"} , and the [Flask mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux){:target="_blank"} .
 
 ## Code Organization
 
