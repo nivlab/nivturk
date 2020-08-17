@@ -5,4 +5,4 @@ parent: Cookbook
 nav_order: 4
 ---
 
-# Contributing
+# How to contribute
