@@ -23,15 +23,16 @@ From the Prolific dashboard, either click 'New study', or duplicate a previous s
 - If desired, under 'Show advanced', you can create an internal label to refer to this this study. This can be useful if you want to refer to it later in other studies (e.g., preventing those who completed this study from accessing a later study).
 
 <br>
-#### Copying study link to NivTurk
-- Prolific will provide a default completion code (if you have duplicated the study, this code will be the same as in the study you duplicated from). The completion code is the 8-digit alphanumeric code in the link: `https://app.prolific.co/submissions/complete?cc=<code>`. Now that this is updated, you can launch your experiment via gunicorn as detailed [here](../serving/#serving-via-gunicorn-production).
-- Copy this code onto your clipboard and paste it into `app.ini` in the NivTurk folder (line 15, replacing the default code `PROLIFIC_CODE_GOES_HERE`).
-- Tick the box that says 'I've set up my study to redirect to this URL at the end'.
-
-<br>
 #### URL and adding URL arguments
+- For the question 'How do you want to record Prolific IDs?', select the option 'I'll use URL parameters'.
 - Set the URL for your experiment to the desired URL in the format `http://<ip-address>:<port-number>/`, as discussed on the [Serving experiments page](../serving). Make sure you include the forward slash `/` at the end, and make sure that you do not include the angle brackets.
 - NivTurk expects several arguments to be provided from Prolific in the study URL. To add these, click 'Show advanced' and press the toggle button on, so that it reads 'Yes, include them'. They should get added above, so that the 'What is the URL of your study?' box should look something like `http://128.112.102.220:9006/?PROLIFIC_PID={{%PROLIFIC_PID%}}&STUDY_ID={{%STUDY_ID%}}&SESSION_ID={{%SESSION_ID%}}`
+
+<br>
+#### Copying study link to NivTurk
+- For the question 'How do you want to confirm participants have completed your study?', select 'I'll redirect them using a URL'.
+- Prolific will then provide a default completion code (if you have duplicated the study, this code will be the same as in the study you duplicated from). The completion code is the 8-digit alphanumeric code in the link: `https://app.prolific.co/submissions/complete?cc=<code>`. Now that this is updated, you can launch your experiment via gunicorn as detailed [here](../serving/#serving-via-gunicorn-production).
+- Copy this code onto your clipboard and paste it into `app.ini` in the NivTurk folder (line 15, replacing the default code `PROLIFIC_CODE_GOES_HERE`).
 
 <br>
 #### Audience
