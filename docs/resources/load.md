@@ -2,7 +2,7 @@
 layout: default
 title: Load Testing
 parent: Resources
-nav_order: 1
+nav_order: 2
 ---
 
 # Load Testing
