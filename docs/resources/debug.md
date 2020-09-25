@@ -51,4 +51,4 @@ if debug:
     session.clear()
 ```
 
-This prevents refresh errors from being triggered subsequently
+This prevents refresh errors from being triggered subsequently.
