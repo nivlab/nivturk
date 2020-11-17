@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Decision Making Experiment - ID input</title>
+  <link href="/static/css/tacit-css.min.css" rel="stylesheet" type="text/css"></link>
+</head>
+<style>
+
+.input-wrap {
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+}
+
+.input-message-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: 50%;
+  width: 60%;
+  font-size: 2.75vh;
+  line-height: 1.5em;
+}
+
+.input-container{
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid black;
+  border-radius: 4px;
+}
+
+</style>
+<body>
+  <div class="input-wrap">
+
+    <div class="input-message-container">
+
+        <!-- Body -->
+        <p style="text-align: center;">
+
+          <form method="post">
+            <p>Please enter your ID:</p>
+            <input type="text" class="input-container" name="id-input">
+            <input type="submit" value="Continue">
+          </form>
+
+        </p>
+
+    </div>
+  </div>
+
+</body>
+<script>
+  window.scrollTo(0,0);
+</script>

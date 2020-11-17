@@ -1,6 +1,6 @@
 import os, sys, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from app import consent, alert, experiment, complete, error
+from app import input, consent, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
 __version__ = '1.0'
@@ -35,8 +35,8 @@ app = Flask(__name__)
 app.secret_key = secret_key
 
 ## Apply blueprints to the application.
+app.register_blueprint(input.bp)
 app.register_blueprint(consent.bp)
-app.register_blueprint(alert.bp)
 app.register_blueprint(experiment.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)
@@ -56,23 +56,21 @@ def index():
 
     ## Record incoming metadata.
     info = dict(
-        workerId     = request.args.get('PROLIFIC_PID'),    # Prolific metadata
-        assignmentId = request.args.get('SESSION_ID'),      # Prolific metadata
-        hitId        = request.args.get('STUDY_ID'),        # Prolific metadata
+        workerId     = request.args.get('workerId'),        # Prolific metadata
         subId        = gen_code(24),                        # NivTurk metadata
         address      = request.remote_addr,                 # NivTurk metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
-        code_success = cfg['PROLIFIC'].get('CODE_SUCCESS', gen_code(8).upper()),
-        code_reject  = cfg['PROLIFIC'].get('CODE_REJECT', gen_code(8).upper()),
+        code_success = cfg['CODES'].get('CODE_SUCCESS', gen_code(8).upper()),
+        code_reject  = cfg['CODES'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
     ## Case 1: workerId absent.
     if info['workerId'] is None:
 
         ## Redirect participant to error (missing workerId).
-        return redirect(url_for('error.error', errornum=1000))
+        return redirect(url_for('input.input'))
 
     ## Case 2: mobile user.
     elif info['platform'] in ['android','iphone','ipad','wii']:
@@ -92,7 +90,7 @@ def index():
 
             ## Update metadata.
             session['workerId'] = info['workerId']
-            session['ERROR'] = '1004: Suspected incognito user.'
+            session['ERROR'] = 'Repeat ID detected.'
             session['complete'] = 'error'
             write_metadata(session, ['ERROR','complete'], 'a')
 
@@ -110,18 +108,7 @@ def index():
             ## Redirect participant to consent form.
             return redirect(url_for('consent.consent'))
 
-    ## Case 4: repeat visit, manually changed workerId.
-    elif 'workerId' in session and session['workerId'] != info['workerId']:
-
-        ## Update metadata.
-        session['ERROR'] = '1005: workerId tampering detected.'
-        session['complete'] = 'error'
-        write_metadata(session, ['ERROR','complete'], 'a')
-
-        ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1005))
-
-    ## Case 5: repeat visit, previously completed experiment.
+    ## Case 3: repeat visit, previously completed experiment.
     elif 'complete' in session:
 
         ## Update metadata.
@@ -131,22 +118,12 @@ def index():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 6: repeat visit, preexisting activity.
-    elif 'workerId' in session:
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited home."
-        write_metadata(session, ['WARNING'], 'a')
-
-        ## Redirect participant to consent form.
-        return redirect(url_for('consent.consent'))
-
-    ## Case 7: first visit, workerId present.
+    ## Case 4: first visit, workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','browser','platform','version'], 'w')
+        write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))

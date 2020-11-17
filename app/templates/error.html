@@ -13,47 +13,37 @@
 
   {% if errornum == 1000 %}
 
-  <p>Sorry, we are missing your Prolific ID. Please start the experiment over from the Prolific link.</p>
+  <p>Sorry, we are missing your ID. Please start the experiment over.</p>
 
   {% elif errornum == 1001 %}
 
   <p>We have detected you may be using a mobile or tablet device. Our experiment requires a desktop device.</p>
 
-  <p>Please return the study or try again on a desktop computer or laptop.</p>
+  <p>Please try again on a desktop computer or laptop.</p>
 
   {% elif errornum == 1002 %}
 
   <p>We are sorry you do not wish to complete this study.</p>
 
-  <p>Please return the study so someone else can perform the experiment.</p>
+  <p>You can close this window now.</p>
 
   {% elif errornum == 1003 %}
 
   <p>Sorry, there was a technical error in our processing of your study. Most likely this means an important component of the experiment failed to load.</p>
 
-  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>Please contact the experimenter, describing the error that you experienced.</p>
 
   {% elif errornum == 1004 %}
 
-  <p>Sorry, our records indicate that you have already completed (or attempted to complete) this study. If you have not previously completed the study, you may have reached this page because you pressed refresh, back, or opened the study in a new browser window.</p>
+  <p>Sorry, you attempted to use an ID for which we already have data.</p>
 
-  <p>Because this is a psychology experiment, you can only complete this study once, and you cannot restart the study if you have previously begun it. Please return the study so someone else can perform the experiment.</p>
-
-  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
-
-  {% elif errornum == 1005 %}
-
-  <p>We have detected unusual or noncompliant activity from your account. Most likely this means we detected you were responding randomly or showing a lack of engagement with the task. Please note that if we detect similar behavior from your account in the future, you may be permanently excluded from all future experiments.</p>
-
-  <p>If you would like to receive partial compensation, or if you have reached this page following an error, please send us a message on Prolific describing the error that you experienced.</p>
-
-  <p>Please return the study so someone else can perform the experiment.</p>
+  <p>Please try again with a new ID (by pressing Back) or contact the experimenter to resolve this issue.</p>
 
   {% else %}
 
   <p>Sorry, there was an unexpected error in our processing of your study.</p>
 
-  <p>If you would like to receive partial compensation, or feel you have reached this page in error, please send us a message on Prolific describing the error that you experienced.</p>
+  <p>Please contact the experimenter, describing the error that you experienced.</p>
 
   {% endif %}
 

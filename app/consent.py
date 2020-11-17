@@ -12,7 +12,7 @@ def consent():
     if not 'workerId' in session:
 
         ## Redirect participant to error (missing workerId).
-        return redirect(url_for('error.error', errornum=1000))
+        return redirect(url_for('input.input'))
 
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
@@ -58,7 +58,7 @@ def consent():
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to alert page.
-        return redirect(url_for('alert.alert'))
+        return redirect(url_for('experiment.experiment'))
 
 @bp.route('/consent', methods=['POST'])
 def consent_post():
@@ -88,7 +88,7 @@ def consent_post():
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to alert page.
-        return redirect(url_for('alert.alert'))
+        return redirect(url_for('experiment.experiment'))
 
     else:
 

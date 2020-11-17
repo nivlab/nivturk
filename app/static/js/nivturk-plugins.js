@@ -15,10 +15,9 @@ function pass_message(msg) {
 }
 
 // Successful completion of experiment: redirect with completion code.
-function redirect_success(workerId, assignmentId, hitId, code_success) {
+function redirect_success(workerId, code_success) {
 
-  // Concatenate metadata into complete URL (returned on success).
-  var url = "https://app.prolific.co/submissions/complete?cc=" + code_success;
+  var url = "/complete";
 
   $.ajax({
     url: "/redirect_success",
@@ -34,10 +33,9 @@ function redirect_success(workerId, assignmentId, hitId, code_success) {
 }
 
 // Unsuccessful completion of experiment: redirect with decoy code.
-function redirect_reject(workerId, assignmentId, hitId, code_reject) {
+function redirect_reject(workerId, code_reject) {
 
-  // Concatenate metadata into complete URL (returned on reject).
-  var url = "https://app.prolific.co/submissions/complete?cc=" + code_reject;
+  var url = "/complete";
 
   $.ajax({
     url: "/redirect_reject",

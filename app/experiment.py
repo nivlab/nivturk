@@ -24,18 +24,7 @@ def experiment():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 2: repeat visit.
-    elif 'experiment' in session:
-
-        ## Update participant metadata.
-        session['ERROR'] = "1004: Revisited experiment."
-        session['complete'] = 'error'
-        write_metadata(session, ['ERROR','complete'], 'a')
-
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1004))
-
-    ## Case 3: first visit.
+    ## Case 2: first visit.
     else:
 
         ## Update participant metadata.
@@ -43,7 +32,7 @@ def experiment():
         write_metadata(session, ['experiment'], 'a')
 
         ## Present experiment.
-        return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
+        return render_template('experiment.html', workerId=session['workerId'])
 
 @bp.route('/experiment', methods=['POST'])
 def pass_message():
