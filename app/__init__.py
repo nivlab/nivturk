@@ -66,17 +66,17 @@ def index():
         code_reject  = cfg['CODES'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
-    ## Case 1: workerId absent.
-    if info['workerId'] is None:
-
-        ## Redirect participant to error (missing workerId).
-        return redirect(url_for('input.input'))
-
-    ## Case 2: mobile user.
-    elif info['platform'] in ['android','iphone','ipad','wii']:
+    ## Case 1: mobile user.
+    if info['platform'] in ['android','iphone','ipad','wii']:
 
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
+
+    ## Case 2: workerId absent.
+    elif info['workerId'] is None:
+
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('input.input'))
 
     ## Case 3: repeat visit, preexisting log but no session data.
     elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
