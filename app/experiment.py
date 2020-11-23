@@ -1,4 +1,5 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
+from datetime import datetime
 from .io import write_data, write_metadata
 
 ## Initialize blueprint.
@@ -18,14 +19,17 @@ def experiment():
     elif 'complete' in session:
 
         ## Update metadata.
-        session['WARNING'] = "Revisited experiment page."
+        session['WARNING'] = "Revisited experiment page after completion."
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 2: first visit.
+    ## Case 2: legitimate visit.
     else:
+
+        ## Define a timestamp for experiment start
+        session['expt_start_time'] = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
         ## Update participant metadata.
         session['experiment'] = True

@@ -78,36 +78,6 @@ def index():
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('input.input'))
 
-    ## Case 3: repeat visit, preexisting log but no session data.
-    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
-
-        ## Consult log file.
-        with open(os.path.join(session['metadata'], info['workerId']),'r') as f:
-            logs = f.read()
-
-        ## Case 3a: previously started experiment.
-        if 'experiment' in logs:
-
-            ## Update metadata.
-            session['workerId'] = info['workerId']
-            session['ERROR'] = 'Repeat ID detected.'
-            session['complete'] = 'error'
-            write_metadata(session, ['ERROR','complete'], 'a')
-
-            ## Redirect participant to error (previous participation).
-            return redirect(url_for('error.error', errornum=1004))
-
-        ## Case 3b: no previous experiment starts.
-        else:
-
-            ## Update metadata.
-            for k, v in info.items(): session[k] = v
-            session['WARNING'] = "Assigned new subId."
-            write_metadata(session, ['subId','WARNING'], 'a')
-
-            ## Redirect participant to consent form.
-            return redirect(url_for('consent.consent'))
-
     ## Case 3: repeat visit, previously completed experiment.
     elif 'complete' in session:
 
@@ -118,12 +88,18 @@ def index():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 4: first visit, workerId present.
+    ## Case 4: workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
+
+        if info['workerId'] in os.listdir(meta_dir):
+            session['WARNING'] = "Repeat workerId detected; a new subId was assigned."
+            write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
+        else:
+            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
+
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))

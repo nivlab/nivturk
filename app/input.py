@@ -10,7 +10,7 @@ def input():
 
 @bp.route('/input/', methods=['POST'])
 def input_post():
-    """Process participant repsonse to alert page."""
+    """Process participant response to alert page."""
 
     id_input = request.form['id-input']  # get the user's id from the form
 
