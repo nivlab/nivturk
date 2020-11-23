@@ -23,8 +23,14 @@
   // Display alert message on back/refresh.
   // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
   function verify_unload(e){
+
+    // pop-up before allowing user to leave page
     e.preventDefault();
     (e || window.event).returnValue = null;
+
+    // save all data collected thus far
+    save_partial_data()
+
     return null;
   };
   window.addEventListener("beforeunload", verify_unload);
