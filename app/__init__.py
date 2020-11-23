@@ -94,7 +94,10 @@ def index():
         ## Update metadata.
         for k, v in info.items(): session[k] = v
 
+        # Check to see whether the input ID duplicates an existing worker ID.
         if info['workerId'] in os.listdir(meta_dir):
+
+            ## Add a warning and print the new metadata to the metadata file.
             session['WARNING'] = "Repeat workerId detected; a new subId was assigned."
             write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
         else:
