@@ -73,7 +73,7 @@ def index():
         return redirect(url_for('error.error', errornum=1001))
 
     ## Case 2: workerId absent.
-    elif info['workerId'] is None:
+    elif not 'workerId' in session and info['workerId'] is None:
 
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('input.input'))
