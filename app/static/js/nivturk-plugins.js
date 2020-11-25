@@ -14,29 +14,13 @@ function pass_message(msg) {
 
 }
 
-// Write partial data on attempted unload
-function save_partial_data() {
-
-  $.ajax({
-    url: "/save_partial_data",
-    method: 'POST',
-    data: JSON.stringify(jsPsych.data.get().json()),
-    contentType: "application/json; charset=utf-8",
-  }).done(function(data, textStatus, jqXHR) {
-    // do nothing on success
-  }).fail(function(error) {
-    console.log(error);
-  });
-
-}
-
 // Write data on experiment end
-function save_data() {
+function save_data(status) {
 
   var url = "/complete";
 
   $.ajax({
-    url: "/save_data",
+    url: "/save_data?status=" + status,
     method: 'POST',
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",

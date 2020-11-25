@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import input, consent, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.0'
+__version__ = '0.1'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -95,9 +95,10 @@ def index():
             ## Add a warning and print the new metadata to the metadata file.
             session['WARNING'] = "Repeat workerId detected; a new subId was assigned."
             write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
-        else:
-            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
+        else:
+
+            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
