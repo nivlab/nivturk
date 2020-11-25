@@ -93,12 +93,26 @@ def index():
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('input.input'))
 
-    ## Case 5: first visit.
+    ## Case 5: workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
+
+        # Case 5a: repeat visit, preexisting log but no session data.
+        if info['workerId'] in os.listdir(meta_dir):
+
+            ## Add warning to metadata file.
+            session['WARNING'] = "Assigned new subId."
+
+            ## Update metadata.
+            write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
+
+        ## Case 5b: first visit.
+        else:
+
+            ## Add a warning and print the new metadata to the metadata file.
+            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
