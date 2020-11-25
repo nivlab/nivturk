@@ -21,10 +21,10 @@ The following is the minimal set of commands needed to get started with NivTurk 
     cd nivturk
     pip install -r requirements.txt
     gunicorn -b 0.0.0.0:9000 -w 4 app:app
-    
 
-Wiki
+
+Documentation
 ^^^^
 
 For details on how to serve your experiment, how the code is organized, and how data is stored, please see the
-`Wiki <https://github.com/nivlab/nivturk/wiki>`_.
+`Documentation <https://nivlab.github.io/nivturk>`_.
