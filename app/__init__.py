@@ -111,7 +111,7 @@ def index():
         ## Case 5b: first visit.
         else:
 
-            ## Add a warning and print the new metadata to the metadata file.
+            ## Update metadata.
             write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
