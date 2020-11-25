@@ -30,50 +30,13 @@ function save_partial_data() {
 
 }
 
-
-// Successful completion of experiment: redirect with completion code.
-function redirect_success(workerId, code_success) {
-
-  var url = "/complete";
-
-  $.ajax({
-    url: "/redirect_success",
-    method: 'POST',
-    data: JSON.stringify(jsPsych.data.get().json()),
-    contentType: "application/json; charset=utf-8",
-  }).done(function(data, textStatus, jqXHR) {
-    window.location.replace(url);
-  }).fail(function(error) {
-    console.log(error);
-  });
-
-}
-
-// Unsuccessful completion of experiment: redirect with decoy code.
-function redirect_reject(workerId, code_reject) {
+// Write data on experiment end
+function save_data() {
 
   var url = "/complete";
 
   $.ajax({
-    url: "/redirect_reject",
-    method: 'POST',
-    data: JSON.stringify(jsPsych.data.get().json()),
-    contentType: "application/json; charset=utf-8",
-  }).done(function(data, textStatus, jqXHR) {
-    window.location.replace(url);
-  }).fail(function(error) {
-    console.log(error);
-  });
-}
-
-// Unsuccessful completion of experiment: redirect to error page.
-function redirect_error(error) {
-
-  // error is the error number to redirect to.
-  var url = "/error/" + error;
-
-  $.ajax({
-    url: "/redirect_error",
+    url: "/save_data",
     method: 'POST',
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",

@@ -68,7 +68,7 @@ def save_partial_data():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
-        write_data(session, JSON, method='pass')
+        write_data(session, JSON)
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200
@@ -77,8 +77,8 @@ def save_partial_data():
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
 
-@bp.route('/redirect_success', methods = ['POST'])
-def redirect_success():
+@bp.route('/save_data', methods = ['POST'])
+def save_data():
     """Save complete jsPsych dataset to disk."""
 
     if request.is_json:
@@ -87,58 +87,10 @@ def redirect_success():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
-        write_data(session, JSON, method='pass')
+        write_data(session, JSON)
 
     ## Flag experiment as complete.
     session['complete'] = 'success'
-    write_metadata(session, ['complete','code_success'], 'a')
-
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## The corresponding jsPsych function handles the redirect.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
-
-@bp.route('/redirect_reject', methods = ['POST'])
-def redirect_reject():
-    """Save rejected jsPsych dataset to disk."""
-
-    if request.is_json:
-
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
-
-        ## Save jsPsch data to disk.
-        write_data(session, JSON, method='reject')
-
-    ## Flag experiment as complete.
-    session['complete'] = 'reject'
-    write_metadata(session, ['complete','code_reject'], 'a')
-
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## The corresponding jsPsych function handles the redirect.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
-
-@bp.route('/redirect_error', methods = ['POST'])
-def redirect_error():
-    """Save rejected jsPsych dataset to disk."""
-
-    if request.is_json:
-
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
-
-        ## Save jsPsch data to disk.
-        write_data(session, JSON, method='reject')
-
-    ## Flag experiment as complete.
-    session['complete'] = 'error'
     write_metadata(session, ['complete'], 'a')
 
     ## DEV NOTE:

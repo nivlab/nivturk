@@ -17,8 +17,6 @@ data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
 if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
-reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
-if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
 
 ## Check Flask mode; if debug mode, clear session variable.
 debug = cfg['FLASK'].getboolean('DEBUG')
@@ -52,7 +50,6 @@ def index():
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
-    session['reject'] = reject_dir
 
     ## Record incoming metadata.
     info = dict(
@@ -61,9 +58,7 @@ def index():
         address      = request.remote_addr,                 # NivTurk metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
-        version      = request.user_agent.version,          # User metadata
-        code_success = cfg['CODES'].get('CODE_SUCCESS', gen_code(8).upper()),
-        code_reject  = cfg['CODES'].get('CODE_REJECT', gen_code(8).upper()),
+        version      = request.user_agent.version           # User metadata
     )
 
     ## Case 1: mobile user.
