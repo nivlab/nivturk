@@ -10,11 +10,19 @@ def input():
 
 @bp.route('/input/', methods=['POST'])
 def input_post():
-    """Process participant response to alert page."""
+    """Process participant response to input page."""
 
+    ## Retrieve participant response.
     id_input = request.form['id-input']  # get the user's id from the form
 
-    if id_input: # check to see if input is present
+    ## Case 1: workerId present.
+    if id_input:
+
+        ## If present, participant is implicitly redirected back to index (home).
         return redirect(url_for('index', workerId=id_input))
+
+    ## Case 2: missing workerId.
     else:
+
+        ## If absent, participant is re-presented the input page.
         return render_template('input.html')

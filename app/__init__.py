@@ -67,13 +67,7 @@ def index():
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 2: workerId absent.
-    elif not 'workerId' in session and info['workerId'] is None:
-
-        ## Redirect participant to error (missing workerId).
-        return redirect(url_for('input.input'))
-
-    ## Case 3: repeat visit, previously completed experiment.
+    ## Case 2: repeat visit, previously completed experiment.
     elif 'complete' in session:
 
         ## Update metadata.
@@ -83,22 +77,28 @@ def index():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 4: workerId present.
+    ## Case 3: repeat visit, preexisting activity.
+    elif 'workerId' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited home."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to consent form.
+        return redirect(url_for('consent.consent'))
+
+    ## Case 4: workerId absent.
+    elif info['workerId'] is None:
+
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('input.input'))
+
+    ## Case 5: first visit.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-
-        # Check to see whether the input ID duplicates an existing worker ID.
-        if info['workerId'] in os.listdir(meta_dir):
-
-            ## Add a warning and print the new metadata to the metadata file.
-            session['WARNING'] = "Repeat workerId detected; a new subId was assigned."
-            write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
-
-        else:
-
-            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
+        write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
