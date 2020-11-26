@@ -13,7 +13,7 @@ def experiment():
     if not 'workerId' in session:
 
         ## Redirect participant to error (missing workerId).
-        return redirect(url_for('error.error', errornum=1000))
+        return redirect(url_for('input.input'))
 
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
@@ -58,25 +58,6 @@ def pass_message():
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
 
-@bp.route('/save_partial_data', methods=['POST'])
-def save_partial_data():
-    """Write jsPsych message to metadata."""
-
-    if request.is_json:
-
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
-
-        ## Save jsPsch data to disk.
-        write_data(session, JSON)
-
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
-
 @bp.route('/save_data', methods = ['POST'])
 def save_data():
     """Save complete jsPsych dataset to disk."""
@@ -86,12 +67,16 @@ def save_data():
         ## Retrieve jsPsych data.
         JSON = request.get_json()
 
+        ## Retrieve status.
+        status = request.args.get('status')
+
         ## Save jsPsch data to disk.
         write_data(session, JSON)
 
     ## Flag experiment as complete.
-    session['complete'] = 'success'
-    write_metadata(session, ['complete'], 'a')
+    if status == "complete":
+        session['complete'] = 'success'
+        write_metadata(session, ['complete'], 'a')
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200

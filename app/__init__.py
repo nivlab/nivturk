@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import input, consent, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.0'
+__version__ = '0.1'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -67,13 +67,7 @@ def index():
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 2: workerId absent.
-    elif not 'workerId' in session and info['workerId'] is None:
-
-        ## Redirect participant to error (missing workerId).
-        return redirect(url_for('input.input'))
-
-    ## Case 3: repeat visit, previously completed experiment.
+    ## Case 2: repeat visit, previously completed experiment.
     elif 'complete' in session:
 
         ## Update metadata.
@@ -83,21 +77,42 @@ def index():
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
-    ## Case 4: workerId present.
+    ## Case 3: repeat visit, preexisting activity.
+    elif 'workerId' in session:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited home."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant to consent form.
+        return redirect(url_for('consent.consent'))
+
+    ## Case 4: workerId absent.
+    elif info['workerId'] is None:
+
+        ## Redirect participant to error (missing workerId).
+        return redirect(url_for('input.input'))
+
+    ## Case 5: workerId present.
     else:
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
 
-        # Check to see whether the input ID duplicates an existing worker ID.
+        # Case 5a: repeat visit, preexisting log but no session data.
         if info['workerId'] in os.listdir(meta_dir):
 
-            ## Add a warning and print the new metadata to the metadata file.
-            session['WARNING'] = "Repeat workerId detected; a new subId was assigned."
-            write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
-        else:
-            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
+            ## Add warning to metadata file.
+            session['WARNING'] = "Assigned new subId."
 
+            ## Update metadata.
+            write_metadata(session, ['WARNING', 'workerId','subId','address','browser','platform','version'], 'a')
+
+        ## Case 5b: first visit.
+        else:
+
+            ## Update metadata.
+            write_metadata(session, ['workerId','subId','address','browser','platform','version'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))

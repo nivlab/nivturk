@@ -29,7 +29,7 @@
     (e || window.event).returnValue = null;
 
     // save all data collected thus far
-    save_partial_data()
+    save_data("partial");
 
     return null;
   };
@@ -62,7 +62,7 @@
       // jsPsych.data.displayData();
 
       // Save complete dataset to disk.
-      save_data();
+      save_data("complete");
 
 
     }
