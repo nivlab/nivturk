@@ -17,15 +17,16 @@ function pass_message(msg) {
 // Write data on experiment end
 function save_data(status) {
 
-  var url = "/complete";
-
   $.ajax({
     url: "/save_data?status=" + status,
     method: 'POST',
     data: JSON.stringify(jsPsych.data.get().json()),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
-    window.location.replace(url);
+    // if complete, redirect to complete page. otherwise, do nothing
+    if (status == "complete") {
+      window.location.replace("/complete");
+    }
   }).fail(function(error) {
     console.log(error);
   });
