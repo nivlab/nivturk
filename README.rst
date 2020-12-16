@@ -24,7 +24,7 @@ The following is the minimal set of commands needed to get started with NivTurk 
 
 
 Documentation
-^^^^
+^^^^^^^^^^^^^
 
 For details on how to serve your experiment, how the code is organized, and how data is stored, please see the
 `Documentation <https://nivlab.github.io/nivturk>`_.
