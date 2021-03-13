@@ -50,6 +50,7 @@ def index():
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
+    session.modified = True
 
     ## Record incoming metadata.
     info = dict(
@@ -98,6 +99,7 @@ def index():
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
+        session.modified = True
 
         # Case 5a: repeat visit, preexisting log but no session data.
         if info['workerId'] in os.listdir(meta_dir):
