@@ -101,7 +101,6 @@ def index():
         for k, v in info.items(): session[k] = v
         session.modified = True
 
-
         # Case 5a: repeat visit, preexisting log but no session data.
         if info['workerId'] in os.listdir(meta_dir):
 
