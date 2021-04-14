@@ -12,7 +12,15 @@
 			<center><h1>Thank you for completing our experiment!</h1></center>
 
 		</div>
-		<center><iframe src='https://app.cloudresearch.com/TakeLaunchedSurvey/DynamicKey' width='80%' height='400'></iframe></center>
+		<center><iframe width='80%' height='400' id="cr_secretcode"></iframe></iframe></center>
 	</div>
 </body>
+<script>
+    function createIFrame() {
+        var ref = encodeURIComponent(document.location.search);
+        var ifrm = document.getElementById("cr_secretcode");
+        ifrm.setAttribute("src", "https://app.cloudresearch.com/TakeLaunchedSurvey/DynamicKey/?referrer=" + ref);
+    }
+    createIFrame();
+</script>
 </html>
