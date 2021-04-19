@@ -38,6 +38,9 @@
     }
   };
 
+  // Define global variables.
+  var low_quality = false;
+
   // Initialize timeline.
   var timeline = [likert_page];
 
@@ -55,11 +58,17 @@
       // Display jsPsych data in viewport.
       // jsPsych.data.displayData();
 
-      // Save complete dataset to disk.
-      redirect_success("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_success}}");
+      if (low_quality) {
 
-      // Save rejected dataset to disk.
-      // redirect_reject("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}");
+        // Save rejected dataset to disk.
+        redirect_reject("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}");
+
+      } else {
+
+        // Save complete dataset to disk.
+        redirect_success("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_success}}");
+
+      }
 
     }
   })
