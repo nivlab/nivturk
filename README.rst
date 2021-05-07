@@ -20,6 +20,7 @@ The following is the minimal set of commands needed to get started with NivTurk 
     git clone https://github.com/nivlab/nivturk.git
     cd nivturk
     pip install -r requirements.txt
+    npm install jest
     gunicorn -b 0.0.0.0:9000 -w 4 app:app
 
 
