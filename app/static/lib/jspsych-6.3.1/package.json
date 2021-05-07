@@ -1,0 +1,33 @@
+{
+  "name": "jspsych",
+  "version": "6.3.0",
+  "description": "Behavioral experiments in a browser",
+  "main": "jspsych.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jspsych/jsPsych.git"
+  },
+  "author": "Josh de Leeuw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jspsych/jsPsych/issues"
+  },
+  "homepage": "https://github.com/jspsych/jsPsych#readme",
+  "devDependencies": {
+    "jest": "^26.6"
+  },
+  "jest": {
+    "resetModules": true,
+    "testEnvironmentOptions": {
+      "fetchExternalResources": true,
+      "pretendToBeVisual": true
+    },
+    "testURL": "http://localhost/"
+  }
+}
