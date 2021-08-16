@@ -4,12 +4,16 @@ title: Home
 nav_order: 1
 description: "Just the Docs is a responsive Jekyll theme with built-in search that is easily customizable and hosted on GitHub Pages."
 permalink: /
-last_modified_date: 2020-08-06
+last_modified_date: 2021-08-16
 ---
 
 # NivTurk
 
-This documentation has five sections. New users should start with the [getting started](/nivturk/docs/detailed-documentation/getting-started) page of the detailed documentation.
+NivTurk is a lightweight software solution for running online behavioral experiments. It is designed to be plug-and-play, requiring only a python environment and a server configured for hosting websites.
+
+## Site Layout
+
+This site has five sections. New users should start with the [getting started](/nivturk/docs/detailed-documentation/getting-started) page of the detailed documentation.
 
 [Quickstart](/nivturk/docs/quickstart): contains the minimal set of code for setting up a study using the NivTurk architecture. Intended for use by users who have already read through the documentation.
 
