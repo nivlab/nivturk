@@ -48,3 +48,5 @@ Finally, the script can be executed with the following:
 ```
 source <script_name>.sh
 ```
+
+where `<script-name>.sh` is a stand-in for file that contains the code above.
