@@ -2,7 +2,7 @@
 layout: default
 title: Multiple stages
 parent: Cookbook
-nav_order: 2
+nav_order: 7
 ---
 
 # Multiple Stages
