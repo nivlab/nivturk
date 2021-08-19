@@ -5,7 +5,7 @@ parent: Cookbook
 nav_order: 2
 ---
 
-## Monitoring subjects
+# Monitoring subjects
 
 While an experiment is live, you may want to monitor how many participants have reached each stage of an experiment (e.g. instructions, task blocks, surveys, etc.).
 

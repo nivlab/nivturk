@@ -5,7 +5,7 @@ parent: Cookbook
 nav_order: 3
 ---
 
-## Multiple restarts
+# Multiple restarts
 
 By default, NivTurk does not allow participants to restart or refresh the experiment page -- if they do so, they will be redirected to an error page and unable to access the experiment. In some situations, it may be desirable to allow participants to restart an experiment (e.g. before they reach the main experiment, if images fail to load, etc.). Allowing for restarts -- up until some point in the experiment -- requires several modifications to NivTurk's architecture.
 
@@ -58,4 +58,4 @@ if request.is_json:
         session['block'] = True
 ```
 
-These three changes would make it such that a participant would be allowed to restart the experiment up until they reached the stage of an experiment that triggers a [message passing](/nivturk/docs/cookbook/message-pass) involving the word "block" (e.g. reaching the first block of an experiment). 
+These three changes would make it such that a participant would be allowed to restart the experiment up until they reached the stage of an experiment that triggers a [message passing](/nivturk/docs/cookbook/message-pass) involving the word "block" (e.g. reaching the first block of an experiment).

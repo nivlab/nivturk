@@ -5,7 +5,7 @@ parent: Cookbook
 nav_order: 5
 ---
 
-## Longitudinal data
+# Longitudinal data
 
 By default, NivTurk assigns new anonymized subject IDs to participants when they first access an experiment. In the context of longitudinal data collection, this is obviously undesirable. It is very easy, however, to extend NivTurk to allow for consistent mapping of worker IDs to subject IDs.
 
