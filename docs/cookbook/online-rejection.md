@@ -7,7 +7,7 @@ nav_order: 4
 
 # Online rejections
 
-In the event of a low quality participant (i.e. careless or inattentive responding), you may want to end an experiment early. This is straightforward using NivTurk by incorporating two features into your experiment. (Niv lab members: please see the note at the bottom of this page.)
+In the event of a low quality participant (i.e. careless or inattentive responding), you may want to end an experiment early. This is straightforward using NivTurk by incorporating two features into your experiment. (*Niv lab experimenters*: please see the note at the bottom of this page.)
 
 First, you can make use of the [`jsPsych.endExperiment()`](https://www.jspsych.org/core_library/jspsych-core/#jspsychendexperiment) function. When called, this function will end a jsPsych experiment, skipping all remaining trials in the timeline. One way to invoke the endExperiment option is to use the [jspsych-call-function](https://www.jspsych.org/plugins/jspsych-call-function/) plugin. For example, the following trial might be added to a specific point in an experiment timeline:
 
