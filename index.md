@@ -4,12 +4,12 @@ title: Home
 nav_order: 1
 description: "Just the Docs is a responsive Jekyll theme with built-in search that is easily customizable and hosted on GitHub Pages."
 permalink: /
-last_modified_date: 2021-08-16
+last_modified_date: 2021-08-22
 ---
 
 # NivTurk
 
-NivTurk is a lightweight software solution for running online behavioral experiments. It is designed to be plug-and-play, requiring only a python environment and a server configured for hosting websites.
+NivTurk is a lightweight software solution for running online behavioral experiments. It is designed to be plug-and-play, requiring only a python environment, a jsPsych experiment, and a server configured for hosting websites.
 
 ## Site Layout
 
