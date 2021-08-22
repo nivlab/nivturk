@@ -27,17 +27,6 @@ def complete():
         return redirect(url)
 
     ## Case 2: visit complete page with previous rejection.
-    elif session['complete'] == 'success':
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited complete."
-        write_metadata(session, ['WARNING'], 'a')
-
-        ## Redirect participant with completion code.
-        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_success']
-        return redirect(url)
-
-    ## Case 3: visit complete page with previous rejection.
     elif session['complete'] == 'reject':
 
         ## Update metadata.
@@ -46,6 +35,17 @@ def complete():
 
         ## Redirect participant with decoy code.
         url = "https://app.prolific.co/submissions/complete?cc=" + session['code_reject']
+        return redirect(url)
+
+    ## Case 3: visit complete page with previous success.
+    elif session['complete'] == 2:
+
+        ## Update metadata.
+        session['WARNING'] = "Revisited complete."
+        write_metadata(session, ['WARNING'], 'a')
+
+        ## Redirect participant with completion code.
+        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_success']
         return redirect(url)
 
     ## Case 4: visit complete page with previous error.

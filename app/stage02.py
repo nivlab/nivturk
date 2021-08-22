@@ -2,10 +2,10 @@ from flask import (Blueprint, redirect, render_template, request, session, url_f
 from .io import write_data, write_metadata
 
 ## Initialize blueprint.
-bp = Blueprint('experiment', __name__)
+bp = Blueprint('stage02', __name__)
 
-@bp.route('/experiment')
-def experiment():
+@bp.route('/stage02')
+def stage02():
     """Present jsPsych experiment to participant."""
 
     ## Error-catching: screen for missing session.
@@ -15,37 +15,36 @@ def experiment():
         return redirect(url_for('error.error', errornum=1000))
 
     ## Case 1: previously completed experiment.
-    elif 'complete' in session:
+    elif session.get('complete', False) == 2:
 
         ## Update metadata.
-        session['WARNING'] = "Revisited experiment page."
+        session['WARNING'] = "Revisited stage02."
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
-    elif 'experiment' in session:
+    elif 'stage02' in session:
 
         ## Update participant metadata.
-        session['ERROR'] = "1004: Revisited experiment."
-        session['complete'] = 'error'
-        write_metadata(session, ['ERROR','complete'], 'a')
+        session['WARNING'] = "Restarted stage02."
+        write_metadata(session, ['WARNING'], 'a')
 
-        ## Redirect participant to error (previous participation).
-        return redirect(url_for('error.error', errornum=1004))
+        ## Present experiment.
+        return render_template('stage02.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
 
     ## Case 3: first visit.
     else:
 
         ## Update participant metadata.
-        session['experiment'] = True
-        write_metadata(session, ['experiment'], 'a')
+        session['stage02'] = True
+        write_metadata(session, ['stage02'], 'a')
 
         ## Present experiment.
-        return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
+        return render_template('stage02.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
 
-@bp.route('/experiment', methods=['POST'])
+@bp.route('/stage02', methods=['POST'])
 def pass_message():
     """Write jsPsych message to metadata."""
 
@@ -75,10 +74,11 @@ def redirect_success():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
+        session['task'] = 'stage02'
         write_data(session, JSON, method='pass')
 
     ## Flag experiment as complete.
-    session['complete'] = 'success'
+    session['complete'] = 2
     write_metadata(session, ['complete','code_success'], 'a')
 
     ## DEV NOTE:
@@ -99,6 +99,7 @@ def redirect_reject():
         JSON = request.get_json()
 
         ## Save jsPsch data to disk.
+        session['task'] = 'stage02'
         write_data(session, JSON, method='reject')
 
     ## Flag experiment as complete.

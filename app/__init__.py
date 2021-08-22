@@ -1,9 +1,9 @@
 import os, sys, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
-from app import consent, alert, experiment, complete, error
+from app import consent, alert, stage01, stage02, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.1'
+__version__ = 'multi-stage-1.1'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -37,7 +37,8 @@ app.secret_key = secret_key
 ## Apply blueprints to the application.
 app.register_blueprint(consent.bp)
 app.register_blueprint(alert.bp)
-app.register_blueprint(experiment.bp)
+app.register_blueprint(stage01.bp)
+app.register_blueprint(stage02.bp)
 app.register_blueprint(complete.bp)
 app.register_blueprint(error.bp)
 
@@ -80,56 +81,36 @@ def index():
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 3: repeat visit, preexisting log but no session data.
-    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
-
-        ## Consult log file.
-        with open(os.path.join(session['metadata'], info['workerId']),'r') as f:
-            logs = f.read()
-
-        ## Case 3a: previously started experiment.
-        if 'experiment' in logs:
-
-            ## Update metadata.
-            session['workerId'] = info['workerId']
-            session['ERROR'] = '1004: Suspected incognito user.'
-            session['complete'] = 'error'
-            write_metadata(session, ['ERROR','complete'], 'a')
-
-            ## Redirect participant to error (previous participation).
-            return redirect(url_for('error.error', errornum=1004))
-
-        ## Case 3b: no previous experiment starts.
-        else:
-
-            ## Update metadata.
-            for k, v in info.items(): session[k] = v
-            session['WARNING'] = "Assigned new subId."
-            write_metadata(session, ['subId','WARNING'], 'a')
-
-            ## Redirect participant to consent form.
-            return redirect(url_for('consent.consent'))
-
-    ## Case 4: repeat visit, manually changed workerId.
-    elif 'workerId' in session and session['workerId'] != info['workerId']:
+    ## Case 3: repeat visit, preexisting data for stage 02.
+    elif "%s_stage02.json" %info['subId'] in os.listdir(data_dir):
 
         ## Update metadata.
-        session['ERROR'] = '1005: workerId tampering detected.'
-        session['complete'] = 'error'
-        write_metadata(session, ['ERROR','complete'], 'a')
-
-        ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1005))
-
-    ## Case 5: repeat visit, previously completed experiment.
-    elif 'complete' in session:
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited home."
-        write_metadata(session, ['WARNING'], 'a')
+        for k, v in info.items(): session[k] = v
+        session['complete'] = 2
 
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
+
+    ## Case 4: repeat visit, previous palminteri completion.
+    elif "%s_stage01.json" %info['subId'] in os.listdir(data_dir):
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
+        session['complete'] = 1
+
+        ## Redirect participant to complete page.
+        return redirect(url_for('stage02.stage02'))
+
+    ## Case 5: repeat visit, preexisting log but no session data.
+    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
+        session['WARNING'] = "Incognito user."
+        write_metadata(session, ['subId','WARNING'], 'a')
+
+        ## Redirect participant to consent form.
+        return redirect(url_for('consent.consent'))
 
     ## Case 6: repeat visit, preexisting activity.
     elif 'workerId' in session:

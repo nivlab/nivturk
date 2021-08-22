@@ -32,7 +32,7 @@ def alert():
         write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to error (previous participation).
-        return redirect(url_for('experiment.experiment'))
+        return redirect(url_for('stage01.stage01'))
 
     ## Case 3: first visit.
     else:
@@ -49,4 +49,4 @@ def alert_post():
     """Process participant repsonse to alert page."""
 
     ## Redirect participant to experiment.
-    return redirect(url_for('experiment.experiment'))
+    return redirect(url_for('stage01.stage01'))

@@ -2,12 +2,28 @@
 function pass_message(msg) {
 
   $.ajax({
-    url: "/experiment",
+    url: "/stage01",
     method: 'POST',
     data: JSON.stringify(msg),
     contentType: "application/json; charset=utf-8",
   }).done(function(data, textStatus, jqXHR) {
     // do nothing on success
+  }).fail(function(error) {
+    console.log(error);
+  });
+
+}
+
+// Successful completion of first experiment: redirect to second experiment.
+function redirect_stage02() {
+
+  $.ajax({
+    url: "/redirect_stage02",
+    method: 'POST',
+    data: JSON.stringify(jsPsych.data.get().json()),
+    contentType: "application/json; charset=utf-8",
+  }).done(function(data, textStatus, jqXHR) {
+    window.location.replace('/stage02');
   }).fail(function(error) {
     console.log(error);
   });

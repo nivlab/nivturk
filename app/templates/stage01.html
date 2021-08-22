@@ -32,9 +32,9 @@
   // Define example survey.
   var likert_page = {
     type: 'survey-likert',
-    questions: [{prompt: "Are you seeing something right now?", labels: ["Yes", "No"]}],
+    questions: [{prompt: "Stage 01: Are you seeing something right now?", labels: ["Yes", "No"]}],
     on_start: function(data) {
-      pass_message('message to pass to nivturk');
+      pass_message('stage01: message to pass to nivturk');
     }
   };
 
@@ -66,7 +66,7 @@
       } else {
 
         // Save complete dataset to disk.
-        redirect_success("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_success}}");
+        redirect_stage02();
 
       }
 
