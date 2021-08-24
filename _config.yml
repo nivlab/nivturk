@@ -51,10 +51,10 @@ search:
 # Enable or disable heading anchors
 heading_anchors: true
 
-# Aux links for the upper right navigation
+ 
 aux_links:
-  "NivTurk on GitHub":
-    - "//github.com/nivlab/nivturk"
+  "Back to NivLab":
+    - "//nivlab.github.io/"
 
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: false
@@ -70,8 +70,8 @@ nav_sort: case_insensitive # default, equivalent to nil
 back_to_top: true
 back_to_top_text: "Back to top"
 
-footer_content: "Copyright &copy; 2019-2021 Niv Lab. Distributed by an <a href=\"https://github.com/nivlab/nivturk/tree/docs/LICENSE\">MIT license.</a>"
-
+footer_content: "Copyright &copy; 2019-2021 Niv Lab. See on <a href=\"//github.com/nivlab/nivturk">Github</a>. Distributed by an <a href=\"https://github.com/nivlab/nivturk/tree/docs/LICENSE\">MIT license.</a>"
+    
 # Footer last edited timestamp
 last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
 last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
