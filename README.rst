@@ -28,3 +28,7 @@ Documentation
 
 For details on how to serve your experiment, how the code is organized, and how data is stored, please see the
 `Documentation <https://nivlab.github.io/nivturk>`_.
+
+Acknowledgements
+^^^^^^^^^^^^^^^^
+NivTurk was developed with support from the National Center for Advancing Translational Sciences (NCATS), a component of the National Institute of Health (NIH), under award number UL1TR003017.
