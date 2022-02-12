@@ -21,22 +21,82 @@ nav_order: 3
 ### PNI virtual machines (Niv / Daw labs only)
 {: .no_toc }
 
-To serve online experiments, IT has set up for us several virtual machines (VMs). To access a VM, open a terminal and SSH in:
+In the Niv & Daw labs, we have several virtual machines (VMs) available for the purpose of running online experiments. To log onto a VM, open a terminal and SSH in:
 
 ```bash
 ssh <user-name>@<server-name>.princeton.edu
 ```
 
-For security reasons, we will not list the server names here. Please ask an administrator (e.g., Sam or Branson) for the server name directly.
-
-**Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment. This password encrypts the cookies so that they cannot be read by the user (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit){:target="_blank"}, for instance).
+For security reasons, we will not list the server names here. Please ask an administrator (e.g., Sam or Dan) for the server names. Note: you need to be on the Princeton VPN to access the VMs.
 
 ### All other users
 {: .no_toc }
 
+Log onto your server as normal.
+
+---
+
 ## Copy your experiment onto the server
 
+### From Github
+{: .no_toc }
+
+If you are hosting your code on Github, you can clone your experiment directly onto the server by running the following command <i>from the server</i>:
+
+```bash
+git clone <repo-url>.git
+```
+
+### From your local machine
+{: .no_toc }
+
+If your code is only available on your local machine, you can copy over your experiment with the following command <i>from your local machine:</i>
+
+```bash
+scp -r <path-to-local-directory> <user-name>@<server-address>:<path-to-new-directory>
+```
+
+See [here](https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/) for a detailed explanation of the command above.
+
+---
+
 ## Configuring your experiment
+
+Before launching your experiment, you need to modify the NivTurk configuration file ([`app.ini`](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini)).
+
+### Set the secret key
+
+Set a secret key in the configuration file ([Line 5](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L5)). The secret key can be a random string of alphanumeric characters (e.g. from [randomkeygen.com](https://randomkeygen.com/)). The key encrypts cookies so that they cannot be read by participants (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit){:target="_blank"}).
+
+### Turn off debug mode
+
+Turn off debug made in the configuration file ([Line 9](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L9)). This is accomplished by setting `DEBUG = false`. This prevents cookies from being reset on every new page visit (for details see [here](/nivturk/docs/basic-usage/development/#debug-mode)).
+
+### Set completion codes (Prolific only)
+
+If you are running your experiment on Prolific, set the completion code ([Line 15](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L15)). This code should be provided to you by Prolific (for details see [here](/nivturk/docs/basic-usage/prolific/#copying-study-link-to-nivturk)). You may also change the dummy code ([Line 19](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L19)) though this is not required.
+
+---
+
+## Start a detatched screen
+
+One issue with running the virtual machines remotely is that, if your local computer crashes or loses connection, the serving process may be interrupted mid-experiment. Luckily, there is a Unix utility called `screen` that allows a user to start, maintain, and reconnect to "detached" terminal sessions that will remain online even if the user disconnects.
+
+To start a "detached" session, run the following command while logged onto the virtual machine:
+
+```bash
+screen -S <session-name>
+```
+
+This will start a new terminal session. From there, follow the steps above to serve an experiment. Now you are free to close the terminal (i.e. quit the terminal application); the "detached" session will stay online even if you quit!
+
+Upon next logging onto the virtual machine, you can reconnect to the session by running:
+
+```bash
+screen -r
+```
+
+On Mac, you can end a screen session with Control + a, followed by k
 
 ## Serve your experiment using [gunicorn](https://gunicorn.org/)
 
@@ -50,7 +110,7 @@ gunicorn -b 0.0.0.0:9000 -w 4 app:app
 
 The `-b` argument specifies the host and port. Again, we are requesting an externally visible server using one of the pre-approved ports. The `-w` argument configures how many workers gunicorn will run. Four workers allows the application to handle up to four clients concurrently, which is likely able to handle a good number of clients, since not all of them are constantly requesting content. This may need to be adjusted to avoid running out of memory. Finally, `app:app` specifies which application to load.
 
-## Accessing the Experiment
+### Accessing the Experiment
 
 With the web server running, you (or a participant) should be able to reach the experiment by navigating to:
 
@@ -74,25 +134,7 @@ To note, the URL arguments `workerId` (on TurkPrime), `PROLIFIC_PID` (on Prolifi
 
 In addition, there are several additional URL arguments that specify the task ID, etc. that the webpage will receive from the recruitment website. However, if these arguments are absent NivTurk will not prevent the user from progressing.
 
-## Using `screen`
-
-One issue with running the virtual machines remotely is that, if your local computer crashes or loses connection, the serving process may be interrupted mid-experiment. Luckily, there is a Unix utility called `screen` that allows a user to start, maintain, and reconnect to "detached" terminal sessions that will remain online even if the user disconnects.
-
-To start a "detached" session, run the following command while logged onto the virtual machine:
-
-```bash
-screen -S <session-name>
-```
-
-This will start a new terminal session. From there, follow the steps above to serve an experiment. Now you are free to close the terminal (i.e. quit the terminal application); the "detached" session will stay online even if you quit!
-
-Upon next logging onto the virtual machine, you can reconnect to the session by running:
-
-```bash
-screen -r
-```
-
-On Mac, you can end a screen session with Control + a, followed by k
+## Closing your experiment
 
 ## Copying the data off the server
 
