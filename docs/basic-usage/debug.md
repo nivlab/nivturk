@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Debug mode
-parent: Detailed documentation
-nav_order: 7
+parent: Basic Usage
+nav_order: 8
 ---
 
 # Debug mode

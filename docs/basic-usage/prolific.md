@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Using Prolific
-nav_order: 5
-parent: Detailed documentation
+nav_order: 6
+parent: Basic Usage
 has_children: false
 ---
 

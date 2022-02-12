@@ -1,13 +1,25 @@
 ---
 layout: default
 title: Serving experiments
-parent: Detailed documentation
-nav_order: 4
+parent: Basic Usage
+nav_order: 3
 ---
 
 # Serving experiments
+{: .no_toc }
 
-## Accessing the Server
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+---
+
+## Log onto the server
+
+### PNI virtual machines (Niv / Daw labs only)
+{: .no_toc }
 
 To serve online experiments, IT has set up for us several virtual machines (VMs). To access a VM, open a terminal and SSH in:
 
@@ -17,57 +29,16 @@ ssh <user-name>@<server-name>.princeton.edu
 
 For security reasons, we will not list the server names here. Please ask an administrator (e.g., Sam or Branson) for the server name directly.
 
-## Installation & Environment Setup
-
-The following steps are necessary only the first time you set up a VM or user account. These steps should not need to be repeated every time you want to serve an experiment.
-
-To set up your environment, you first need to get a working python environment. First you need to point your user account towards the default Anaconda install (these should already be installed on the VMs):
-
-```bash
-export PATH=/opt/anaconda/bin:$PATH
-echo "export PATH=/opt/anaconda/bin:$PATH" >> .bashrc
-```
-
-The commands above should only need to be run once. Next you will define a new conda environment:
-
-```bash
-conda create -n nivturk python=3.7
-source activate nivturk
-```
-
-The first command will install python, and the second will activate the new environment. You should run this second command everytime you log onto the server, or you may store it in your bash_profile.
-
-Next you need to clone NivTurk onto the server:
-
-```bash
-git clone https://github.com/nivlab/nivturk.git
-```
-
-Finally, install the required packages:
-
-```bash
-cd nivturk
-pip install -r requirements.txt
-```
-
 **Do not** forget to change the password in the configuration file (`app.ini`) before running your experiment. This password encrypts the cookies so that they cannot be read by the user (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit){:target="_blank"}, for instance).
 
-## Serving via [Flask](https://flask.palletsprojects.com/en/1.1.x/){:target="_blank"} (Development)
+### All other users
+{: .no_toc }
 
-To test out the application (but **not** to serve an actual experiment, see next section) we can use Flask's default web server. **From the nivturk folder**, run the following commands on the VM:
+## Copy your experiment onto the server
 
-```bash
-export FLASK_APP=app.py
-export FLASK_ENV=development
-export FLASK_RUN_PORT=9000
-flask run --host=0.0.0.0
-```
+## Configuring your experiment
 
-The first two lines tell Flask what application and in what mode to run. The third line specifies the port number. Our VMs are configured to run on ports 9000-9010. The final line starts the web server, and the `host` argument specifies to use an [externally visible server](https://flask.palletsprojects.com/en/1.1.x/quickstart/).
-
-The example code above puts the experiment on port 9000. If you are unsure which ports are currently free for you to use, you can refer to [the relevant section](../../troubleshooting#determining-if-a-port-is-in-use) of the Troubleshooting page.
-
-## Serving via [Gunicorn](https://gunicorn.org/) (Production)
+## Serve your experiment using [gunicorn](https://gunicorn.org/)
 
 The default Flask web server is useful during development, but performs poorly for production purposes. As such, we use gunicorn as our web server for serving experiments to actual participants. Gunicorn is a pure Python application, and far more robust than Flask.
 

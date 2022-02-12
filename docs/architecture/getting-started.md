@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Detailed documentation
+parent: Code Architecture
 nav_order: 1
 ---
 
