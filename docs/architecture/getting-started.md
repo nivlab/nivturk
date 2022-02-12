@@ -7,8 +7,6 @@ nav_order: 1
 
 # Getting started
 
-{: .fs-6 .fw-300 }
-
 There are two major steps that you will need to take to serve your own custom experiment. The first is to set up the NivTurk server, and the second is to write the code that runs your experiment.
 
 The NivTurk software that is documented on this website is designed to help with the first of these two things. We have included some resources below to help get started with the second.
