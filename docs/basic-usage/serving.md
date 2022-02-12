@@ -98,6 +98,8 @@ screen -r
 
 Instead of `screen`, you may also use `tmux`. See [here](https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/) for a tutorial.
 
+---
+
 ## Serve your experiment
 
 ### Identify an open port
@@ -159,6 +161,8 @@ To note, the URL arguments `workerId` and `PROLIFIC_PID` are not strictly necess
 
 To note, there are several additional URL arguments (e.g. task ID) that the NivTurk will normally receive from the recruitment website. However, if these arguments are absent NivTurk will not prevent the user from progressing.
 
+---
+
 ## Closing your experiment
 
 When you are finished collecting data, it is important to close down your gunicorn instance in order to free up its port for other experimenters (and to minimize security risks).
@@ -205,7 +209,9 @@ kill -9 87896
 
 where 87896 is the process' PID number as identified by running the `netstat` command.
 
-## Copying the data off the server
+---
+
+## Copy data off the server
 
 When data collection is complete, the final task is to download the data off the server. You do not need to be on the server in order to do this; instead, you can do it from your local machine.
 

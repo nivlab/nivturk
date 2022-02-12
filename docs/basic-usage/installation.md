@@ -5,7 +5,7 @@ parent: Basic Usage
 nav_order: 1
 ---
 
-# Downloading & installing NivTurk
+# Download & install
 {: .no_toc }
 
 ## Table of contents
