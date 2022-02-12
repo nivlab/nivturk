@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Using Prolific
-nav_order: 6
+nav_order: 4
 parent: Basic Usage
 has_children: false
 ---
@@ -30,7 +30,7 @@ From the Prolific dashboard, either click 'New study', or duplicate a previous s
 - Uncheck the 'mobile' and 'tablet' options. NivTurk is compatible only with desktop computers.
 
 ### Study link details
-- Set the URL for your experiment to the IP address of the server using the format `http://<ip-address>:<port-number>/`. (To find the IP address of the server, see [here](../serving).) Make sure you include the forward slash, `/`, at the end, and make sure that you do not include the angle brackets.
+- Set the URL for your experiment to the IP address of the server using the format `http://<ip-address>:<port-number>/`. (To find the IP address of the server, see [here](../serving#accessing-the-experiment).) Make sure you include the forward slash, `/`, at the end, and make sure that you do not include the angle brackets.
 - Under 'How to record Prolific IDs', select the option 'I'll use URL parameters'.
 - Make sure Prolific will pass the following variables: `PROLIFIC_PID`, `STUDY_ID`, and `SESSION_ID`.
 - At the end of the three steps above, the URL in the box under 'What is the URL of your study?' should look something like: <br>{%raw%}`http://128.100.100.100:9000/?PROLIFIC_PID={{%PROLIFIC_PID%}}&STUDY_ID={{%STUDY_ID%}}&SESSION_ID={{%SESSION_ID%}}`{%endraw%}
@@ -38,7 +38,7 @@ From the Prolific dashboard, either click 'New study', or duplicate a previous s
 ### Study completion
 - Under 'How to confirm participants have completed your study', select 'I'll redirect them using a URL'.
 - Prolific will then provide a completion code (if you have duplicated the study, this code will be the same as in the study you duplicated from). The completion code is the 8-digit alphanumeric code in the link: `https://app.prolific.co/submissions/complete?cc=<code>`.
-- Copy this code and paste it into `app.ini` in the NivTurk folder (for details, see [here](nivturk/docs/basic-usage/serving/#set-completion-codes-prolific-only)).
+- Copy this code and paste it into `app.ini` in the NivTurk folder (for details, see [here](../serving#set-completion-codes-prolific-only)).
 
 ### Audience
 - Under 'How many participants are you looking to recruit?', set the number of participants you want to recruit.
@@ -52,4 +52,4 @@ From the Prolific dashboard, either click 'New study', or duplicate a previous s
 ## Launching study
 Once you have specified the completion time and payment amount, you can launch your experiment. If you need extra funds, you will be prompted to add them here.
 
-The 'Preview' option gives you the chance to see the study advertisement as participants see it. We <b>strongly recommend</b> experimenters test at least a partial version of their experiment, starting from the Preview screen, to ensure that participants are successfully redirected back to Prolific at the end of an experiment with the correct completion code. 
+The 'Preview' option gives you the chance to see the study advertisement as participants see it. We <b>strongly recommend</b> experimenters test at least a partial version of their experiment, starting from the Preview screen, to ensure that participants are successfully redirected back to Prolific at the end of an experiment with the correct completion code.

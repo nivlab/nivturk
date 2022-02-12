@@ -1,16 +1,23 @@
 ---
 layout: default
 title: Using MTurk
-nav_order: 7
+nav_order: 5
 parent: Basic Usage
 has_children: false
 ---
 
-# Using CloudResearch
+# Using MTurk
+{: .no_toc }
 
-This page provides information on getting an experiment set up on CloudResearch using NivTurk.
+## Table of contents
+{: .no_toc .text-delta }
 
-This assumes that you already have working experiment code in your `experiment.html` file, and that you have tested it locally (as well as testing its data-saving on a server).
+1. TOC
+{:toc}
+
+---
+
+This page is a step-by-step guide to setting up an experiment on MTurk using Cloudresearch and NivTurk. It assumes that you already have working experiment code that has been tested both locally and on the server.
 
 ## Initialising the CloudResearch study
 From the Dashboard, under 'Create a Study', click 'Mturk Toolkit'. This will create a new study. You should follow the steps there to fill in information about your study.
