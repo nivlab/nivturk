@@ -1,13 +1,11 @@
 ---
 layout: default
 title: Code architecture
-parent: Detailed documentation
+parent: Code Architecture
 nav_order: 2
 ---
 
 # Code Architecture
-
-{: .fs-6 .fw-300 }
 
 In this section we review the Flask code, which is the scaffolding for our web-based experiments. Specifically, we will detail how the code is organized, what each script does, and how they fit together to create the experimental workflow.
 
@@ -79,23 +77,3 @@ This script contains functions for reading/writing data and metadata files. See 
 ### _utils.py_
 
 This script contains miscellaneous functions. This script is a good place for users to write and store experiment-specific functions (e.g. computing bonus).
-
-## Prolific and TurkPrime Integration
-
-In `experiment.py`, you'll see that when we render `experiment.html` we're passing several pieces of metadata (workerId, assignmentId, etc.). These pieces of metadata are initially stored in the Flask Session object when the participant first arrives at the experiment. When we pass those variables `to experiment.html`, they are now accessible within the HTML environment. To reference them, we use curly brackets. For example, in the `pass_data` function:
-
-```html
-{% raw %}
-# for TurkPrime:
-pass_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}",  "{{a}}", "{{tp_a}}", "{{b}}", "{{tp_b}}", "{{c}}", "{{tp_c}}");
-
-# for Prolific:
-pass_data("{{workerId}}", "{{assignmentId}}", "{{hitId}}");
-{% endraw %}
-```
-
-Note the variables are enclosed in double-quotation marks to denote that, in this case, we want the variable to become a string.
-
-Note also that we collect and pass different metadata depending on whether we are using TurkPrime or Prolific. This is because of the different completion dynamics of the two recruitment pages; see the [Using Prolific](../turkprime) and [Using TurkPrime](../turkprime) pages for more information.
-
-The function `pass_data` function works such that, on successful writing of the jsPsych JSON data to disk, the function changes the URL to the appropriate completion URL for the recruitment website, with the appropriate pieces of metadata.

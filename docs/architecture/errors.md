@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Error codes
-nav_order: 7
-parent: Detailed documentation
+nav_order: 8
+parent: Code Architecture
 has_children: false
 ---
 

@@ -1,13 +1,11 @@
 ---
 layout: default
 title: Getting started
-parent: Detailed documentation
+parent: Code Architecture
 nav_order: 1
 ---
 
 # Getting started
-
-{: .fs-6 .fw-300 }
 
 There are two major steps that you will need to take to serve your own custom experiment. The first is to set up the NivTurk server, and the second is to write the code that runs your experiment.
 

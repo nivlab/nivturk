@@ -8,6 +8,4 @@ permalink: /docs/cookbook
 
 # Cookbook
 
-Some helpful resources
-
-{: .fs-6 .fw-300 }
+Examples for extending the functionality of NivTurk.
