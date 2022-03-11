@@ -209,6 +209,20 @@ kill -9 87896
 
 where 87896 is the process' PID number as identified by running the `netstat` command.
 
+_Note:_ There could be more than one process listening and so you may have to use the `kill` command multiple times. 
+
+For example, if you are trying to close port 9001, you can use the following command to list all the processes that are running on port 9001:
+
+```bash
+lsof -i:9001
+```
+
+For a more aggressive method to kill all processes listening to a particular port (e.g. port 9001), you can use the following command:
+
+```bash
+kill -9 $(lsof -t -i:9001)
+```
+
 ---
 
 ## Copy data off the server
