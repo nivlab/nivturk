@@ -68,6 +68,9 @@ Before launching your experiment, you need to modify the NivTurk configuration f
 
 Set a secret key in the configuration file ([Line 5](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L5)). The secret key can be a random string of alphanumeric characters (e.g. from [randomkeygen.com](https://randomkeygen.com/)). The key encrypts cookies so that they cannot be read by participants (though this is not foolproof; see [here](https://spring.io/blog/2014/01/20/exploiting-encrypted-cookies-for-fun-and-profit){:target="_blank"}).
 
+{: .caution }
+Reusing secret keys across NivTurk applications can result in [unexpected errors](https://github.com/nivlab/nivturk/issues/91). Be sure to use a new key for each experiment.
+
 ### Turn off debug mode
 
 Turn off debug made in the configuration file ([Line 9](https://github.com/nivlab/nivturk/blob/prolific/app/app.ini#L9)). This is accomplished by setting `DEBUG = false`. This prevents cookies from being reset on every new page visit (for details see [here](../development/#debug-mode)).
@@ -209,7 +212,7 @@ kill -9 87896
 
 where 87896 is the process' PID number as identified by running the `netstat` command.
 
-_Note:_ There could be more than one process listening and so you may have to use the `kill` command multiple times. 
+_Note:_ There could be more than one process listening and so you may have to use the `kill` command multiple times.
 
 For example, if you are trying to close port 9001, you can use the following command to list all the processes that are running on port 9001:
 
