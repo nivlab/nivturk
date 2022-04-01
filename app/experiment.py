@@ -21,7 +21,7 @@ def experiment():
         return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
-    elif 'experiment' in session:
+    elif not session['allow_restart'] and 'experiment' in session:
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."

@@ -30,6 +30,9 @@ secret_key = cfg['FLASK']['SECRET_KEY']
 if secret_key == "PLEASE_CHANGE_THIS":
     warnings.warn("WARNING: Flask password is currently default. This should be changed prior to production.")
 
+## Check restart mode; if true, participants can restart experiment.
+allow_restart = cfg['FLASK'].getboolean('ALLOW_RESTART')
+
 ## Initialize Flask application.
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -53,6 +56,7 @@ def index():
     session['data'] = data_dir
     session['metadata'] = meta_dir
     session['reject'] = reject_dir
+    session['allow_restart'] = allow_restart
 
     ## Record incoming metadata.
     info = dict(
