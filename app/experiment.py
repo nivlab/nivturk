@@ -17,10 +17,6 @@ def experiment():
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
 
-        ## Update metadata.
-        session['WARNING'] = "Revisited experiment page."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 

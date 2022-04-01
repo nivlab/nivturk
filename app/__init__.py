@@ -1,9 +1,9 @@
-import os, sys, configparser, warnings
+import os, sys, re, configparser, warnings
 from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.1'
+__version__ = '1.2'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -68,47 +68,23 @@ def index():
         code_reject  = cfg['PROLIFIC'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
-    ## Case 1: workerId absent.
+    ## Case 1: workerId absent form URL.
     if info['workerId'] is None:
 
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
 
-    ## Case 2: mobile user.
+    ## Case 2: mobile / tablet user.
     elif info['platform'] in ['android','iphone','ipad','wii']:
 
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
 
-    ## Case 3: repeat visit, preexisting log but no session data.
-    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
+    ## Case 3: previous complete.
+    elif 'complete' in session:
 
-        ## Consult log file.
-        with open(os.path.join(session['metadata'], info['workerId']),'r') as f:
-            logs = f.read()
-
-        ## Case 3a: previously started experiment.
-        if 'experiment' in logs:
-
-            ## Update metadata.
-            session['workerId'] = info['workerId']
-            session['ERROR'] = '1004: Suspected incognito user.'
-            session['complete'] = 'error'
-            write_metadata(session, ['ERROR','complete'], 'a')
-
-            ## Redirect participant to error (previous participation).
-            return redirect(url_for('error.error', errornum=1004))
-
-        ## Case 3b: no previous experiment starts.
-        else:
-
-            ## Update metadata.
-            for k, v in info.items(): session[k] = v
-            session['WARNING'] = "Assigned new subId."
-            write_metadata(session, ['subId','WARNING'], 'a')
-
-            ## Redirect participant to consent form.
-            return redirect(url_for('consent.consent'))
+        ## Redirect participant to complete page.
+        return redirect(url_for('complete.complete'))
 
     ## Case 4: repeat visit, manually changed workerId.
     elif 'workerId' in session and session['workerId'] != info['workerId']:
@@ -121,25 +97,46 @@ def index():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1005))
 
-    ## Case 5: repeat visit, previously completed experiment.
-    elif 'complete' in session:
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited home."
-        write_metadata(session, ['WARNING'], 'a')
-
-        ## Redirect participant to complete page.
-        return redirect(url_for('complete.complete'))
-
-    ## Case 6: repeat visit, preexisting activity.
+    ## Case 5: repeat visit, preexisting activity.
     elif 'workerId' in session:
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited home."
-        write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
+
+    ## Case 6: repeat visit, preexisting log but no session data.
+    elif not 'workerId' in session and info['workerId'] in os.listdir(meta_dir):
+
+        ## Parse log file.
+        with open(os.path.join(session['metadata'], info['workerId']), 'r') as f:
+            logs = f.read()
+
+        ## Extract subject ID.
+        info['subId'] = re.search('subId\t(.*)\n', logs).group(1)
+
+        ## Check for previous consent.
+        consent = re.search('consent\t(.*)\n', logs)
+        if consent and consent.group(1) == 'True': info['consent'] = True       # consent = true
+        elif consent and consent.group(1) == 'False': info['consent'] = False   # consent = false
+        elif consent: info['consent'] = consent.group(1)                        # consent = bot
+
+        ## Check for previous experiment.
+        experiment = re.search('experiment\t(.*)\n', logs)
+        if experiment: info['experiment'] = experiment.group(1)
+
+        ## Check for previous complete.
+        complete = re.search('complete\t(.*)\n', logs)
+        if complete: info['complete'] = complete.group(1)
+
+        ## Update metadata.
+        for k, v in info.items(): session[k] = v
+
+        ## Redirect participant as appropriate.
+        if 'complete' in session:
+            return redirect(url_for('complete.complete'))
+        elif 'experiment' in session:
+            return redirect(url_for('experiment.experiment'))
+        else:
+            return redirect(url_for('consent.consent'))
 
     ## Case 7: first visit, workerId present.
     else:
