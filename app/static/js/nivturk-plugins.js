@@ -28,7 +28,7 @@ function redirect_success(workerId, assignmentId, hitId, code_success) {
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 
 }
@@ -47,7 +47,7 @@ function redirect_reject(workerId, assignmentId, hitId, code_reject) {
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 }
 
@@ -65,7 +65,7 @@ function redirect_error(error) {
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 
 }
