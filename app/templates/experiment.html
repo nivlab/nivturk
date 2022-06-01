@@ -25,6 +25,7 @@
   function verify_unload(e){
     e.preventDefault();
     (e || window.event).returnValue = null;
+    incomplete_save();
     return null;
   };
   window.addEventListener("beforeunload", verify_unload);

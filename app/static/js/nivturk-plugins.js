@@ -14,6 +14,22 @@ function pass_message(msg) {
 
 }
 
+// Save an incomplete dataset.
+function incomplete_save() {
+
+  $.ajax({
+    url: "/incomplete_save",
+    method: 'POST',
+    data: JSON.stringify(jsPsych.data.get().json()),
+    contentType: "application/json; charset=utf-8",
+  }).done(function(data, textStatus, jqXHR) {
+    // do nothing
+  }).fail(function(error) {
+    // do nothing
+  });
+
+}
+
 // Successful completion of experiment: redirect with completion code.
 function redirect_success(workerId, assignmentId, hitId, code_success) {
 

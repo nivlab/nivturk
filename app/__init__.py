@@ -17,6 +17,8 @@ data_dir = os.path.join(ROOT_DIR, cfg['IO']['DATA'])
 if not os.path.isdir(data_dir): os.makedirs(data_dir)
 meta_dir = os.path.join(ROOT_DIR, cfg['IO']['METADATA'])
 if not os.path.isdir(meta_dir): os.makedirs(meta_dir)
+incomplete_dir = os.path.join(ROOT_DIR, cfg['IO']['INCOMPLETE'])
+if not os.path.isdir(incomplete_dir): os.makedirs(incomplete_dir)
 reject_dir = os.path.join(ROOT_DIR, cfg['IO']['REJECT'])
 if not os.path.isdir(reject_dir): os.makedirs(reject_dir)
 
@@ -55,6 +57,7 @@ def index():
     ## Store directories in session object.
     session['data'] = data_dir
     session['metadata'] = meta_dir
+    session['incomplete'] = incomplete_dir
     session['reject'] = reject_dir
     session['allow_restart'] = allow_restart
 

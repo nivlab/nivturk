@@ -61,6 +61,29 @@ def pass_message():
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
 
+@bp.route('/incomplete_save', methods=['POST'])
+def incomplete_save():
+    """Save incomplete jsPsych dataset to disk."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        JSON = request.get_json()
+
+        ## Save jsPsch data to disk.
+        write_data(session, JSON, method='incomplete')
+
+    ## Flag partial data saving.
+    session['MESSAGE'] = 'incomplete dataset saved'
+    write_metadata(session, ['MESSAGE'], 'a')
+
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)
+
 @bp.route('/redirect_success', methods = ['POST'])
 def redirect_success():
     """Save complete jsPsych dataset to disk."""
