@@ -5,16 +5,16 @@
 
   <!-- Load libraries -->
   <script src="../static/lib/jquery-3.3.1/jquery.min.js"></script>
-  <script src="../static/lib/jspsych-6.3.1/jspsych.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/jspsych.js"></script>
 
   <!-- Load NivTurk plug-ins -->
   <script src="../static/js/nivturk-plugins.js" type="text/javascript"></script>
 
   <!-- Load jsPsych plug-ins -->
-  <script src="../static/lib/jspsych-6.3.1/plugins/jspsych-survey-likert.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
 
   <!-- Load CSS styles -->
-  <link href="../static/lib/jspsych-6.3.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 
 </head>
 <body></body>
@@ -25,13 +25,14 @@
   function verify_unload(e){
     e.preventDefault();
     (e || window.event).returnValue = null;
+    incomplete_save();  // Saves incomplete data. 
     return null;
   };
   window.addEventListener("beforeunload", verify_unload);
 
   // Define example survey.
   var likert_page = {
-    type: 'survey-likert',
+    type: jsPsychSurveyLikert,
     questions: [{prompt: "Are you seeing something right now?", labels: ["Yes", "No"]}],
     on_start: function(data) {
       pass_message('message to pass to nivturk');
@@ -44,8 +45,8 @@
   // Initialize timeline.
   var timeline = [likert_page];
 
-  jsPsych.init({
-    timeline: timeline,
+  // Initialize jsPsych.
+  var jsPsych = initJsPsych({
     on_finish: function() {
 
       // Remove requirement to verify redirect
@@ -71,7 +72,10 @@
       }
 
     }
-  })
+  });
+
+  // Execute timeline.
+  jsPsych.run(timeline);
 
 </script>
 </html>

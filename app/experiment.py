@@ -17,15 +17,11 @@ def experiment():
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
 
-        ## Update metadata.
-        session['WARNING'] = "Revisited experiment page."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
-    elif 'experiment' in session:
+    elif not session['allow_restart'] and 'experiment' in session:
 
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."
@@ -57,6 +53,29 @@ def pass_message():
         ## Update participant metadata.
         session['MESSAGE'] = msg
         write_metadata(session, ['MESSAGE'], 'a')
+
+    ## DEV NOTE:
+    ## This function returns the HTTP response status code: 200
+    ## Code 200 signifies the POST request has succeeded.
+    ## For a full list of status codes, see:
+    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+    return ('', 200)
+
+@bp.route('/incomplete_save', methods=['POST'])
+def incomplete_save():
+    """Save incomplete jsPsych dataset to disk."""
+
+    if request.is_json:
+
+        ## Retrieve jsPsych data.
+        JSON = request.get_json()
+
+        ## Save jsPsch data to disk.
+        write_data(session, JSON, method='incomplete')
+
+    ## Flag partial data saving.
+    session['MESSAGE'] = 'incomplete dataset saved'
+    write_metadata(session, ['MESSAGE'], 'a')
 
     ## DEV NOTE:
     ## This function returns the HTTP response status code: 200

@@ -27,33 +27,24 @@ def complete():
         return redirect(url)
 
     ## Case 2: visit complete page with previous rejection.
-    elif session['complete'] == 'success':
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited complete."
-        write_metadata(session, ['WARNING'], 'a')
-
-        ## Redirect participant with completion code.
-        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_success']
-        return redirect(url)
-
-    ## Case 3: visit complete page with previous rejection.
     elif session['complete'] == 'reject':
-
-        ## Update metadata.
-        session['WARNING'] = "Revisited complete."
-        write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant with decoy code.
         url = "https://app.prolific.co/submissions/complete?cc=" + session['code_reject']
         return redirect(url)
 
+    ## Case 3: visit complete page with previous rejection.
+    elif session['complete'] == 'success':
+
+        ## Redirect participant with completion code.
+        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_success']
+        return redirect(url)
+
     ## Case 4: visit complete page with previous error.
     else:
 
-        ## Update metadata.
-        session['WARNING'] = "Revisited complete."
-        write_metadata(session, ['WARNING'], 'a')
+        ## Determine error code.
+        errornum = 1002 if not session['consent'] else 1005
 
         ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=1005))
+        return redirect(url_for('error.error', errornum=errornum))
