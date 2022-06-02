@@ -41,5 +41,7 @@ def write_data(session, json, method='pass'):
         fout = os.path.join(session['data'], '%s.json' %session['subId'])
     elif method == 'reject':
         fout = os.path.join(session['reject'], '%s.json' %session['subId'])
+    elif method == 'incomplete':
+        fout = os.path.join(session['incomplete'], '%s.json' %session['subId'])
 
     with open(fout, 'w') as f: f.write(json)
