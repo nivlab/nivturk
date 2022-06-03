@@ -23,7 +23,7 @@ Citation
 
 If you use this library in academic work, please cite the following:
 
-  | Samuel Zorowitz & Daniel Bennett. (2022). NivTurk (v1.2-prolific). Zenodo. https://doi.org/10.5281/zenodo.6609218
+  | Samuel Zorowitz & Daniel Bennett. (2022). NivTurk (v1.2-mturk). Zenodo. https://doi.org/10.5281/zenodo.6609241
 
 Acknowledgements
 ^^^^^^^^^^^^^^^^
