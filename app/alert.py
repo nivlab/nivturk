@@ -36,16 +36,6 @@ def alert():
         ## Present alert page.
         return render_template('alert.html')
 
-    ## Case 3: first visit.
-    else:
-
-        ## Update participant metadata.
-        session['alert'] = True
-        write_metadata(session, ['alert'], 'a')
-
-        ## Present alert page.
-        return render_template('alert.html')
-
 @bp.route('/alert', methods=['POST'])
 def alert_post():
     """Process participant repsonse to alert page."""
