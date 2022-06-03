@@ -14,6 +14,22 @@ function pass_message(msg) {
 
 }
 
+// Save an incomplete dataset.
+function incomplete_save() {
+
+  $.ajax({
+    url: "/incomplete_save",
+    method: 'POST',
+    data: JSON.stringify(jsPsych.data.get().json()),
+    contentType: "application/json; charset=utf-8",
+  }).done(function(data, textStatus, jqXHR) {
+    // do nothing
+  }).fail(function(error) {
+    // do nothing
+  });
+
+}
+
 // Successful completion of experiment: redirect with completion code.
 function redirect_success(workerId, assignmentId, hitId, a, tp_a, b, tp_b, c, tp_c) {
 
@@ -28,7 +44,7 @@ function redirect_success(workerId, assignmentId, hitId, a, tp_a, b, tp_b, c, tp
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 
 }
@@ -47,7 +63,7 @@ function redirect_reject(error) {
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 }
 
@@ -65,7 +81,7 @@ function redirect_error(error) {
   }).done(function(data, textStatus, jqXHR) {
     window.location.replace(url);
   }).fail(function(error) {
-    console.log(error);
+    window.location.replace(url);
   });
 
 }

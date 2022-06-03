@@ -17,10 +17,6 @@ def consent():
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
 
-        ## Update metadata.
-        session['WARNING'] = "Revisited consent page."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
@@ -33,29 +29,17 @@ def consent():
     ## Case 3: repeat visit, previous bot-detection.
     elif session['consent'] == 'BOT':
 
-        ## Update participant metadata.
-        session['WARNING'] = "Revisited consent form."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1005))
 
     ## Case 4: repeat visit, previous non-consent.
     elif session['consent'] == False:
 
-        ## Update participant metadata.
-        session['WARNING'] = "Revisited consent form."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to error (decline consent).
         return redirect(url_for('error.error', errornum=1002))
 
     ## Case 5: repeat visit, previous consent.
     else:
-
-        ## Update participant metadata.
-        session['WARNING'] = "Revisited consent form."
-        write_metadata(session, ['WARNING'], 'a')
 
         ## Redirect participant to alert page.
         return redirect(url_for('alert.alert'))
@@ -73,9 +57,8 @@ def consent_post():
 
         ## Update participant metadata.
         session['consent'] = 'BOT'
-        session['experiment'] = False    # Prevents incognito users
         session['complete'] = 'error'
-        write_metadata(session, ['consent','experiment','complete'], 'a')
+        write_metadata(session, ['consent','complete'], 'a')
 
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=1005))
@@ -94,6 +77,7 @@ def consent_post():
 
         ## Update participant metadata.
         session['consent'] = False
+        session['complete'] = 'error'
         write_metadata(session, ['consent'], 'a')
 
         ## Redirect participant to error (decline consent).

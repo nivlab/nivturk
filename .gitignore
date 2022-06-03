@@ -19,4 +19,5 @@ build/
 # project specific
 data/**
 metadata/**
+incomplete/**
 reject/**

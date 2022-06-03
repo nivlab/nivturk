@@ -17,21 +17,13 @@ def alert():
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
 
-        ## Update metadata.
-        session['WARNING'] = "Revisited alert page."
-        write_metadata(session, ['WARNING'], 'a')
-
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
     elif 'alert' in session:
 
-        ## Update participant metadata.
-        session['WARNING'] = "Revisited alert page."
-        write_metadata(session, ['WARNING'], 'a')
-
-        ## Redirect participant to error (previous participation).
+        ## Redirect participant to experiment.
         return redirect(url_for('experiment.experiment'))
 
     ## Case 3: first visit.
