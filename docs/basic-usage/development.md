@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Developing experiments
-parent: Basic Usage
+parent: Basic usage
 nav_order: 2
 ---
 

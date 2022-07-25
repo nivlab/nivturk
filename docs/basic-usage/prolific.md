@@ -2,7 +2,7 @@
 layout: default
 title: Using Prolific
 nav_order: 4
-parent: Basic Usage
+parent: Basic usage
 has_children: false
 ---
 

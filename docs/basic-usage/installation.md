@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Download & install
-parent: Basic Usage
+parent: Basic usage
 nav_order: 1
 ---
 

@@ -2,7 +2,7 @@
 layout: default
 title: Using MTurk
 nav_order: 5
-parent: Basic Usage
+parent: Basic usage
 has_children: false
 ---
 
