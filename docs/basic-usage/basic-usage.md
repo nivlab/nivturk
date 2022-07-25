@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Basic Usage
-nav_order: 3
+title: Basic usage
+nav_order: 4
 has_children: true
 permalink: /docs/basic-usage
 ---

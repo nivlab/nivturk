@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Code architecture
-parent: Code Architecture
+title: Detailed
+parent: How it works
 nav_order: 2
 ---
 

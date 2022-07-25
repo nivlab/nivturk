@@ -2,7 +2,7 @@
 layout: default
 title: Error codes
 nav_order: 8
-parent: Code Architecture
+parent: How it works
 has_children: false
 ---
 
