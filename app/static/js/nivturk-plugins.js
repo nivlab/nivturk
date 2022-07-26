@@ -31,10 +31,10 @@ function incomplete_save() {
 }
 
 // Successful completion of experiment: redirect with completion code.
-function redirect_success(workerId, assignmentId, hitId, a, tp_a, b, tp_b, c, tp_c) {
+function redirect_success(workerId, assignmentId, hitId, code_success) {
 
   // Concatenate metadata into complete URL (returned on success).
-  var url = "/complete?workerId=" + workerId + "&assignmentId=" + assignmentId + "&hitId=" + hitId + "&a=" + a + "&tp_a=" + tp_a + "&b=" + b + "&tp_b=" + tp_b + "&c=" + c + "&tp_c=" + tp_c;
+  var url = "/complete?completion_code=" + code_success;
 
   $.ajax({
     url: "/redirect_success",

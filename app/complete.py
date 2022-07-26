@@ -47,15 +47,8 @@ def complete():
         ## Redirect participant to error (unusual activity).
         return redirect(url_for('error.error', errornum=errornum))
 
-    ## Case 4: visit complete page with previous success.
-    elif session['complete'] == 'success' and not all_fields:
-
-        ## Redirect participant with complete metadata.
-        url = "/complete?workerId=%s&assignmentId=%s&hitId=%s&a=%s&tp_a=%s&b=%s&tp_b=%s&c=%s&tp_c=%s" %(session['workerId'], session['assignmentId'], session['hitId'], session['a'], session['tp_a'], session['b'], session['tp_b'], session['c'], session['tp_c'])
-        return redirect(url)
-
-    ## Case 5: all else.
+    ## Case 4: all else.
     else:
 
         ## Redirect participant with completion code.
-        return render_template('complete.html')
+        return render_template('complete.html', completion_code=session['code_success'])
