@@ -8,13 +8,6 @@ bp = Blueprint('complete', __name__)
 def complete():
     """Present completion screen to participant."""
 
-    ## Access query string.
-    query_info = request.args
-
-    ## Confirm all CloudResearch metadata present.
-    fields = ['workerId','assignmentId','hitId','a','tp_a','b','tp_b','c','tp_c']
-    all_fields = all([f in query_info for f in fields])
-
     ## Error-catching: screen for missing session.
     if not 'workerId' in session:
 
