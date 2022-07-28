@@ -29,8 +29,8 @@ Below are the sections that have contents related to NivTurk.
 - NivTurk expects several arguments to be provided from CloudResearch in the study URL (`workerId`, `assignmentId` and `hitId`). Make sure to keep the box for 'Do not add query string parameters' unselected (as default).
 
 ### How Workers are Approved
-- NivTurk uses Dynamic Completion Code. Thus, select the option 'Each worker will have a unique secret code. Your HIT can either be auto-approved or manually approved.'
-- With the Dynamic Completion Code, CloudResearch by default automatically approve workers. If you prefer to manually examine the codes, you can select 'Manual Assignment Management'. Otherwise, keep it unselected, and fill in the time to auto pay workers.
+- NivTurk is configured for use with the Fixed Completion Code option.
+- Cloudresearch will then provide a completion code. Copy this code and paste it into `app.ini` in the NivTurk folder (for details, see [here](../serving#set-completion-codes-prolific-only)).
 
 ## Useful information about CloudResearch studies
 
