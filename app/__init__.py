@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.2'
+__version__ = '1.2.1'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -67,16 +67,12 @@ def index():
         assignmentId = request.args.get('assignmentId'),    # MTurk metadata
         hitId        = request.args.get('hitId'),           # MTurk metadata
         subId        = gen_code(24),                        # NivTurk metadata
-        a            = request.args.get('a'),               # TurkPrime metadata
-        tp_a         = request.args.get('tp_a'),            # TurkPrime metadata
-        b            = request.args.get('b'),               # TurkPrime metadata
-        tp_b         = request.args.get('tp_b'),            # TurkPrime metadata
-        c            = request.args.get('c'),               # TurkPrime metadata
-        tp_c         = request.args.get('tp_c'),            # TurkPrime metadata
         address      = request.remote_addr,                 # NivTurk metadata
         browser      = request.user_agent.browser,          # User metadata
         platform     = request.user_agent.platform,         # User metadata
         version      = request.user_agent.version,          # User metadata
+        code_success = cfg['CLOUDRESEARCH'].get('CODE_SUCCESS', gen_code(8).upper()),
+        code_reject  = cfg['CLOUDRESEARCH'].get('CODE_REJECT', gen_code(8).upper()),
     )
 
     ## Case 1: workerId absent form URL.

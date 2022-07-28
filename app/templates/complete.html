@@ -4,23 +4,10 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>Decision Making Experiment - Completed</title>
-	<link rel="stylesheet" href="/static/css/tacit-css.min.css"/>
+	<link rel="stylesheet" href="../static/css/tacit-css.min.css"/>
 </head>
 <body>
-	<div id="container-not-an-ad" class="media">
-		<div class="media-body">
-			<center><h1>Thank you for completing our experiment!</h1></center>
-
-		</div>
-		<center><iframe width='80%' height='400' id="cr_secretcode"></iframe></iframe></center>
-	</div>
+	<center><h1>Thank you for completing our experiment!</h1></center>
+	<center><h3>Your completion code is <font style="color: #fa9200">{{completion_code}}</font></h3></center>
 </body>
-<script>
-    function createIFrame() {
-        var ref = encodeURIComponent(document.location.search);
-        var ifrm = document.getElementById("cr_secretcode");
-        ifrm.setAttribute("src", "https://app.cloudresearch.com/TakeLaunchedSurvey/DynamicKey/?referrer=" + ref);
-    }
-    createIFrame();
-</script>
 </html>
