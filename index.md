@@ -15,12 +15,12 @@ NivTurk is a lightweight software solution for running online behavioral experim
 
 This site has five sections. New users should start with the [getting started](/nivturk/docs/getting-started) page of the detailed documentation.
 
-[Code architecture](/nivturk/docs/architecture): describing the major organization of NivTurk, containing pages like "code architecture"
+[Getting started](/nivturk/docs/getting-started): provides an overview of NivTurk, written with new users in mind
 
-[Basic usage](/nivturk/docs/basic-usage): describing the basic usage of NivTurk, containing pages like "download & install NivTurk", "serving experiments", and "using Prolific"
+[How it works](/nivturk/docs/how-it-works): describes the organization and internal workings of NivTurk
 
-[Cookbook](/nivturk/docs/quickstart): recipes for more advanced NivTurk usage (e.g. message passing to trigger session variable updates, multi-stage experiments)
+[Basic usage](/nivturk/docs/basic-usage): explains how to use of NivTurk, covering topics like installation, serving experiments, and integration with Prolific
+
+[Cookbook](/nivturk/docs/quickstart): recipes for more advanced NivTurk usage (e.g. message passing, multi-stage experiments, longitudinal experiments)
 
 [Resources](/nivturk/docs/resources/): various helpful things for collecting data, such as our reputation info, consent forms, etc.
-
-[Troubleshooting](/nivturk/docs/troubleshooting): Some known failure modes for NivTurk and their solutions.

@@ -19,7 +19,7 @@ permalink: /docs/resources
 
 ## Best practices
 
-The Niv lab maintains a collection of articles on best practices for (online) behavioral experiments in its online [library](https://nivlab.github.io/library/#experiments--data-collection){:target="_blank"}.
+The Niv lab maintains a collection of articles on best practices for (online) behavioral experiments in its online [library](https://nivlab.github.io/library#online-data-quality){:target="_blank"}.
 
 ## jsPsych-demos
 
