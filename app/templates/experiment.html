@@ -7,9 +7,6 @@
   <script src="../static/lib/jquery-3.3.1/jquery.min.js"></script>
   <script src="../static/lib/jspsych-7.2.1/jspsych.js"></script>
 
-  <!-- Load NivTurk plug-ins -->
-  <script src="../static/js/nivturk-plugins.js" type="text/javascript"></script>
-
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
 
@@ -76,6 +73,97 @@
 
   // Execute timeline.
   jsPsych.run(timeline);
+
+</script>
+<script>
+
+  // Pass message from jsPsych to NivTurk
+  function pass_message(msg) {
+
+    $.ajax({
+      url: "/experiment",
+      method: 'POST',
+      data: JSON.stringify(msg),
+      contentType: "application/json; charset=utf-8",
+    }).done(function(data, textStatus, jqXHR) {
+      // do nothing on success
+    }).fail(function(error) {
+      console.log(error);
+    });
+
+  }
+
+  // Save an incomplete dataset.
+  function incomplete_save() {
+
+    $.ajax({
+      url: "/incomplete_save",
+      method: 'POST',
+      data: JSON.stringify(jsPsych.data.get().json()),
+      contentType: "application/json; charset=utf-8",
+    }).done(function(data, textStatus, jqXHR) {
+      // do nothing
+    }).fail(function(error) {
+      // do nothing
+    });
+
+  }
+
+  // Successful completion of experiment: redirect with completion code.
+  function redirect_success(workerId, assignmentId, hitId, code_success) {
+
+    // Concatenate metadata into complete URL (returned on success).
+    var url = "/complete?completion_code=" + code_success;
+
+    $.ajax({
+      url: "/redirect_success",
+      method: 'POST',
+      data: JSON.stringify(jsPsych.data.get().json()),
+      contentType: "application/json; charset=utf-8",
+    }).done(function(data, textStatus, jqXHR) {
+      window.location.replace(url);
+    }).fail(function(error) {
+      window.location.replace(url);
+    });
+
+  }
+
+  // Unsuccessful completion of experiment: redirect with decoy code.
+  function redirect_reject(error) {
+
+    // Concatenate metadata into complete URL (returned on reject).
+    var url = "/error/" + error;
+
+    $.ajax({
+      url: "/redirect_reject",
+      method: 'POST',
+      data: JSON.stringify(jsPsych.data.get().json()),
+      contentType: "application/json; charset=utf-8",
+    }).done(function(data, textStatus, jqXHR) {
+      window.location.replace(url);
+    }).fail(function(error) {
+      window.location.replace(url);
+    });
+  }
+
+  // Unsuccessful completion of experiment: redirect to error page.
+  function redirect_error(error) {
+
+    // error is the error number to redirect to.
+    var url = "/error/" + error;
+
+    $.ajax({
+      url: "/redirect_error",
+      method: 'POST',
+      data: JSON.stringify(jsPsych.data.get().json()),
+      contentType: "application/json; charset=utf-8",
+    }).done(function(data, textStatus, jqXHR) {
+      window.location.replace(url);
+    }).fail(function(error) {
+      window.location.replace(url);
+    });
+
+  }
 
 </script>
 </html>
