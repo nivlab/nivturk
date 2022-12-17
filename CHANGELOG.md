@@ -65,6 +65,6 @@ Authors: Sam Zorowitz ([#48](https://github.com/nivlab/nivturk/pull/48))
 
 ## v1.0.0 (2020-08-10)
 
-Authors: Sam Zorowitz, Dan Bennett ([#41](https://github.com/nivlab/nivturk/pull/41]))
+Authors: Sam Zorowitz, Dan Bennett ([#41](https://github.com/nivlab/nivturk/pull/41))
 
 - First stable version of NivTurk released.
