@@ -2,7 +2,7 @@
 
 ## v1.2.3 (2022-12-17)
 
-Authors: Sam Zorowitz ([#109](https://github.com/nivlab/nivturk/pull/109))
+Authors: Sam Zorowitz ([#112](https://github.com/nivlab/nivturk/pull/112))
 
 - Add ability to print/save consent form.
 - Update Tacit CSS for dynamic scaling on large monitors.
