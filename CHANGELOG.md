@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.2.3 (2022-12-19)
+## v1.2.4 (2022-12-19)
 
 Authors: Yongjing Ren, Sam Zorowitz ([#117](https://github.com/nivlab/nivturk/pull/117))
 
