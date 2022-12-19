@@ -5,6 +5,7 @@
 Authors: Yongjing Ren, Sam Zorowitz ([#116](https://github.com/nivlab/nivturk/pull/116))
 
 - Consent form updated to reflect latest IRB amendments.
+- Sections on eye-tracking and mood-induction added, but commented out by default.
 
 ## v1.2.2 (2022-12-15)
 
