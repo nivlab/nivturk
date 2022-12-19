@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2.4 (2022-12-19)
+
+Authors: Yongjing Ren, Sam Zorowitz ([#117](https://github.com/nivlab/nivturk/pull/117))
+
+- Consent form updated to reflect latest IRB amendments.
+- Sections on eye-tracking and mood-induction added, but commented out by default.
+
 ## v1.2.3 (2022-12-17)
 
 Authors: Sam Zorowitz ([#112](https://github.com/nivlab/nivturk/pull/112))
