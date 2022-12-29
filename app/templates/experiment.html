@@ -22,7 +22,7 @@
   function verify_unload(e){
     e.preventDefault();
     (e || window.event).returnValue = null;
-    incomplete_save();  // Saves incomplete data. 
+    incompleteSave();  // Saves incomplete data.
     return null;
   };
   window.addEventListener("beforeunload", verify_unload);
@@ -32,7 +32,7 @@
     type: jsPsychSurveyLikert,
     questions: [{prompt: "Are you seeing something right now?", labels: ["Yes", "No"]}],
     on_start: function(data) {
-      pass_message('message to pass to nivturk');
+      passMessage('message to pass to nivturk');
     }
   };
 
@@ -56,17 +56,10 @@
       // Display jsPsych data in viewport.
       // jsPsych.data.displayData();
 
-      if (low_quality) {
-
-        // Save rejected dataset to disk.
-        redirect_reject("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_reject}}");
-
-      } else {
-
-        // Save complete dataset to disk.
-        redirect_success("{{workerId}}", "{{assignmentId}}", "{{hitId}}", "{{code_success}}");
-
-      }
+      // Redirect participant & save data.
+      var tryCount = 0;
+      var retryLimit = 3;
+      redirectUser(Number(low_quality), "{{code_success}}", "{{code_reject}}", tryCount, retryLimit);
 
     }
   });
@@ -78,7 +71,7 @@
 <script>
 
   // Pass message from jsPsych to NivTurk
-  function pass_message(msg) {
+  function passMessage(msg) {
 
     $.ajax({
       url: "/experiment",
@@ -88,13 +81,13 @@
     }).done(function(data, textStatus, jqXHR) {
       // do nothing on success
     }).fail(function(error) {
-      console.log(error);
+      // do nothing on failure
     });
 
   }
 
   // Save an incomplete dataset.
-  function incomplete_save() {
+  function incompleteSave() {
 
     $.ajax({
       url: "/incomplete_save",
@@ -102,66 +95,122 @@
       data: JSON.stringify(jsPsych.data.get().json()),
       contentType: "application/json; charset=utf-8",
     }).done(function(data, textStatus, jqXHR) {
-      // do nothing
+      // do nothing on success
     }).fail(function(error) {
-      // do nothing
+      // do nothing on failure
     });
 
   }
 
-  // Successful completion of experiment: redirect with completion code.
-  function redirect_success(workerId, assignmentId, hitId, code_success) {
+  /**
+  * Redirect user on completion of experiment.
+  * @param  {int}    status        Status of participant (success = 0, reject = 1, error = all else).
+  * @param  {string} code_success  Completion code on success.
+  * @param  {string} code_reject   Completion code on reject.
+  * @param  {int}    tryCount      Current number of data saving attempts.
+  * @param  {int}    retryLimit    Maximum number of data saving attempts.
+  */
+  function redirectUser(status, code_success, code_reject, tryCount, retryLimit) {
 
-    // Concatenate metadata into complete URL (returned on success).
-    var url = "https://app.prolific.co/submissions/complete?cc=" + code_success;
+    // Define redirect URL.
+    switch (status) {
+      case 0:
+        var internal_url = "/redirect_success";
+        var external_url = "https://app.prolific.co/submissions/complete?cc=" + code_success;
+        break;
+      case 1:
+        var internal_url = "/redirect_reject";
+        var external_url = "https://app.prolific.co/submissions/complete?cc=" + code_reject;
+        break;
+      default:
+        var internal_url = "/redirect_error";
+        var external_url = "/error/" + status;
+    }
 
+    // Perform AJAX call.
     $.ajax({
-      url: "/redirect_success",
+      url: internal_url,
       method: 'POST',
       data: JSON.stringify(jsPsych.data.get().json()),
       contentType: "application/json; charset=utf-8",
     }).done(function(data, textStatus, jqXHR) {
-      window.location.replace(url);
+      window.location.replace(external_url);
     }).fail(function(error) {
-      window.location.replace(url);
+      errorHandling(status, code_success, code_reject, tryCount, retryLimit);
     });
 
   }
 
-  // Unsuccessful completion of experiment: redirect with decoy code.
-  function redirect_reject(workerId, assignmentId, hitId, code_reject) {
+  /**
+  * Handle data saving errors.
+  * @param  {int}    status        Status of participant (success = 0, reject = 1, error = all else).
+  * @param  {string} code_success  Completion code on success.
+  * @param  {string} code_reject   Completion code on reject.
+  * @param  {int}    tryCount      Current number of data saving attempts.
+  * @param  {int}    retryLimit    Maximum number of data saving attempts.
+  */
+  function errorHandling(status, code_success, code_reject, tryCount, retryLimit) {
 
-    // Concatenate metadata into complete URL (returned on reject).
-    var url = "https://app.prolific.co/submissions/complete?cc=" + code_reject;
+    // Increment counter.
+    tryCount++;
 
-    $.ajax({
-      url: "/redirect_reject",
-      method: 'POST',
-      data: JSON.stringify(jsPsych.data.get().json()),
-      contentType: "application/json; charset=utf-8",
-    }).done(function(data, textStatus, jqXHR) {
-      window.location.replace(url);
-    }).fail(function(error) {
-      window.location.replace(url);
-    });
-  }
+    // Method #1: Lost internet connection.
+    if (!navigator.onLine) {
 
-  // Unsuccessful completion of experiment: redirect to error page.
-  function redirect_error(error) {
+      // Define & display error message.
+      const msg = "<h3>No internet connection detected.</h3>" +
+                  "<p>Once you are reconnected, please press the button below.</p>" +
+                  "<button type='button' class='jspsych-btn' id='jspsych-error-button'>Continue</button>";
+      document.getElementById("jspsych-content").innerHTML = msg;
 
-    // error is the error number to redirect to.
-    var url = "/error/" + error;
+      // Add event listener.
+      document.getElementById("jspsych-error-button").addEventListener("click", function(event) {
+        redirectUser(status, code_success, code_reject, tryCount, retryLimit)
+      });
 
-    $.ajax({
-      url: "/redirect_error",
-      method: 'POST',
-      data: JSON.stringify(jsPsych.data.get().json()),
-      contentType: "application/json; charset=utf-8",
-    }).done(function(data, textStatus, jqXHR) {
-      window.location.replace(url);
-    }).fail(function(error) {
-      window.location.replace(url);
-    });
+    // Method #2: Wait and retry.
+    } else if (tryCount <= retryLimit) {
+
+      // Define & display error message.
+      const msg = "<h3>Oops, we ran into trouble while trying to save your data.</h3>" +
+                  "<p>Retrying automatically in 5 seconds (attempt " + tryCount + " of " + retryLimit + ").</p>" +
+                  "<p><small><a href='#' id='jspsych-error-link'>Click here if nothing happens.</a></small></p>";
+      document.getElementById("jspsych-content").innerHTML = msg;
+
+      // Add event listener.
+      document.getElementById("jspsych-error-link").addEventListener("click", function(event) {
+        redirectUser(status, code_success, code_reject, tryCount, retryLimit)
+      });
+
+      // Wait 5 seconds and try again.
+      setTimeout(() => {
+        redirectUser(status, code_success, code_reject, tryCount, retryLimit)
+      }, 5000000);
+
+    // Method #3: Display completion code.
+    } else {
+
+      // Define completion code.
+      switch (status) {
+        case 0:
+          var completion_code = code_success;
+          break;
+        case 1:
+          var completion_code = code_reject;
+          break;
+        default:
+          var completion_code = status;
+      }
+
+      // Define & display error message.
+      const msg = "<p>Sorry, we were unable to save your data.</p>" +
+                  "<p>Your completion code is <b>" + completion_code + "</b></p>";
+      document.getElementById("jspsych-content").innerHTML = msg;
+
+      // Attempt to pass message to NivTurk.
+      passMessage("Data saving failed after " + (tryCount-1) + " attempts." )
+
+    }
 
   }
 
