@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.5 (2023-02-28)
+
+Authors: Yongjing Ren, Sam Zorowitz ([#121](https://github.com/nivlab/nivturk/pull/121))
+
+- Consent form updated to reflect latest IRB amendments.
+- Minimum hourly wage is now $14 USD/hr (matched to New Jersey).
+- Sections on skin conductance added, but commented out by default.
+- Future use of data requires no additional consent (as opposed to no additional informed consent).
+
 ## v1.2.4 (2022-12-19)
 
 Authors: Yongjing Ren, Sam Zorowitz ([#117](https://github.com/nivlab/nivturk/pull/117))
