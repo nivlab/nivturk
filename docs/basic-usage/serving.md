@@ -142,7 +142,17 @@ The `-b` argument specifies the host and port (e.g. port 9000). The `-w` argumen
 
 ### Accessing the experiment
 
-With the web server running, you (or a participant) should be able to reach the experiment by navigating to:
+**For Niv lab users:** With the web server running, you (or a participant) should be able to reach the experiment by navigating to:
+
+```
+# for Prolific
+https://<server-name>-<two-digit-port-number>.princeton.edu/?PROLIFIC_PID=<xxx>
+
+# for MTurk
+https://<server-name>-<two-digit-port-number>.princeton.edu/?workerId=<xxx>
+```
+
+**For all others:** With the web server running, you (or a participant) should be able to reach the experiment by navigating to:
 
 ```
 # for Prolific
