@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.6 (2023-04-09)
+
+Authors: Sam Zorowitz ([#124](https://github.com/nivlab/nivturk/pull/124))
+
+- Remove deprecated `request.user_agent` calls.
+- Return entire `request.user_agent` string.
+- Expand list of screened devices (e.g., mobile, tablets, game consoles).
+
 ## v1.2.5 (2023-02-28)
 
 Authors: Yongjing Ren, Sam Zorowitz ([#121](https://github.com/nivlab/nivturk/pull/121))

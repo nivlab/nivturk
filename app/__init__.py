@@ -3,7 +3,7 @@ from flask import (Flask, redirect, render_template, request, session, url_for)
 from app import consent, alert, experiment, complete, error
 from .io import write_metadata
 from .utils import gen_code
-__version__ = '1.2.5'
+__version__ = '1.2.6'
 
 ## Define root directory.
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -68,9 +68,7 @@ def index():
         hitId        = request.args.get('hitId'),           # MTurk metadata
         subId        = gen_code(24),                        # NivTurk metadata
         address      = request.remote_addr,                 # NivTurk metadata
-        browser      = request.user_agent.browser,          # User metadata
-        platform     = request.user_agent.platform,         # User metadata
-        version      = request.user_agent.version,          # User metadata
+        user_agent   = request.user_agent.string,           # User metadata
         code_success = cfg['CLOUDRESEARCH'].get('CODE_SUCCESS', gen_code(8).upper()),
         code_reject  = cfg['CLOUDRESEARCH'].get('CODE_REJECT', gen_code(8).upper()),
     )
@@ -81,8 +79,8 @@ def index():
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
 
-    ## Case 2: mobile / tablet user.
-    elif info['platform'] in ['android','iphone','ipad','wii']:
+    ## Case 2: mobile / tablet / game console user.
+    elif any([device in info['user_agent'].lower() for device in ['mobile','android','iphone','ipad','kindle','nintendo','playstation','xbox']]):
 
         ## Redirect participant to error (platform error).
         return redirect(url_for('error.error', errornum=1001))
@@ -150,7 +148,7 @@ def index():
 
         ## Update metadata.
         for k, v in info.items(): session[k] = v
-        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','browser','platform','version'], 'w')
+        write_metadata(session, ['workerId','hitId','assignmentId','subId','address','user_agent'], 'w')
 
         ## Redirect participant to consent form.
         return redirect(url_for('consent.consent'))
