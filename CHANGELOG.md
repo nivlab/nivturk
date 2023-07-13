@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2.7 (2023-07-12)
+
+Authors: Sam Zorowitz ([#127](https://github.com/nivlab/nivturk/pull/127))
+
+- Remove static jQuery file.
+- Source jQuery from unpkg.
+
 ## v1.2.6 (2023-04-09)
 
 Authors: Sam Zorowitz ([#124](https://github.com/nivlab/nivturk/pull/124))
