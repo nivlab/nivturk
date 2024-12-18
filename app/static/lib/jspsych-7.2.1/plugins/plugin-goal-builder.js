@@ -134,6 +134,35 @@ var jsPsychBuilder = (function (jspsych) {
                 event.preventDefault();
             });
 
+            // Add dragstart event for shapes in slots
+            slot.addEventListener("dragstart", (event) => {
+                if (event.target.classList.contains('shape')) {
+                    // Mark this shape for removal
+                    event.target.dataset.remove = 'true';
+                    
+                    // Allow dragging out
+                    event.dataTransfer.setData("text", "removing");
+                }
+            });
+
+            // Add dragend event to handle removal
+            slot.addEventListener("dragend", (event) => {
+                if (event.target.classList.contains('shape') && event.target.dataset.remove === 'true') {
+                    // Get the slot index
+                    const slotIndex = parseInt(event.target.parentElement.dataset.slot) - 1;
+                    
+                    // Remove the shape
+                    event.target.remove();
+                    
+                    // Update the goal array
+                    goal[slotIndex] = null;
+                    
+                    // Update submit button state
+                    const filled = goal.every((g) => g !== null);
+                    document.getElementById("submit-btn").disabled = !filled;
+                }
+            });
+
             slot.addEventListener("drop", (event) => {
                 event.preventDefault();
                 const shapeId = event.dataTransfer.getData("shape-id");
@@ -147,6 +176,7 @@ var jsPsychBuilder = (function (jspsych) {
                     clone.dataset.shape = shapeData.shape;
                     clone.dataset.texture = shapeData.texture;
                     clone.dataset.shade = shapeData.shade;
+                    clone.draggable = true;  // Make the clone draggable
                     
                     slot.appendChild(clone);
                     const slotIndex = parseInt(slot.dataset.slot) - 1;
@@ -157,6 +187,16 @@ var jsPsychBuilder = (function (jspsych) {
                 const filled = goal.every((g) => g !== null);
                 document.getElementById("submit-btn").disabled = !filled;
             });
+        });
+
+        // Add this to handle shapes being dragged out
+        document.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+
+        document.addEventListener("drop", (event) => {
+            event.preventDefault();
+            // If we're dropping outside of a slot, the shape will be removed by the dragend event
         });
 
         // Submit Button
