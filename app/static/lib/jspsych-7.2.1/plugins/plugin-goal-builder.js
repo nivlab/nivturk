@@ -63,10 +63,11 @@ var jsPsychBuilder = (function (jspsych) {
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid black;
             cursor: grab;
             user-select: none;
             background-clip: padding-box;
+            border: none;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
             }
             .shape.circle { border-radius: 50%; }
             .shape.square { }
@@ -145,64 +146,87 @@ var jsPsychBuilder = (function (jspsych) {
                     shade: event.target.dataset.shade
                 }));
 
-                // Create custom drag image for triangles
-                if (event.target.classList.contains('triangle')) {
-                    // Create a canvas
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 80;
-                    canvas.height = 80;
-                    
-                    // Hide the canvas but keep it in the document
-                    canvas.style.position = 'absolute';
-                    canvas.style.left = '-1000px';
-                    canvas.style.top = '-1000px';
-                    document.body.appendChild(canvas);
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.translate(40, 40);
+                // Create canvas drag image for all shapes
+                const canvas = document.createElement('canvas');
+                canvas.width = 80;
+                canvas.height = 80;
+                
+                // Hide the canvas but keep it in the document
+                canvas.style.position = 'absolute';
+                canvas.style.left = '-1000px';
+                canvas.style.top = '-1000px';
+                document.body.appendChild(canvas);
+                
+                const ctx = canvas.getContext('2d');
+                ctx.translate(40, 40);
+                
+                // Rotate if it's a triangle
+                if (event.target.dataset.shape === 'triangle') {
                     ctx.rotate(Math.PI / 4);
-                    
-                    // Draw the base shape
-                    ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                }
+                
+                // Draw the base shape
+                ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                
+                if (event.target.dataset.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Square or rotated square (triangle)
                     ctx.fillRect(-30, -30, 60, 60);
-                    
-                    // Apply patterns based on texture
-                    if (event.target.dataset.texture === 'striped') {
-                        ctx.save();
+                }
+                
+                // Apply patterns based on texture
+                if (event.target.dataset.texture === 'striped') {
+                    ctx.save();
+                    if (event.target.dataset.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                        ctx.clip();
+                    } else {
                         ctx.beginPath();
                         ctx.rect(-30, -30, 60, 60);
                         ctx.clip();
-                        
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-                        ctx.lineWidth = 5;
-                        
-                        for (let i = -60; i < 60; i += 10) {
-                            ctx.beginPath();
-                            ctx.moveTo(i - 30, -30);
-                            ctx.lineTo(i + 30, 30);
-                            ctx.stroke();
-                        }
-                        
-                        ctx.restore();
-                    } else if (event.target.dataset.texture === 'dotted') {
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                        for (let x = -20; x <= 20; x += 10) {
-                            for (let y = -20; y <= 20; y += 10) {
-                                ctx.beginPath();
-                                ctx.arc(x, y, 3, 0, Math.PI * 2);
-                                ctx.fill();
-                            }
-                        }
                     }
                     
-                    // Use the canvas as drag image
-                    event.dataTransfer.setDragImage(canvas, 40, 40);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.lineWidth = 5;
                     
-                    // Remove the canvas after the drag starts
-                    setTimeout(() => {
-                        document.body.removeChild(canvas);
-                    }, 0);
+                    for (let i = -60; i < 60; i += 10) {
+                        ctx.beginPath();
+                        ctx.moveTo(i - 30, -30);
+                        ctx.lineTo(i + 30, 30);
+                        ctx.stroke();
+                    }
+                    
+                    ctx.restore();
+                } else if (event.target.dataset.texture === 'dotted') {
+                    ctx.save();
+                    if (event.target.dataset.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                        ctx.clip();
+                    }
+                    
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    for (let x = -20; x <= 20; x += 10) {
+                        for (let y = -20; y <= 20; y += 10) {
+                            ctx.beginPath();
+                            ctx.arc(x, y, 3, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                    ctx.restore();
                 }
+                
+                // Use the canvas as drag image
+                event.dataTransfer.setDragImage(canvas, 40, 40);
+                
+                // Remove the canvas after the drag starts
+                setTimeout(() => {
+                    document.body.removeChild(canvas);
+                }, 0);
             });
         });
 
