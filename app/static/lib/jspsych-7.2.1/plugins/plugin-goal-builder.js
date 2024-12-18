@@ -33,9 +33,13 @@ var jsPsychBuilder = (function (jspsych) {
             ${this.generateShapesHTML()}
             </div>
             <div id="goal-slots">
-            <div class="goal-slot" data-slot="1"></div>
-            <div class="goal-slot" data-slot="2"></div>
-            <div class="goal-slot" data-slot="3"></div>
+                <div class="goal-row">
+                    <div class="goal-slot" data-slot="1"></div>
+                </div>
+                <div class="goal-row">
+                    <div class="goal-slot" data-slot="2"></div>
+                    <div class="goal-slot" data-slot="3"></div>
+                </div>
             </div>
             <button id="submit-btn" disabled>Submit</button>
         `;
@@ -117,14 +121,26 @@ var jsPsychBuilder = (function (jspsych) {
             .shape.triangle.dotted::before {
                 transform: rotate(-45deg) scale(1.414);
             }
+            #goal-slots {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;  /* Space between rows */
+            }
+            
+            .goal-row {
+                display: flex;
+                justify-content: center;
+                gap: 20px;  /* Space between slots in the same row */
+            }
+            
             .goal-slot {
-            width: 80px;
-            height: 80px;
-            border: 2px dashed gray;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
+                width: 80px;
+                height: 80px;
+                border: 2px dashed gray;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             #submit-btn {
             margin-top: 20px;
