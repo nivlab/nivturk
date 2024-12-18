@@ -211,29 +211,46 @@ var jsPsychBuilder = (function (jspsych) {
             const shapes = ["circle", "square", "triangle"];
             const textures = ["none", "striped", "dotted"];
             const shades = ["low", "medium", "high"];
-            let html = "";
-            let id = 0;
-        
+            
+            // Create array of all possible combinations
+            let allShapes = [];
             shapes.forEach((shape) => {
-              textures.forEach((texture) => {
-                shades.forEach((shade) => {
-                  html += `
-                    <div id="shape-${id}" 
-                         class="shape ${shape} ${texture}" 
-                         style="background-color: ${this.getShadeColor(shade)};" 
-                         data-shape="${shape}" 
-                         data-texture="${texture}" 
-                         data-shade="${shade}">
-                    </div>`;
-                  id++;
+                textures.forEach((texture) => {
+                    shades.forEach((shade) => {
+                        allShapes.push({
+                            shape,
+                            texture,
+                            shade,
+                            id: `shape-${allShapes.length}`
+                        });
+                    });
                 });
-              });
             });
-        
-            return html;
-          }
+            
+            // Shuffle the array
+            allShapes = this.shuffleArray(allShapes);
+            
+            // Generate HTML from shuffled array
+            return allShapes.map(({shape, texture, shade, id}) => `
+                <div id="${id}" 
+                     class="shape ${shape} ${texture}" 
+                     style="background-color: ${this.getShadeColor(shade)};" 
+                     data-shape="${shape}" 
+                     data-texture="${texture}" 
+                     data-shade="${shade}">
+                </div>`
+            ).join('');
+        }
 
-          getShadeColor(shade) {
+        shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        getShadeColor(shade) {
             switch (shade) {
               case "low": return "lightblue";
               case "medium": return "blue";
