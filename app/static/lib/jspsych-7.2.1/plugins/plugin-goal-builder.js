@@ -74,8 +74,9 @@ var jsPsychBuilder = (function (jspsych) {
                 border-radius: 50%;
             }
             .shape.triangle {
-                transform: rotate(45deg) scale(0.707);
+                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
                 margin: 8px;
+                transform: none;
             }
             .shape.striped {
                 position: relative;
@@ -171,64 +172,126 @@ var jsPsychBuilder = (function (jspsych) {
                 const ctx = canvas.getContext('2d');
                 ctx.translate(40, 40);
                 
-                // Rotate if it's a triangle
+                // Update the shape drawing code in both dragstart handlers
                 if (event.target.dataset.shape === 'triangle') {
-                    ctx.rotate(Math.PI / 4);
-                }
-                
-                // Draw the base shape
-                ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
-                
-                if (event.target.dataset.shape === 'circle') {
+                    // Draw star
                     ctx.beginPath();
-                    ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                    const spikes = 5;
+                    const outerRadius = 30;
+                    const innerRadius = 15;
+                    
+                    // Create the star path
+                    for (let i = 0; i < spikes * 2; i++) {
+                        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                        const angle = (i * Math.PI) / spikes - Math.PI / 2;
+                        if (i === 0) {
+                            ctx.moveTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                        } else {
+                            ctx.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                        }
+                    }
+                    ctx.closePath();
+                    
+                    // Fill with base color
+                    ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
                     ctx.fill();
-                } else {
-                    // Square or rotated square (triangle)
-                    ctx.fillRect(-30, -30, 60, 60);
-                }
-                
-                // Apply patterns based on texture
-                if (event.target.dataset.texture === 'striped') {
+                    
+                    // Save the star path for clipping
                     ctx.save();
-                    if (event.target.dataset.shape === 'circle') {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, 30, 0, Math.PI * 2);
-                        ctx.clip();
-                    } else {
-                        ctx.beginPath();
-                        ctx.rect(-30, -30, 60, 60);
-                        ctx.clip();
-                    }
+                    ctx.clip();
                     
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-                    ctx.lineWidth = 5;
-                    
-                    for (let i = -60; i < 60; i += 10) {
-                        ctx.beginPath();
-                        ctx.moveTo(i - 30, -30);
-                        ctx.lineTo(i + 30, 30);
-                        ctx.stroke();
-                    }
-                    
-                    ctx.restore();
-                } else if (event.target.dataset.texture === 'dotted') {
-                    ctx.save();
-                    if (event.target.dataset.shape === 'circle') {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, 30, 0, Math.PI * 2);
-                        ctx.clip();
-                    }
-                    
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                    for (let x = -20; x <= 20; x += 10) {
-                        for (let y = -20; y <= 20; y += 10) {
+                    // Apply patterns based on texture
+                    if (event.target.dataset.texture === 'striped') {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 5;
+                        
+                        for (let i = -60; i < 60; i += 10) {
                             ctx.beginPath();
-                            ctx.arc(x, y, 3, 0, Math.PI * 2);
-                            ctx.fill();
+                            ctx.moveTo(i - 30, -30);
+                            ctx.lineTo(i + 30, 30);
+                            ctx.stroke();
+                        }
+                    } else if (event.target.dataset.texture === 'dotted') {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        for (let x = -20; x <= 20; x += 10) {
+                            for (let y = -20; y <= 20; y += 10) {
+                                ctx.beginPath();
+                                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
                         }
                     }
                     ctx.restore();
+                } else if (event.target.dataset.shape === 'circle') {
+                    // Draw circle
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                    ctx.closePath();
+                    
+                    // Fill with base color
+                    ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                    ctx.fill();
+                    
+                    // Save the circle path for clipping
+                    ctx.save();
+                    ctx.clip();
+                    
+                    // Apply patterns based on texture
+                    if (event.target.dataset.texture === 'striped') {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 5;
+                        
+                        for (let i = -60; i < 60; i += 10) {
+                            ctx.beginPath();
+                            ctx.moveTo(i - 30, -30);
+                            ctx.lineTo(i + 30, 30);
+                            ctx.stroke();
+                        }
+                    } else if (event.target.dataset.texture === 'dotted') {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        for (let x = -20; x <= 20; x += 10) {
+                            for (let y = -20; y <= 20; y += 10) {
+                                ctx.beginPath();
+                                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    }
+                    ctx.restore();
+                } else {
+                    // Square drawing and patterns
+                    ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                    ctx.fillRect(-30, -30, 60, 60);
+                    
+                    // Apply patterns based on texture within the square
+                    if (event.target.dataset.texture === 'striped' || event.target.dataset.texture === 'dotted') {
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(-30, -30, 60, 60);
+                        ctx.clip();
+                        
+                        if (event.target.dataset.texture === 'striped') {
+                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                            ctx.lineWidth = 5;
+                            
+                            for (let i = -60; i < 60; i += 10) {
+                                ctx.beginPath();
+                                ctx.moveTo(i - 30, -30);
+                                ctx.lineTo(i + 30, 30);
+                                ctx.stroke();
+                            }
+                        } else if (event.target.dataset.texture === 'dotted') {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                            for (let x = -20; x <= 20; x += 10) {
+                                for (let y = -20; y <= 20; y += 10) {
+                                    ctx.beginPath();
+                                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                            }
+                        }
+                        ctx.restore();
+                    }
                 }
                 
                 // Use the canvas as drag image
@@ -257,12 +320,10 @@ var jsPsychBuilder = (function (jspsych) {
                     
                     // Create custom drag image for triangles being removed
                     if (event.target.classList.contains('triangle')) {
-                        // Create a canvas
                         const canvas = document.createElement('canvas');
                         canvas.width = 80;
                         canvas.height = 80;
                         
-                        // Hide the canvas but keep it in the document
                         canvas.style.position = 'absolute';
                         canvas.style.left = '-1000px';
                         canvas.style.top = '-1000px';
@@ -270,19 +331,35 @@ var jsPsychBuilder = (function (jspsych) {
                         
                         const ctx = canvas.getContext('2d');
                         ctx.translate(40, 40);
-                        ctx.rotate(Math.PI / 4);
                         
-                        // Draw the base shape
+                        // Draw star
+                        ctx.beginPath();
+                        const spikes = 5;
+                        const outerRadius = 30;
+                        const innerRadius = 15;
+                        
+                        // Create the star path
+                        for (let i = 0; i < spikes * 2; i++) {
+                            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                            const angle = (i * Math.PI) / spikes - Math.PI / 2;
+                            if (i === 0) {
+                                ctx.moveTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                            } else {
+                                ctx.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                            }
+                        }
+                        ctx.closePath();
+                        
+                        // Fill with base color
                         ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
-                        ctx.fillRect(-30, -30, 60, 60);
+                        ctx.fill();
+                        
+                        // Save the star path for clipping
+                        ctx.save();
+                        ctx.clip();
                         
                         // Apply patterns based on texture
                         if (event.target.dataset.texture === 'striped') {
-                            ctx.save();
-                            ctx.beginPath();
-                            ctx.rect(-30, -30, 60, 60);
-                            ctx.clip();
-                            
                             ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
                             ctx.lineWidth = 5;
                             
@@ -292,8 +369,6 @@ var jsPsychBuilder = (function (jspsych) {
                                 ctx.lineTo(i + 30, 30);
                                 ctx.stroke();
                             }
-                            
-                            ctx.restore();
                         } else if (event.target.dataset.texture === 'dotted') {
                             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                             for (let x = -20; x <= 20; x += 10) {
@@ -304,11 +379,10 @@ var jsPsychBuilder = (function (jspsych) {
                                 }
                             }
                         }
+                        ctx.restore();
                         
-                        // Use the canvas as drag image
                         event.dataTransfer.setDragImage(canvas, 40, 40);
                         
-                        // Remove the canvas after the drag starts
                         setTimeout(() => {
                             document.body.removeChild(canvas);
                         }, 0);
@@ -350,7 +424,7 @@ var jsPsychBuilder = (function (jspsych) {
 
                     // Apply triangle styles immediately if it's a triangle
                     if (shapeData.shape === 'triangle') {
-                        clone.style.transform = 'rotate(45deg) scale(0.707)';
+                        clone.style.transform = 'none';
                         clone.style.margin = '8px';
                     }
                     
@@ -411,7 +485,7 @@ var jsPsychBuilder = (function (jspsych) {
                 <div id="${id}" 
                      class="shape ${shape} ${texture}" 
                      style="color: ${this.getShadeColor(shade)}; 
-                            ${shape === 'triangle' ? 'transform: rotate(45deg) scale(0.707); margin: 8px;' : ''}" 
+                            ${shape === 'triangle' ? 'margin: 8px;' : ''}" 
                      data-shape="${shape}" 
                      data-texture="${texture}" 
                      data-shade="${shade}">
