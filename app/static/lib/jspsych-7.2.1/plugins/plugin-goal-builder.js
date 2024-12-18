@@ -67,16 +67,27 @@ var jsPsychBuilder = (function (jspsych) {
             user-select: none;
             background-clip: padding-box;
             border: none;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+            border-radius: 3px;
+            background-color: currentColor;
             }
-            .shape.circle { border-radius: 50%; }
-            .shape.square { }
+            .shape.circle { 
+                border-radius: 50%;
+            }
             .shape.triangle {
-            transform: rotate(45deg) scale(0.707);
-            margin: 8px;
-            border-radius: 0;
+                transform: rotate(45deg) scale(0.707);
+                margin: 8px;
             }
             .shape.striped {
+                position: relative;
+                overflow: hidden;
+            }
+            .shape.striped::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.8) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.8) 75%, transparent 75%, transparent);
                 background-size: 10px 10px;
             }
@@ -399,7 +410,7 @@ var jsPsychBuilder = (function (jspsych) {
             return allShapes.map(({shape, texture, shade, id}) => `
                 <div id="${id}" 
                      class="shape ${shape} ${texture}" 
-                     style="background-color: ${this.getShadeColor(shade)}; 
+                     style="color: ${this.getShadeColor(shade)}; 
                             ${shape === 'triangle' ? 'transform: rotate(45deg) scale(0.707); margin: 8px;' : ''}" 
                      data-shape="${shape}" 
                      data-texture="${texture}" 
