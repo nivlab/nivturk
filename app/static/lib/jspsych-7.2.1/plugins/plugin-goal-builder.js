@@ -66,24 +66,43 @@ var jsPsychBuilder = (function (jspsych) {
             border: 2px solid black;
             cursor: grab;
             user-select: none;
+            background-clip: padding-box;
             }
             .shape.circle { border-radius: 50%; }
             .shape.square { }
             .shape.triangle {
-            width: 0;
-            height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-bottom: 60px solid black;
-            background: none;
+            transform: rotate(45deg) scale(0.707);
+            margin: 8px;
+            border-radius: 0;
             }
             .shape.striped {
-            background-image: linear-gradient(45deg, black 25%, transparent 25%, transparent 50%, black 50%, black 75%, transparent 75%, transparent);
-            background-size: 20px 20px;
+                background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.8) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.8) 75%, transparent 75%, transparent);
+                background-size: 10px 10px;
             }
             .shape.dotted {
-            background-image: radial-gradient(black 10%, transparent 10%);
-            background-size: 10px 10px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .shape.circle.dotted::before,
+            .shape.square.dotted::before,
+            .shape.triangle.dotted::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: radial-gradient(white 30%, transparent 30%);
+                background-size: 10px 10px;
+            }
+
+            .shape.circle.dotted::before {
+                border-radius: 50%;
+            }
+            
+            .shape.triangle.dotted::before {
+                transform: rotate(-45deg) scale(1.414);
             }
             .goal-slot {
             width: 80px;
@@ -120,12 +139,70 @@ var jsPsychBuilder = (function (jspsych) {
 
             shape.addEventListener("dragstart", (event) => {
                 event.dataTransfer.setData("shape-id", event.target.id);
-                // Add shape properties to transfer data
                 event.dataTransfer.setData("shape-data", JSON.stringify({
                     shape: event.target.dataset.shape,
                     texture: event.target.dataset.texture,
                     shade: event.target.dataset.shade
                 }));
+
+                // Create custom drag image for triangles
+                if (event.target.classList.contains('triangle')) {
+                    // Create a canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 80;
+                    canvas.height = 80;
+                    
+                    // Hide the canvas but keep it in the document
+                    canvas.style.position = 'absolute';
+                    canvas.style.left = '-1000px';
+                    canvas.style.top = '-1000px';
+                    document.body.appendChild(canvas);
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.translate(40, 40);
+                    ctx.rotate(Math.PI / 4);
+                    
+                    // Draw the base shape
+                    ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                    ctx.fillRect(-30, -30, 60, 60);
+                    
+                    // Apply patterns based on texture
+                    if (event.target.dataset.texture === 'striped') {
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(-30, -30, 60, 60);
+                        ctx.clip();
+                        
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 5;
+                        
+                        for (let i = -60; i < 60; i += 10) {
+                            ctx.beginPath();
+                            ctx.moveTo(i - 30, -30);
+                            ctx.lineTo(i + 30, 30);
+                            ctx.stroke();
+                        }
+                        
+                        ctx.restore();
+                    } else if (event.target.dataset.texture === 'dotted') {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        for (let x = -20; x <= 20; x += 10) {
+                            for (let y = -20; y <= 20; y += 10) {
+                                ctx.beginPath();
+                                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    }
+                    
+                    // Use the canvas as drag image
+                    event.dataTransfer.setDragImage(canvas, 40, 40);
+                    
+                    // Remove the canvas after the drag starts
+                    setTimeout(() => {
+                        document.body.removeChild(canvas);
+                    }, 0);
+                }
             });
         });
 
@@ -142,6 +219,65 @@ var jsPsychBuilder = (function (jspsych) {
                     
                     // Allow dragging out
                     event.dataTransfer.setData("text", "removing");
+                    
+                    // Create custom drag image for triangles being removed
+                    if (event.target.classList.contains('triangle')) {
+                        // Create a canvas
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 80;
+                        canvas.height = 80;
+                        
+                        // Hide the canvas but keep it in the document
+                        canvas.style.position = 'absolute';
+                        canvas.style.left = '-1000px';
+                        canvas.style.top = '-1000px';
+                        document.body.appendChild(canvas);
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.translate(40, 40);
+                        ctx.rotate(Math.PI / 4);
+                        
+                        // Draw the base shape
+                        ctx.fillStyle = this.getShadeColor(event.target.dataset.shade);
+                        ctx.fillRect(-30, -30, 60, 60);
+                        
+                        // Apply patterns based on texture
+                        if (event.target.dataset.texture === 'striped') {
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.rect(-30, -30, 60, 60);
+                            ctx.clip();
+                            
+                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                            ctx.lineWidth = 5;
+                            
+                            for (let i = -60; i < 60; i += 10) {
+                                ctx.beginPath();
+                                ctx.moveTo(i - 30, -30);
+                                ctx.lineTo(i + 30, 30);
+                                ctx.stroke();
+                            }
+                            
+                            ctx.restore();
+                        } else if (event.target.dataset.texture === 'dotted') {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                            for (let x = -20; x <= 20; x += 10) {
+                                for (let y = -20; y <= 20; y += 10) {
+                                    ctx.beginPath();
+                                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                    ctx.fill();
+                                }
+                            }
+                        }
+                        
+                        // Use the canvas as drag image
+                        event.dataTransfer.setDragImage(canvas, 40, 40);
+                        
+                        // Remove the canvas after the drag starts
+                        setTimeout(() => {
+                            document.body.removeChild(canvas);
+                        }, 0);
+                    }
                 }
             });
 
@@ -168,7 +304,6 @@ var jsPsychBuilder = (function (jspsych) {
                 const shapeId = event.dataTransfer.getData("shape-id");
                 const shapeData = JSON.parse(event.dataTransfer.getData("shape-data"));
                 
-                // Create a clone of the shape instead of moving it
                 if (!slot.firstChild) {
                     const clone = document.createElement('div');
                     clone.className = `shape ${shapeData.shape} ${shapeData.texture}`;
@@ -176,7 +311,13 @@ var jsPsychBuilder = (function (jspsych) {
                     clone.dataset.shape = shapeData.shape;
                     clone.dataset.texture = shapeData.texture;
                     clone.dataset.shade = shapeData.shade;
-                    clone.draggable = true;  // Make the clone draggable
+                    clone.draggable = true;
+
+                    // Apply triangle styles immediately if it's a triangle
+                    if (shapeData.shape === 'triangle') {
+                        clone.style.transform = 'rotate(45deg) scale(0.707)';
+                        clone.style.margin = '8px';
+                    }
                     
                     slot.appendChild(clone);
                     const slotIndex = parseInt(slot.dataset.slot) - 1;
@@ -234,7 +375,8 @@ var jsPsychBuilder = (function (jspsych) {
             return allShapes.map(({shape, texture, shade, id}) => `
                 <div id="${id}" 
                      class="shape ${shape} ${texture}" 
-                     style="background-color: ${this.getShadeColor(shade)};" 
+                     style="background-color: ${this.getShadeColor(shade)}; 
+                            ${shape === 'triangle' ? 'transform: rotate(45deg) scale(0.707); margin: 8px;' : ''}" 
                      data-shape="${shape}" 
                      data-texture="${texture}" 
                      data-shade="${shade}">
