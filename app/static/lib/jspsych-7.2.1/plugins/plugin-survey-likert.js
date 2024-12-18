@@ -77,6 +77,7 @@ var jsPsychSurveyLikert = (function (jspsych) {
    * @author Josh de Leeuw
    * @see {@link https://www.jspsych.org/plugins/jspsych-survey-likert/ survey-likert plugin documentation on jspsych.org}
    */
+  
   class SurveyLikertPlugin {
       constructor(jsPsych) {
           this.jsPsych = jsPsych;
@@ -199,49 +200,7 @@ var jsPsychSurveyLikert = (function (jspsych) {
           });
           var startTime = performance.now();
       }
-      simulate(trial, simulation_mode, simulation_options, load_callback) {
-          if (simulation_mode == "data-only") {
-              load_callback();
-              this.simulate_data_only(trial, simulation_options);
-          }
-          if (simulation_mode == "visual") {
-              this.simulate_visual(trial, simulation_options, load_callback);
-          }
-      }
-      create_simulation_data(trial, simulation_options) {
-          const question_data = {};
-          let rt = 1000;
-          for (const q of trial.questions) {
-              const name = q.name ? q.name : `Q${trial.questions.indexOf(q)}`;
-              question_data[name] = this.jsPsych.randomization.randomInt(0, q.labels.length - 1);
-              rt += this.jsPsych.randomization.sampleExGaussian(1500, 400, 1 / 200, true);
-          }
-          const default_data = {
-              response: question_data,
-              rt: rt,
-              question_order: trial.randomize_question_order
-                  ? this.jsPsych.randomization.shuffle([...Array(trial.questions.length).keys()])
-                  : [...Array(trial.questions.length).keys()],
-          };
-          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
-          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
-          return data;
-      }
-      simulate_data_only(trial, simulation_options) {
-          const data = this.create_simulation_data(trial, simulation_options);
-          this.jsPsych.finishTrial(data);
-      }
-      simulate_visual(trial, simulation_options, load_callback) {
-          const data = this.create_simulation_data(trial, simulation_options);
-          const display_element = this.jsPsych.getDisplayElement();
-          this.trial(display_element, trial);
-          load_callback();
-          const answers = Object.entries(data.response);
-          for (let i = 0; i < answers.length; i++) {
-              this.jsPsych.pluginAPI.clickTarget(display_element.querySelector(`input[type="radio"][name="${answers[i][0]}"][value="${answers[i][1]}"]`), ((data.rt - 1000) / answers.length) * (i + 1));
-          }
-          this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#jspsych-survey-likert-next"), data.rt);
-      }
+      
   }
   SurveyLikertPlugin.info = info;
 

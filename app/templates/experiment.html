@@ -4,11 +4,12 @@
   <title>Decision Making Experiment</title>
 
   <!-- Load libraries -->
-  <script src="https://unpkg.com/jquery"></script>
+  <!-- <script src="https://unpkg.com/jquery"></script> -->
   <script src="../static/lib/jspsych-7.2.1/jspsych.js"></script>
 
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-builder.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -36,11 +37,18 @@
     }
   };
 
+  var goal_builder = {
+    type: jsPsychBuilder,
+    instrunction: "Drag and drop shapes to create your goal."
+  }
+
   // Define global variables.
   var low_quality = false;
 
   // Initialize timeline.
-  var timeline = [likert_page];
+  var timeline = [
+    goal_builder
+  ];
 
   // Initialize jsPsych.
   var jsPsych = initJsPsych({
