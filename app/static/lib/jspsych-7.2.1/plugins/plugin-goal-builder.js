@@ -13,7 +13,7 @@ var jsPsychBuilder = (function (jspsych) {
     };
 
     /**
-   * **survey-likert**
+   * **goal builder**
    *
    * jsPsych plugin for gathering responses to questions on a likert scale
    *

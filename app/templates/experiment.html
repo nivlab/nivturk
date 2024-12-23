@@ -10,6 +10,7 @@
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-builder.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-pursuit.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -42,12 +43,17 @@
     instrunction: "Drag and drop shapes to create your goal."
   }
 
+  var goal_pursuit = {
+    type: jsPsychGoalPursuit,
+    instrunction: "Drag and drop shapes to create your goal."
+  }
+
   // Define global variables.
   var low_quality = false;
 
   // Initialize timeline.
   var timeline = [
-    goal_builder
+    goal_pursuit
   ];
 
   // Initialize jsPsych.
