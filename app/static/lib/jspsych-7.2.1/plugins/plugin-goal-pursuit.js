@@ -8,6 +8,11 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 type: jspsych.ParameterType.STRING,
                 default: "Select your goal and take actions.",
                 description: "Instructions displayed above the task."
+            },
+            goalState: {
+                type: jspsych.ParameterType.OBJECT,
+                default: null,
+                description: "Goal state passed from the builder"
             }
         }
     };
@@ -184,27 +189,70 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 }
 
                 .square-obj, .circle-obj, .triangle-obj {
-                    background-repeat: repeat;
+                    background-repeat: repeat !important;
                     background-size: 20px 20px;
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .circle-obj {
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+                
+                .triangle-obj {
+                    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+                    overflow: hidden;
                 }
             `;
             document.head.appendChild(styles);
 
-            // Initialize the goal and state
+            // Initialize the goal from the passed data
             this.currentGoal = {
-                a: { id: 'fixed-obj-a', shape: 'square', color: '1', pattern: 'plain' },
-                b: { id: 'fixed-obj-b', shape: 'square', color: '1', pattern: 'plain' },
-                c: { id: 'fixed-obj-c', shape: 'square', color: '1', pattern: 'plain' }
+                a: { 
+                    id: 'fixed-obj-a', 
+                    shape: trial.goalState[0].shape, 
+                    color: trial.goalState[0].shade,
+                    pattern: trial.goalState[0].texture === 'none' ? 'plain' : trial.goalState[0].texture 
+                },
+                b: { 
+                    id: 'fixed-obj-b', 
+                    shape: trial.goalState[1].shape, 
+                    color: trial.goalState[1].shade,
+                    pattern: trial.goalState[1].texture === 'none' ? 'plain' : trial.goalState[1].texture 
+                },
+                c: { 
+                    id: 'fixed-obj-c', 
+                    shape: trial.goalState[2].shape, 
+                    color: trial.goalState[2].shade,
+                    pattern: trial.goalState[2].texture === 'none' ? 'plain' : trial.goalState[2].texture 
+                }
             };
 
             this.currentConfig = {
-                a: { id: 'demo-obj-a', shape: 'square', color: '1', pattern: 'plain' },
-                b: { id: 'demo-obj-b', shape: 'square', color: '1', pattern: 'plain' },
-                c: { id: 'demo-obj-c', shape: 'square', color: '2', pattern: 'plain' }
+                a: { 
+                    id: 'demo-obj-a', 
+                    shape: 'square', 
+                    color: '1',
+                    pattern: 'striped' 
+                },
+                b: { 
+                    id: 'demo-obj-b', 
+                    shape: 'square', 
+                    color: '1',
+                    pattern: 'plain' 
+                },
+                c: { 
+                    id: 'demo-obj-c', 
+                    shape: 'square', 
+                    color: '2',
+                    pattern: 'dotted' 
+                }
             };
 
             // Display both goal and current state
             this.createGoalShapes(Object.values(this.currentGoal));
+            console.log("Current Goal after creation:", this.currentGoal);
             this.displayShapes(this.currentConfig);
 
             // Add event listeners to shapes in current state
@@ -229,21 +277,87 @@ var jsPsychGoalPursuit = (function (jspsych) {
         makeShape(id, shape, color, pattern) {
             const shapeDiv = document.createElement('div');
             shapeDiv.id = id;
-            shapeDiv.className = `${shape}-obj`;
+            
+            // Map shape names to match the goal builder's classes
+            const shapeClass = shape === 'triangle' ? 'triangle' : 
+                              shape === 'circle' ? 'circle' : 'square';
+            
+            shapeDiv.className = `${shapeClass}-obj`;
             
             // Base styling
             shapeDiv.style.backgroundColor = this.getShadeColor(color);
             shapeDiv.style.cursor = 'pointer';
             
-            // Apply stripe pattern if needed
-            if (pattern === 'stripe') {
+            // Set base styles for all shapes
+            shapeDiv.style.width = '100px';
+            shapeDiv.style.height = '100px';
+            shapeDiv.style.position = 'relative';
+            shapeDiv.style.overflow = 'hidden';
+            shapeDiv.style.backgroundRepeat = 'repeat';
+            
+            // Apply patterns
+            if (pattern === 'striped' || pattern === 'stripe') {
                 shapeDiv.style.backgroundImage = `repeating-linear-gradient(
                     45deg,
-                    rgba(255, 255, 255, 0.8),
+                    rgba(255, 255, 255, 0.8) 0px,
                     rgba(255, 255, 255, 0.8) 10px,
                     transparent 10px,
                     transparent 20px
                 )`;
+                shapeDiv.style.backgroundSize = '28px 28px';
+            } else if (pattern === 'dotted') {
+                shapeDiv.style.backgroundImage = `radial-gradient(
+                    circle at center,
+                    rgba(255, 255, 255, 0.8) 3px,
+                    transparent 3px
+                )`;
+                shapeDiv.style.backgroundSize = '10px 10px';
+                shapeDiv.style.backgroundPosition = 'center';
+            }
+
+            // Special handling for triangles
+            if (shapeClass === 'triangle') {
+                shapeDiv.style.width = '0';
+                shapeDiv.style.height = '0';
+                shapeDiv.style.borderLeft = '50px solid transparent';
+                shapeDiv.style.borderRight = '50px solid transparent';
+                shapeDiv.style.borderBottom = `100px solid ${this.getShadeColor(color)}`;
+                if (pattern === 'striped' || pattern === 'dotted') {
+                    shapeDiv.style.background = 'none';  // Clear background for triangle
+                    shapeDiv.style.position = 'relative';
+                    
+                    // Create a pseudo-element for the pattern
+                    const pseudoStyle = document.createElement('style');
+                    pseudoStyle.textContent = `
+                        #${id}::before {
+                            content: '';
+                            position: absolute;
+                            width: 100px;
+                            height: 100px;
+                            left: -50px;
+                            top: 0;
+                            background-color: inherit;
+                            ${pattern === 'striped' ? `
+                                background-image: repeating-linear-gradient(
+                                    45deg,
+                                    rgba(255, 255, 255, 0.8) 0px,
+                                    rgba(255, 255, 255, 0.8) 10px,
+                                    transparent 10px,
+                                    transparent 20px
+                                );
+                            ` : `
+                                background-image: radial-gradient(
+                                    circle at center,
+                                    rgba(255, 255, 255, 0.8) 3px,
+                                    transparent 3px
+                                );
+                                background-size: 10px 10px;
+                            `}
+                            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+                        }
+                    `;
+                    document.head.appendChild(pseudoStyle);
+                }
             }
             
             return shapeDiv;
@@ -359,8 +473,9 @@ var jsPsychGoalPursuit = (function (jspsych) {
             let recipient_pattern = this.currentConfig[recipient]['pattern'];
 
             // decide transitions
-            let [ret_color, ret_shape, ret_pattern] = ['', '', ''];
+            let ret_color, ret_shape, ret_pattern;
 
+            // Color transition logic (unchanged)
             if (parseInt(agent_color) > parseInt(recipient_color)) {
                 ret_color = this.safeColorChange(recipient_color, '+');
             } else if (parseInt(agent_color) < parseInt(recipient_color)) {
@@ -369,24 +484,37 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 ret_color = recipient_color;
             }
 
+            // Shape transition logic (unchanged)
             ret_shape = (Math.random() < 0.8) ? agent_shape : recipient_shape;
-            ret_pattern = (recipient_pattern == 'plain') ? 'stripe' : 'plain';
 
+            // Pattern transition logic - always alternate
+            if (recipient_pattern === 'plain') {
+                ret_pattern = Math.random() < 0.5 ? 'striped' : 'dotted';
+            } else {
+                ret_pattern = 'plain';
+            }
+
+            // Update the shape
             this.getEl(this.getHolderId(r)).innerHTML = '';
             this.getEl(this.getHolderId(r)).append(this.makeShape(r, ret_shape, ret_color, ret_pattern));
             this.getEl(r).onclick = () => this.selectObj(r, this.currentGoal);
 
             // register changes
-            this.currentConfig[recipient]['color'] = ret_color;
-            this.currentConfig[recipient]['shape'] = ret_shape;
-            this.currentConfig[recipient]['pattern'] = ret_pattern;
+            this.currentConfig[recipient] = {
+                id: r,
+                shape: ret_shape,
+                color: ret_color,
+                pattern: ret_pattern
+            };
 
             // check goal fulfillment
             let goal_fulfilled = this.isGoalFulfilled(currentGoal);
             if (goal_fulfilled) {
                 console.log("Goal fulfilled!");
+                // You might want to add some visual feedback here
+                alert("Congratulations! You've achieved the goal!");
             } else {
-                console.log("Goal not yet fulfilled.");
+                console.log("Goal not yet fulfilled");
             }
 
             // clear up
@@ -396,23 +524,22 @@ var jsPsychGoalPursuit = (function (jspsych) {
         }
 
         isGoalFulfilled(currentState) {
-            console.log('Eval happening...');
-            console.log(`Current Goal: ${this.currentGoal}`);
-            return this.stateToString(this.currentGoal) == this.stateToString(this.currentConfig);
-        }
-
-        stateToString(state) {
-            return `
-                ${state['a'].color}
-                ${state['a'].shape}
-                ${state['a'].pattern}
-                ${state['b'].color}
-                ${state['b'].shape}
-                ${state['b'].pattern}
-                ${state['c'].color}
-                ${state['c'].shape}
-                ${state['c'].pattern}
-            `;
+            console.log('Checking goal fulfillment...');
+            console.log('Current Goal:', this.currentGoal);
+            console.log('Current State:', this.currentConfig);
+            
+            // Compare each property of each shape
+            for (let key of ['a', 'b', 'c']) {
+                if (this.currentGoal[key].shape !== this.currentConfig[key].shape ||
+                    this.currentGoal[key].color !== this.currentConfig[key].color ||
+                    this.currentGoal[key].pattern !== this.currentConfig[key].pattern) {
+                    console.log(`Mismatch found in shape ${key}:`);
+                    console.log(`Goal: ${JSON.stringify(this.currentGoal[key])}`);
+                    console.log(`Current: ${JSON.stringify(this.currentConfig[key])}`);
+                    return false;
+                }
+            }
+            return true;
         }
 
         randomInit() {

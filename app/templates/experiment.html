@@ -53,7 +53,19 @@
 
   // Initialize timeline.
   var timeline = [
-    goal_pursuit
+    {
+        type: jsPsychBuilder,
+        instruction: "Drag and drop shapes to create your goal."
+    },
+    {
+        type: jsPsychGoalPursuit,
+        instruction: "Try to achieve your goal by selecting shapes to interact.",
+        on_start: function(trial) {
+            const goalData = jsPsych.data.get().last(1).values()[0].goal;
+            console.log("Goal Data being passed:", goalData);
+            trial.goalState = goalData;
+        }
+    }
   ];
 
   // Initialize jsPsych.

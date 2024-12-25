@@ -467,8 +467,14 @@ var jsPsychBuilder = (function (jspsych) {
 
         // Submit Button
         document.getElementById("submit-btn").addEventListener("click", () => {
+            const goalData = goal.map(g => ({
+                shape: g.shape,
+                shade: g.shade,
+                texture: g.texture
+            }));
+            
             jsPsych.finishTrial({
-            goal
+                goal: goalData
             });
         });
         };
@@ -476,7 +482,7 @@ var jsPsychBuilder = (function (jspsych) {
         generateShapesHTML() {
             const shapes = ["circle", "square", "triangle"];
             const textures = ["none", "striped", "dotted"];
-            const shades = ["low", "medium", "high"];
+            const shades = ["1", "2", "3"];
             
             // Create array of all possible combinations
             let allShapes = [];
@@ -519,12 +525,12 @@ var jsPsychBuilder = (function (jspsych) {
 
         getShadeColor(shade) {
             switch (shade) {
-              case "low": return "lightblue";
-              case "medium": return "blue";
-              case "high": return "darkblue";
-              default: return "white";
+                case "1": return "lightblue";
+                case "2": return "blue";
+                case "3": return "darkblue";
+                default: return "white";
             }
-          }
+        }
         
     }
     
