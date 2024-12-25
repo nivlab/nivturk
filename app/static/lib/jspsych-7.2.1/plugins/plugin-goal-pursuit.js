@@ -171,13 +171,9 @@ var jsPsychGoalPursuit = (function (jspsych) {
                     margin: auto;
                 }
 
-                .triangle-obj {
-                    width: 0;
-                    height: 0;
-                    border-left: 50px solid transparent;
-                    border-right: 50px solid transparent;
-                    border-bottom: 100px solid blue;
-                    margin: auto;
+                .star-obj {
+                    background-repeat: no-repeat !important;
+                    background-position: center !important;
                 }
 
                 .goal-display, .workspace {
@@ -188,7 +184,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
                     box-sizing: border-box;
                 }
 
-                .square-obj, .circle-obj, .triangle-obj {
+                .square-obj, .circle-obj {
                     background-repeat: repeat !important;
                     background-size: 20px 20px;
                     position: relative;
@@ -200,9 +196,9 @@ var jsPsychGoalPursuit = (function (jspsych) {
                     overflow: hidden;
                 }
                 
-                .triangle-obj {
-                    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-                    overflow: hidden;
+                .star-obj {
+                    background-repeat: no-repeat !important;
+                    background-position: center !important;
                 }
             `;
             document.head.appendChild(styles);
@@ -211,19 +207,19 @@ var jsPsychGoalPursuit = (function (jspsych) {
             this.currentGoal = {
                 a: { 
                     id: 'fixed-obj-a', 
-                    shape: trial.goalState[0].shape, 
+                    shape: trial.goalState[0].shape === 'triangle' ? 'star' : trial.goalState[0].shape,  // Map triangle to star
                     color: trial.goalState[0].shade,
                     pattern: trial.goalState[0].texture === 'none' ? 'plain' : trial.goalState[0].texture 
                 },
                 b: { 
                     id: 'fixed-obj-b', 
-                    shape: trial.goalState[1].shape, 
+                    shape: trial.goalState[1].shape === 'triangle' ? 'star' : trial.goalState[1].shape,  // Map triangle to star
                     color: trial.goalState[1].shade,
                     pattern: trial.goalState[1].texture === 'none' ? 'plain' : trial.goalState[1].texture 
                 },
                 c: { 
                     id: 'fixed-obj-c', 
-                    shape: trial.goalState[2].shape, 
+                    shape: trial.goalState[2].shape === 'triangle' ? 'star' : trial.goalState[2].shape,  // Map triangle to star
                     color: trial.goalState[2].shade,
                     pattern: trial.goalState[2].texture === 'none' ? 'plain' : trial.goalState[2].texture 
                 }
@@ -232,7 +228,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
             this.currentConfig = {
                 a: { 
                     id: 'demo-obj-a', 
-                    shape: 'square', 
+                    shape: 'star',
                     color: '1',
                     pattern: 'striped' 
                 },
@@ -244,7 +240,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 },
                 c: { 
                     id: 'demo-obj-c', 
-                    shape: 'square', 
+                    shape: 'circle',
                     color: '2',
                     pattern: 'dotted' 
                 }
@@ -278,8 +274,8 @@ var jsPsychGoalPursuit = (function (jspsych) {
             const shapeDiv = document.createElement('div');
             shapeDiv.id = id;
             
-            // Map shape names to match the goal builder's classes
-            const shapeClass = shape === 'triangle' ? 'triangle' : 
+            // Map shape names - removed triangle mapping since we're using star directly
+            const shapeClass = shape === 'star' ? 'star' : 
                               shape === 'circle' ? 'circle' : 'square';
             
             shapeDiv.className = `${shapeClass}-obj`;
@@ -315,49 +311,67 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 shapeDiv.style.backgroundPosition = 'center';
             }
 
-            // Special handling for triangles
-            if (shapeClass === 'triangle') {
-                shapeDiv.style.width = '0';
-                shapeDiv.style.height = '0';
-                shapeDiv.style.borderLeft = '50px solid transparent';
-                shapeDiv.style.borderRight = '50px solid transparent';
-                shapeDiv.style.borderBottom = `100px solid ${this.getShadeColor(color)}`;
-                if (pattern === 'striped' || pattern === 'dotted') {
-                    shapeDiv.style.background = 'none';  // Clear background for triangle
-                    shapeDiv.style.position = 'relative';
-                    
-                    // Create a pseudo-element for the pattern
-                    const pseudoStyle = document.createElement('style');
-                    pseudoStyle.textContent = `
-                        #${id}::before {
-                            content: '';
-                            position: absolute;
-                            width: 100px;
-                            height: 100px;
-                            left: -50px;
-                            top: 0;
-                            background-color: inherit;
-                            ${pattern === 'striped' ? `
-                                background-image: repeating-linear-gradient(
-                                    45deg,
-                                    rgba(255, 255, 255, 0.8) 0px,
-                                    rgba(255, 255, 255, 0.8) 10px,
-                                    transparent 10px,
-                                    transparent 20px
-                                );
-                            ` : `
-                                background-image: radial-gradient(
-                                    circle at center,
-                                    rgba(255, 255, 255, 0.8) 3px,
-                                    transparent 3px
-                                );
-                                background-size: 10px 10px;
-                            `}
-                            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-                        }
-                    `;
-                    document.head.appendChild(pseudoStyle);
+            // Special handling for stars (previously triangles)
+            if (shapeClass === 'star') {
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
+                
+                // Draw star
+                ctx.translate(50, 50);
+                ctx.beginPath();
+                
+                const spikes = 5;
+                const outerRadius = 40;
+                const innerRadius = 20;
+                
+                for (let i = 0; i < spikes * 2; i++) {
+                    const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                    const angle = (i * Math.PI) / spikes - Math.PI / 2;
+                    if (i === 0) {
+                        ctx.moveTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                    } else {
+                        ctx.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+                    }
                 }
+                ctx.closePath();
+                
+                // Fill with base color
+                ctx.fillStyle = this.getShadeColor(color);
+                ctx.fill();
+                
+                // Apply pattern if needed
+                if (pattern === 'striped' || pattern === 'dotted') {
+                    ctx.save();
+                    ctx.clip();
+                    
+                    if (pattern === 'striped') {
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.lineWidth = 5;
+                        
+                        for (let i = -60; i < 60; i += 10) {
+                            ctx.beginPath();
+                            ctx.moveTo(i - 30, -30);
+                            ctx.lineTo(i + 30, 30);
+                            ctx.stroke();
+                        }
+                    } else if (pattern === 'dotted') {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        for (let x = -20; x <= 20; x += 10) {
+                            for (let y = -20; y <= 20; y += 10) {
+                                ctx.beginPath();
+                                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    }
+                    ctx.restore();
+                }
+                
+                shapeDiv.style.backgroundImage = `url(${canvas.toDataURL()})`;
+                shapeDiv.style.backgroundSize = 'contain';
+                shapeDiv.style.backgroundColor = 'transparent';
             }
             
             return shapeDiv;
@@ -552,9 +566,10 @@ var jsPsychGoalPursuit = (function (jspsych) {
             config['b']['color'] = this.sampleFromList(Object.keys(colorCode));
             config['c']['color'] = this.sampleFromList(Object.keys(colorCode));
 
-            config['a']['shape'] = this.sampleFromList(['square', 'circle', 'triangle']);
-            config['b']['shape'] = this.sampleFromList(['square', 'circle', 'triangle']);
-            config['c']['shape'] = this.sampleFromList(['square', 'circle', 'triangle']);
+            // Update shape options to use 'star' instead of 'triangle'
+            config['a']['shape'] = this.sampleFromList(['square', 'circle', 'star']);
+            config['b']['shape'] = this.sampleFromList(['square', 'circle', 'star']);
+            config['c']['shape'] = this.sampleFromList(['square', 'circle', 'star']);
 
             config['a']['pattern'] = this.sampleFromList(['plain', 'stripe']);
             config['b']['pattern'] = this.sampleFromList(['plain', 'stripe']);
