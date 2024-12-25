@@ -525,8 +525,13 @@ var jsPsychGoalPursuit = (function (jspsych) {
             let goal_fulfilled = this.isGoalFulfilled(currentGoal);
             if (goal_fulfilled) {
                 console.log("Goal fulfilled!");
-                // You might want to add some visual feedback here
                 alert("Congratulations! You've achieved the goal!");
+                // End the trial with success status
+                this.jsPsych.finishTrial({
+                    success: true,
+                    final_state: this.currentConfig,
+                    goal_state: this.currentGoal
+                });
             } else {
                 console.log("Goal not yet fulfilled");
             }

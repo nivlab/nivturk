@@ -51,20 +51,43 @@
   // Define global variables.
   var low_quality = false;
 
-  // Initialize timeline.
-  var timeline = [
-    {
+  // Define the number of iterations
+  const NUM_ITERATIONS = 5;
+
+  // Create a single iteration
+  const iteration = {
+    timeline: [
+      {
         type: jsPsychBuilder,
         instruction: "Drag and drop shapes to create your goal."
-    },
-    {
+      },
+      {
         type: jsPsychGoalPursuit,
         instruction: "Try to achieve your goal by selecting shapes to interact.",
         on_start: function(trial) {
-            const goalData = jsPsych.data.get().last(1).values()[0].goal;
-            console.log("Goal Data being passed:", goalData);
-            trial.goalState = goalData;
+          const goalData = jsPsych.data.get().last(1).values()[0].goal;
+          console.log("Goal Data being passed:", goalData);
+          trial.goalState = goalData;
         }
+      }
+    ],
+    loop_function: function(data) {
+      // Get the last trial's data (goal pursuit)
+      const lastTrial = data.values().slice(-1)[0];
+      // If goal was achieved, move to next iteration
+      return false;  // Return false to end the loop and move to next iteration
+    },
+    iterations: NUM_ITERATIONS
+  };
+
+  // Initialize timeline with the iteration
+  var timeline = [
+    {
+      timeline: [iteration],
+      repetitions: NUM_ITERATIONS,
+      data: {
+        phase: 'goal_iteration'
+      }
     }
   ];
 
