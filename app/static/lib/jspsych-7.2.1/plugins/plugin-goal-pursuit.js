@@ -525,6 +525,8 @@ var jsPsychGoalPursuit = (function (jspsych) {
             let goal_fulfilled = this.isGoalFulfilled(currentGoal);
             if (goal_fulfilled) {
                 console.log("Goal fulfilled!");
+                // Clear borders before finishing trial
+                this.clearSelectionBorders();
                 alert("Congratulations! You've achieved the goal!");
                 // End the trial with success status
                 this.jsPsych.finishTrial({
@@ -532,13 +534,13 @@ var jsPsychGoalPursuit = (function (jspsych) {
                     final_state: this.currentConfig,
                     goal_state: this.currentGoal
                 });
+                return; // Exit the function after finishing trial
             } else {
                 console.log("Goal not yet fulfilled");
             }
 
             // clear up
-            this.getEl(this.getHolderId(this.currentSelect[0])).style.border = '';
-            this.getEl(this.getHolderId(this.currentSelect[1])).style.border = '';
+            this.clearSelectionBorders();
             this.currentSelect = [];
         }
 
@@ -596,6 +598,17 @@ var jsPsychGoalPursuit = (function (jspsych) {
                     }
                 }
                 return sampled;
+            }
+        }
+
+        // Add new helper method for clearing borders
+        clearSelectionBorders() {
+            // Safely clear borders by checking if elements exist
+            for (let id of this.currentSelect) {
+                const holder = this.getEl(this.getHolderId(id));
+                if (holder) {
+                    holder.style.border = '';
+                }
             }
         }
     }
