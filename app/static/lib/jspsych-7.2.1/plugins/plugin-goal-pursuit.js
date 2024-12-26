@@ -286,29 +286,29 @@ var jsPsychGoalPursuit = (function (jspsych) {
             shapeDiv.style.height = '100px';
             shapeDiv.style.position = 'relative';
             
-            // Apply patterns
+            // Apply patterns with better coverage
             if (pattern === 'striped' || pattern === 'stripe') {
                 shapeDiv.style.backgroundImage = `repeating-linear-gradient(
                     45deg,
                     rgba(255, 255, 255, 0.8) 0px,
-                    rgba(255, 255, 255, 0.8) 10px,
-                    transparent 10px,
-                    transparent 20px
+                    rgba(255, 255, 255, 0.8) 8px,
+                    transparent 8px,
+                    transparent 16px
                 )`;
-                shapeDiv.style.backgroundSize = '28px 28px';
+                shapeDiv.style.backgroundSize = '20px 20px';  // Smaller size for better coverage
+                shapeDiv.style.backgroundRepeat = 'repeat';
             } else if (pattern === 'dotted') {
-                // Updated dotted pattern to match goal builder
                 shapeDiv.style.backgroundImage = `radial-gradient(
-                    circle at center,
-                    rgba(255, 255, 255, 0.8) 3px,
-                    transparent 3px
+                    circle at 5px 5px,
+                    rgba(255, 255, 255, 0.8) 2.5px,
+                    transparent 2.5px
                 )`;
-                shapeDiv.style.backgroundSize = '10px 10px';
-                shapeDiv.style.backgroundPosition = 'center';
-                shapeDiv.style.backgroundRepeat = 'repeat';  // Ensure pattern repeats
+                shapeDiv.style.backgroundSize = '12px 12px';  // Smaller size for better coverage
+                shapeDiv.style.backgroundRepeat = 'repeat';
+                shapeDiv.style.backgroundPosition = '0 0';    // Start from corner for better coverage
             }
 
-            // Special handling for stars
+            // Special handling for stars with updated pattern coverage
             if (shapeClass === 'star') {
                 const canvas = document.createElement('canvas');
                 canvas.width = 100;
@@ -338,27 +338,28 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 ctx.fillStyle = this.getShadeColor(color);
                 ctx.fill();
                 
-                // Apply pattern if needed
+                // Apply pattern if needed with better coverage
                 if (pattern === 'striped' || pattern === 'dotted') {
                     ctx.save();
                     ctx.clip();
                     
                     if (pattern === 'striped') {
                         ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-                        ctx.lineWidth = 5;
+                        ctx.lineWidth = 4;
                         
-                        for (let i = -60; i < 60; i += 10) {
+                        for (let i = -80; i < 80; i += 8) {
                             ctx.beginPath();
-                            ctx.moveTo(i - 30, -30);
-                            ctx.lineTo(i + 30, 30);
+                            ctx.moveTo(i - 40, -40);
+                            ctx.lineTo(i + 40, 40);
                             ctx.stroke();
                         }
                     } else if (pattern === 'dotted') {
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                        for (let x = -20; x <= 20; x += 10) {
-                            for (let y = -20; y <= 20; y += 10) {
+                        // Increase dot coverage area and density
+                        for (let x = -40; x <= 40; x += 6) {  // Wider range and smaller spacing
+                            for (let y = -40; y <= 40; y += 6) {  // Wider range and smaller spacing
                                 ctx.beginPath();
-                                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                                ctx.arc(x, y, 2, 0, Math.PI * 2);  // Slightly smaller dots
                                 ctx.fill();
                             }
                         }
