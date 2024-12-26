@@ -274,13 +274,10 @@ var jsPsychGoalPursuit = (function (jspsych) {
             const shapeDiv = document.createElement('div');
             shapeDiv.id = id;
             
-            // Map shape names - removed triangle mapping since we're using star directly
             const shapeClass = shape === 'star' ? 'star' : 
                               shape === 'circle' ? 'circle' : 'square';
             
             shapeDiv.className = `${shapeClass}-obj`;
-            
-            // Base styling
             shapeDiv.style.backgroundColor = this.getShadeColor(color);
             shapeDiv.style.cursor = 'pointer';
             
@@ -288,8 +285,6 @@ var jsPsychGoalPursuit = (function (jspsych) {
             shapeDiv.style.width = '100px';
             shapeDiv.style.height = '100px';
             shapeDiv.style.position = 'relative';
-            shapeDiv.style.overflow = 'hidden';
-            shapeDiv.style.backgroundRepeat = 'repeat';
             
             // Apply patterns
             if (pattern === 'striped' || pattern === 'stripe') {
@@ -302,6 +297,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 )`;
                 shapeDiv.style.backgroundSize = '28px 28px';
             } else if (pattern === 'dotted') {
+                // Updated dotted pattern to match goal builder
                 shapeDiv.style.backgroundImage = `radial-gradient(
                     circle at center,
                     rgba(255, 255, 255, 0.8) 3px,
@@ -309,9 +305,10 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 )`;
                 shapeDiv.style.backgroundSize = '10px 10px';
                 shapeDiv.style.backgroundPosition = 'center';
+                shapeDiv.style.backgroundRepeat = 'repeat';  // Ensure pattern repeats
             }
 
-            // Special handling for stars (previously triangles)
+            // Special handling for stars
             if (shapeClass === 'star') {
                 const canvas = document.createElement('canvas');
                 canvas.width = 100;
