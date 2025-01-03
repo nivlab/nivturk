@@ -28,9 +28,27 @@ var jsPsychBuilder = (function (jspsych) {
             this.actionCount = 0;  // Track number of drag/drop actions
         }
         
+        // Move generateShapesHTMLFromMenu out of trial method
+        generateShapesHTMLFromMenu(menuLayout) {
+            return menuLayout.flat().map(({shape, texture, shade, id}) => `
+                <div id="${id}" 
+                     class="shape ${shape} ${texture}" 
+                     style="color: ${this.getShadeColor(shade)}; 
+                            ${shape === 'triangle' ? 'margin: 8px;' : ''}" 
+                     data-shape="${shape}" 
+                     data-texture="${texture}" 
+                     data-shade="${shade}">
+                </div>`
+            ).join('');
+        }
+
         trial(display_element, trial) {
             this.startTime = Date.now();
             
+            // Generate menu layout first
+            this.menuLayout = this.getMenuLayout();
+            
+            // Create the HTML using the same shuffled order
             display_element.innerHTML = `
                 <div class="jspsych-content-wrapper">
                     <div class="jspsych-content">
@@ -38,10 +56,10 @@ var jsPsychBuilder = (function (jspsych) {
                         
                         <!-- Shape selection grid -->
                         <div class="shapes-container">
-                            ${this.generateShapesHTML()}
+                            ${this.generateShapesHTMLFromMenu(this.menuLayout)}
                         </div>
 
-                        <!-- Updated goal slots structure -->
+                        <!-- Goal slots structure -->
                         <div class="goal-slots-container">
                             <div class="goal-slot-row">
                                 <div class="goal-slot" data-slot="1"></div>
@@ -56,6 +74,24 @@ var jsPsychBuilder = (function (jspsych) {
                     </div>
                 </div>
             `;
+
+            // Save initial menu data
+            const menuData = {
+                trial_type: 'goal_builder_menu',
+                trial_index: this.jsPsych.getProgress().current_trial_global,
+                goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                time_elapsed: this.jsPsych.getTotalTime(),
+                timestamp: new Date().toISOString(),
+                menu: this.menuLayout,
+                action_number: 0,
+                shape_selected: null,
+                slot_filled: null,
+                final_goal: null,
+                completion_time: 0
+            };
+            
+            console.log('Menu Layout Data:', JSON.stringify(menuData, null, 2));
+            this.jsPsych.data.write(menuData);
 
             // CSS Styling
             const styles = document.createElement("style");
@@ -600,42 +636,6 @@ var jsPsychBuilder = (function (jspsych) {
                 this.jsPsych.finishTrial(submitData);
             });
         };
-
-        generateShapesHTML() {
-            const shapes = ["circle", "square", "triangle"];
-            const textures = ["none", "striped", "dotted"];
-            const shades = ["1", "2", "3"];
-            
-            // Create array of all possible combinations
-            let allShapes = [];
-            shapes.forEach((shape) => {
-                textures.forEach((texture) => {
-                    shades.forEach((shade) => {
-                        allShapes.push({
-                            shape,
-                            texture,
-                            shade,
-                            id: `shape-${allShapes.length}`
-                        });
-                    });
-                });
-            });
-            
-            // Shuffle the array
-            allShapes = this.shuffleArray(allShapes);
-            
-            // Generate HTML from shuffled array
-            return allShapes.map(({shape, texture, shade, id}) => `
-                <div id="${id}" 
-                     class="shape ${shape} ${texture}" 
-                     style="color: ${this.getShadeColor(shade)}; 
-                            ${shape === 'triangle' ? 'margin: 8px;' : ''}" 
-                     data-shape="${shape}" 
-                     data-texture="${texture}" 
-                     data-shade="${shade}">
-                </div>`
-            ).join('');
-        }
 
         shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
