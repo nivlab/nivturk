@@ -13,6 +13,11 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 type: jspsych.ParameterType.OBJECT,
                 default: null,
                 description: "Goal state passed from the builder"
+            },
+            participant_id: {
+                type: jspsych.ParameterType.STRING,
+                default: null,
+                description: "Participant ID"
             }
         }
     };
@@ -442,7 +447,8 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 interaction_number: this.interactionCount,
                 
                 // Additional metadata
-                completion_time: Date.now() - this.startTime
+                completion_time: Date.now() - this.startTime,
+                participant_id: this.jsPsych.getProgress().participant_id
             };
             
             console.log('Abandon Data:', JSON.stringify(abandonData, null, 2));
@@ -590,7 +596,8 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 interaction_number: this.interactionCount,
                 goal_achieved: goal_fulfilled,
                 abandoned: false,
-                completion_time: Date.now() - this.startTime
+                completion_time: Date.now() - this.startTime,
+                participant_id: this.jsPsych.getProgress().participant_id
             };
 
             // Log the data being saved

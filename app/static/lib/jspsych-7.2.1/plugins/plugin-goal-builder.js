@@ -3,13 +3,18 @@ var jsPsychBuilder = (function (jspsych) {
     
     const info = {
         name: "build-goal",
-    parameters: {
-      instruction: {
-        type: jspsych.ParameterType.STRING,
-        default: "Drag and drop shapes to create your goal.",
-        description: "Instructions displayed above the task."
-      }
-    }
+        parameters: {
+            instruction: {
+                type: jspsych.ParameterType.STRING,
+                default: "Drag and drop shapes to create your goal.",
+                description: "Instructions displayed above the task."
+            },
+            participant_id: {
+                type: jspsych.ParameterType.STRING,
+                default: null,
+                description: "Participant ID"
+            }
+        }
     };
 
     /**
@@ -77,6 +82,7 @@ var jsPsychBuilder = (function (jspsych) {
 
             // Save initial menu data
             const menuData = {
+                participant_id: trial.participant_id,
                 trial_type: 'goal_builder_menu',
                 trial_index: this.jsPsych.getProgress().current_trial_global,
                 goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
@@ -495,6 +501,7 @@ var jsPsychBuilder = (function (jspsych) {
                         
                         // Save removal interaction data
                         const removalData = {
+                            participant_id: trial.participant_id,
                             trial_type: 'goal_builder_action',
                             trial_index: this.jsPsych.getProgress().current_trial_global,
                             goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
@@ -538,6 +545,7 @@ var jsPsychBuilder = (function (jspsych) {
                         
                         // Save drag and drop interaction data
                         const interactionData = {
+                            participant_id: trial.participant_id,
                             trial_type: 'goal_builder_action',
                             trial_index: this.jsPsych.getProgress().current_trial_global,
                             goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
@@ -617,6 +625,7 @@ var jsPsychBuilder = (function (jspsych) {
                 ];
                 
                 const submitData = {
+                    participant_id: trial.participant_id,
                     trial_type: 'goal_builder_submit',
                     trial_index: this.jsPsych.getProgress().current_trial_global,
                     goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),

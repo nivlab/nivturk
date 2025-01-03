@@ -59,14 +59,15 @@
     timeline: [
       {
         type: jsPsychBuilder,
-        instruction: "Drag and drop shapes to create your goal."
+        instruction: "Drag and drop shapes to create your goal.",
+        participant_id: "{{workerId}}"
       },
       {
         type: jsPsychGoalPursuit,
         instruction: "Try to achieve your goal by selecting shapes to interact.",
+        participant_id: "{{workerId}}",
         on_start: function(trial) {
           const goalData = jsPsych.data.get().last(1).values()[0].goal;
-          console.log("Goal Data being passed:", goalData);
           trial.goalState = goalData;
         }
       }
