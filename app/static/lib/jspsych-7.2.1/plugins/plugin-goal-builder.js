@@ -515,8 +515,9 @@ var jsPsychBuilder = (function (jspsych) {
                                 texture: event.target.dataset.texture,
                                 shade: event.target.dataset.shade
                             },
+                            menu_position: { row: null, column: null },
                             slot_filled: parseInt(event.target.parentElement.dataset.slot),
-                            shape_removed: true,  // Add removal flag
+                            shape_removed: true,
                             final_goal: null,
                             completion_time: Date.now() - this.startTime
                         };
@@ -541,6 +542,18 @@ var jsPsychBuilder = (function (jspsych) {
                     if (!slot.firstChild) {
                         const shapeId = event.dataTransfer.getData("shape-id");
                         const shapeData = JSON.parse(event.dataTransfer.getData("shape-data"));
+                        
+                        // Find the position in the menu array
+                        let menuPosition = { row: null, column: null };
+                        this.menuLayout.forEach((row, rowIndex) => {
+                            row.forEach((item, colIndex) => {
+                                if (item.id === shapeId) {
+                                    menuPosition.row = rowIndex;
+                                    menuPosition.column = colIndex;
+                                }
+                            });
+                        });
+                        
                         this.actionCount++;
                         
                         // Save drag and drop interaction data
@@ -559,8 +572,9 @@ var jsPsychBuilder = (function (jspsych) {
                                 texture: shapeData.texture,
                                 shade: shapeData.shade
                             },
+                            menu_position: menuPosition,
                             slot_filled: parseInt(slot.dataset.slot),
-                            shape_removed: false,  // Add removal flag
+                            shape_removed: false,
                             final_goal: null,
                             completion_time: Date.now() - this.startTime
                         };
@@ -636,9 +650,10 @@ var jsPsychBuilder = (function (jspsych) {
                     shape_selected: null,
                     slot_filled: null,
                     shape_removed: false,
-                    final_goal: goalData,  // Use the properly structured goal data
+                    final_goal: goalData,
+                    menu_position: { row: null, column: null },
                     completion_time: Date.now() - this.startTime,
-                    goal: goalData  // Add this to ensure it's passed to the next trial
+                    goal: goalData
                 };
                 
                 console.log('Submit Data:', JSON.stringify(submitData, null, 2));
