@@ -23,9 +23,14 @@ var jsPsychBuilder = (function (jspsych) {
     class BuilderPlugin {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
+            this.startTime = null;
+            this.menuLayout = [];  // Store the 3x9 menu layout
+            this.actionCount = 0;  // Track number of drag/drop actions
         }
         
         trial(display_element, trial) {
+            this.startTime = Date.now();
+            
             display_element.innerHTML = `
                 <div class="jspsych-content-wrapper">
                     <div class="jspsych-content">
@@ -55,6 +60,7 @@ var jsPsychBuilder = (function (jspsych) {
             // CSS Styling
             const styles = document.createElement("style");
             styles.innerHTML = `
+                /* Grid container */
                 .shapes-container {
                     display: grid;
                     grid-template-columns: repeat(9, 70px);
@@ -68,6 +74,7 @@ var jsPsychBuilder = (function (jspsych) {
                     overflow: hidden;
                 }
 
+                /* Base shape styles */
                 .shape {
                     width: 60px;
                     height: 60px;
@@ -79,23 +86,12 @@ var jsPsychBuilder = (function (jspsych) {
                     justify-content: center;
                 }
 
+                /* Square styles */
                 .shape.square {
                     background-color: currentColor;
                 }
 
-                .shape.circle {
-                    border-radius: 50%;
-                    background-color: currentColor;
-                }
-
-                .shape.triangle {
-                    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-                    background-color: currentColor;
-                    transform: scale(0.9);
-                    margin: 0 auto;
-                }
-
-                .shape.striped::before {
+                .shape.square.striped {
                     background-image: repeating-linear-gradient(
                         45deg,
                         currentColor 0px,
@@ -105,7 +101,59 @@ var jsPsychBuilder = (function (jspsych) {
                     );
                 }
 
-                .shape.dotted::before {
+                .shape.square.dotted {
+                    background-image: radial-gradient(
+                        circle at center,
+                        rgba(255, 255, 255, 0.8) 3px,
+                        transparent 3px
+                    );
+                    background-size: 10px 10px;
+                    background-color: currentColor;
+                }
+
+                /* Circle styles */
+                .shape.circle {
+                    border-radius: 50%;
+                    background-color: currentColor;
+                }
+
+                .shape.circle.striped {
+                    background-image: repeating-linear-gradient(
+                        45deg,
+                        currentColor 0px,
+                        currentColor 10px,
+                        rgba(255, 255, 255, 0.8) 10px,
+                        rgba(255, 255, 255, 0.8) 20px
+                    );
+                }
+
+                .shape.circle.dotted {
+                    background-image: radial-gradient(
+                        circle at center,
+                        rgba(255, 255, 255, 0.8) 3px,
+                        transparent 3px
+                    );
+                    background-size: 10px 10px;
+                }
+
+                /* Triangle styles */
+                .shape.triangle {
+                    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+                    background-color: currentColor;
+                    transform: scale(0.9);
+                }
+
+                .shape.triangle.striped {
+                    background-image: repeating-linear-gradient(
+                        45deg,
+                        currentColor 0px,
+                        currentColor 10px,
+                        rgba(255, 255, 255, 0.8) 10px,
+                        rgba(255, 255, 255, 0.8) 20px
+                    );
+                }
+
+                .shape.triangle.dotted {
                     background-image: radial-gradient(
                         circle at center,
                         rgba(255, 255, 255, 0.8) 3px,
@@ -149,54 +197,6 @@ var jsPsychBuilder = (function (jspsych) {
                     display: block;
                     margin: 20px auto;
                     padding: 10px 20px;
-                }
-
-                /* Update pattern styles for circles */
-                .shape.circle.striped {
-                    background-image: repeating-linear-gradient(
-                        45deg,
-                        currentColor 0px,
-                        currentColor 10px,
-                        rgba(255, 255, 255, 0.8) 10px,
-                        rgba(255, 255, 255, 0.8) 20px
-                    );
-                }
-
-                .shape.circle.dotted {
-                    background-image: radial-gradient(
-                        circle at center,
-                        rgba(255, 255, 255, 0.8) 3px,
-                        transparent 3px
-                    );
-                    background-size: 10px 10px;
-                }
-
-                /* Star (triangle) base style */
-                .shape.triangle {
-                    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-                    background-color: currentColor;
-                    transform: scale(0.9);
-                    margin: 0 auto;
-                }
-
-                /* Star patterns */
-                .shape.triangle.striped {
-                    background-image: repeating-linear-gradient(
-                        45deg,
-                        currentColor 0px,
-                        currentColor 10px,
-                        rgba(255, 255, 255, 0.8) 10px,
-                        rgba(255, 255, 255, 0.8) 20px
-                    );
-                }
-
-                .shape.triangle.dotted {
-                    background-image: radial-gradient(
-                        circle at center,
-                        rgba(255, 255, 255, 0.8) 3px,
-                        transparent 3px
-                    );
-                    background-size: 10px 10px;
                 }
             `;
             document.head.appendChild(styles);
@@ -455,6 +455,32 @@ var jsPsychBuilder = (function (jspsych) {
                         // Get the slot index
                         const slotIndex = parseInt(event.target.parentElement.dataset.slot) - 1;
                         
+                        this.actionCount++;
+                        
+                        // Save removal interaction data
+                        const removalData = {
+                            trial_type: 'goal_builder_action',
+                            trial_index: this.jsPsych.getProgress().current_trial_global,
+                            goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                            time_elapsed: this.jsPsych.getTotalTime(),
+                            timestamp: new Date().toISOString(),
+                            menu: this.menuLayout,
+                            action_number: this.actionCount,
+                            shape_selected: {
+                                id: event.target.id,
+                                shape: event.target.dataset.shape,
+                                texture: event.target.dataset.texture,
+                                shade: event.target.dataset.shade
+                            },
+                            slot_filled: parseInt(event.target.parentElement.dataset.slot),
+                            shape_removed: true,  // Add removal flag
+                            final_goal: null,
+                            completion_time: Date.now() - this.startTime
+                        };
+                        
+                        console.log('Removal Data:', JSON.stringify(removalData, null, 2));
+                        this.jsPsych.data.write(removalData);
+                        
                         // Remove the shape
                         event.target.remove();
                         
@@ -469,10 +495,35 @@ var jsPsychBuilder = (function (jspsych) {
 
                 slot.addEventListener("drop", (event) => {
                     event.preventDefault();
-                    const shapeId = event.dataTransfer.getData("shape-id");
-                    const shapeData = JSON.parse(event.dataTransfer.getData("shape-data"));
-                    
                     if (!slot.firstChild) {
+                        const shapeId = event.dataTransfer.getData("shape-id");
+                        const shapeData = JSON.parse(event.dataTransfer.getData("shape-data"));
+                        this.actionCount++;
+                        
+                        // Save drag and drop interaction data
+                        const interactionData = {
+                            trial_type: 'goal_builder_action',
+                            trial_index: this.jsPsych.getProgress().current_trial_global,
+                            goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                            time_elapsed: this.jsPsych.getTotalTime(),
+                            timestamp: new Date().toISOString(),
+                            menu: this.menuLayout,
+                            action_number: this.actionCount,
+                            shape_selected: {
+                                id: shapeId,
+                                shape: shapeData.shape,
+                                texture: shapeData.texture,
+                                shade: shapeData.shade
+                            },
+                            slot_filled: parseInt(slot.dataset.slot),
+                            shape_removed: false,  // Add removal flag
+                            final_goal: null,
+                            completion_time: Date.now() - this.startTime
+                        };
+                        
+                        console.log('Interaction Data:', JSON.stringify(interactionData, null, 2));
+                        this.jsPsych.data.write(interactionData);
+                        
                         const clone = document.createElement('div');
                         clone.className = `shape ${shapeData.shape} ${shapeData.texture}`;
                         clone.style.color = this.getShadeColor(shapeData.shade);
@@ -510,15 +561,43 @@ var jsPsychBuilder = (function (jspsych) {
 
             // Submit Button
             document.getElementById("submit-btn").addEventListener("click", () => {
-                const goalData = goal.map(g => ({
-                    shape: g.shape,
-                    shade: g.shade,
-                    texture: g.texture
-                }));
+                // Ensure goal data matches the structure expected by goal pursuit
+                const goalData = [
+                    {
+                        shape: goal[0].shape,
+                        shade: goal[0].shade,
+                        texture: goal[0].texture
+                    },
+                    {
+                        shape: goal[1].shape,
+                        shade: goal[1].shade,
+                        texture: goal[1].texture
+                    },
+                    {
+                        shape: goal[2].shape,
+                        shade: goal[2].shade,
+                        texture: goal[2].texture
+                    }
+                ];
                 
-                jsPsych.finishTrial({
-                    goal: goalData
-                });
+                const submitData = {
+                    trial_type: 'goal_builder_submit',
+                    trial_index: this.jsPsych.getProgress().current_trial_global,
+                    goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                    time_elapsed: this.jsPsych.getTotalTime(),
+                    timestamp: new Date().toISOString(),
+                    menu: this.menuLayout,
+                    action_number: this.actionCount + 1,
+                    shape_selected: null,
+                    slot_filled: null,
+                    shape_removed: false,
+                    final_goal: goalData,  // Use the properly structured goal data
+                    completion_time: Date.now() - this.startTime,
+                    goal: goalData  // Add this to ensure it's passed to the next trial
+                };
+                
+                console.log('Submit Data:', JSON.stringify(submitData, null, 2));
+                this.jsPsych.finishTrial(submitData);
             });
         };
 
@@ -575,6 +654,34 @@ var jsPsychBuilder = (function (jspsych) {
             }
         }
         
+        // New method to get menu layout as 3x9 array
+        getMenuLayout() {
+            const shapes = ["circle", "square", "triangle"];
+            const textures = ["none", "striped", "dotted"];
+            const shades = ["1", "2", "3"];
+            
+            let allShapes = [];
+            shapes.forEach((shape) => {
+                textures.forEach((texture) => {
+                    shades.forEach((shade) => {
+                        allShapes.push({
+                            shape,
+                            texture,
+                            shade,
+                            id: `shape-${allShapes.length}`
+                        });
+                    });
+                });
+            });
+            
+            // Shuffle and convert to 3x9 array
+            allShapes = this.shuffleArray(allShapes);
+            const menuArray = [];
+            for (let i = 0; i < 3; i++) {
+                menuArray.push(allShapes.slice(i * 9, (i + 1) * 9));
+            }
+            return menuArray;
+        }
     }
     
     // Make the BuilderPlugin Class

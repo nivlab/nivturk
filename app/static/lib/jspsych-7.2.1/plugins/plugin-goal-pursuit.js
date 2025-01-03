@@ -23,6 +23,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
             this.currentSelect = [];
             this.currentConfig = null;
             this.currentGoal = null;
+            this.interactionCount = 0;
             this.colorCode = {
                 "1": "lightblue",
                 "2": "blue",
@@ -33,6 +34,10 @@ var jsPsychGoalPursuit = (function (jspsych) {
         }
 
         trial(display_element, trial) {
+            this.startTime = Date.now();
+            this.initialConfig = { ...this.currentConfig };
+            this.interactionCount = 0;
+            
             // HTML Structure
             const html = `
                 <div class="container">
@@ -391,8 +396,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
         }
 
         selectObj(id, goal) {
-            // Function to handle object selection
-            console.log(`Selected: ${id}`, goal[id]);
+            // console.log(`Selected: ${id}`, goal[id]);  // Comment out
             
             if (this.currentSelect.length === 0) {
                 this.currentSelect.push(id);
@@ -414,9 +418,35 @@ var jsPsychGoalPursuit = (function (jspsych) {
         }
 
         abandonGoal() {
-            // Function to handle goal abandonment
-            console.log("Goal abandoned!");
-            // Add your abandonment logic here
+            // console.log("Goal abandoned!");  // Comment out
+            const abandonData = {
+                // Trial metadata
+                trial_type: 'goal_pursuit_action',
+                trial_index: this.jsPsych.getProgress().current_trial_global,
+                goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                time_elapsed: this.jsPsych.getTotalTime(),
+                timestamp: new Date().toISOString(),
+                
+                // Trial outcome
+                success: false,
+                abandoned: true,
+                total_moves: this.currentSelect.length / 2,
+                
+                // States
+                initial_state: this.initialConfig,
+                final_state: this.currentConfig,
+                goal_state: this.currentGoal,
+                
+                // Interaction data
+                interactions: JSON.stringify(this.currentSelect),
+                interaction_number: this.interactionCount,
+                
+                // Additional metadata
+                completion_time: Date.now() - this.startTime
+            };
+            
+            console.log('Abandon Data:', JSON.stringify(abandonData, null, 2));
+            this.jsPsych.finishTrial(abandonData);
         }
 
         // Additional functions from temp_pursuit.js
@@ -473,6 +503,8 @@ var jsPsychGoalPursuit = (function (jspsych) {
         }
 
         makeTransition(a, r, currentGoal) {
+            this.interactionCount++;
+            
             // read agent properties
             let agent = a.split('-')[2];
             let agent_color = this.currentConfig[agent]['color'];
@@ -484,9 +516,12 @@ var jsPsychGoalPursuit = (function (jspsych) {
             let recipient_shape = this.currentConfig[recipient]['shape'];
             let recipient_pattern = this.currentConfig[recipient]['pattern'];
 
+            // Store state before transition
+            const previousState = JSON.parse(JSON.stringify(this.currentConfig));
+
             // decide transitions
             let ret_color, ret_shape, ret_pattern;
-
+            
             // Color transition logic (unchanged)
             if (parseInt(agent_color) > parseInt(recipient_color)) {
                 ret_color = this.safeColorChange(recipient_color, '+');
@@ -506,7 +541,7 @@ var jsPsychGoalPursuit = (function (jspsych) {
                 ret_pattern = 'plain';
             }
 
-            // Update the shape
+            // Update the shape and register changes
             this.getEl(this.getHolderId(r)).innerHTML = '';
             this.getEl(this.getHolderId(r)).append(this.makeShape(r, ret_shape, ret_color, ret_pattern));
             this.getEl(r).onclick = () => this.selectObj(r, this.currentGoal);
@@ -521,40 +556,73 @@ var jsPsychGoalPursuit = (function (jspsych) {
 
             // check goal fulfillment
             let goal_fulfilled = this.isGoalFulfilled(currentGoal);
+            
+            // Save data for this interaction
+            const interactionData = {
+                // Trial metadata
+                trial_type: 'goal_pursuit_action',
+                trial_index: this.jsPsych.getProgress().current_trial_global,
+                goal_trial_number: Math.floor(this.jsPsych.getProgress().current_trial_global / 2),
+                time_elapsed: this.jsPsych.getTotalTime(),
+                timestamp: new Date().toISOString(),
+                
+                // Action details
+                actor_id: agent,
+                actor_shape: agent_shape,
+                actor_color: agent_color,
+                recipient_id: recipient,
+                recipient_shape: recipient_shape,
+                recipient_color: recipient_color,
+                recipient_pattern: recipient_pattern,
+                
+                // Outcome
+                resulting_shape: ret_shape,
+                resulting_color: ret_color,
+                resulting_pattern: ret_pattern,
+                
+                // States
+                state_before: previousState,
+                state_after: this.currentConfig,
+                goal_state: this.currentGoal,
+                
+                // Trial status
+                action_number: this.currentSelect.length / 2,
+                interaction_number: this.interactionCount,
+                goal_achieved: goal_fulfilled,
+                abandoned: false,
+                completion_time: Date.now() - this.startTime
+            };
+
+            // Log the data being saved
+            console.log('Interaction Data:', JSON.stringify(interactionData, null, 2));
+            
+            this.jsPsych.data.write(interactionData);
+
             if (goal_fulfilled) {
-                console.log("Goal fulfilled!");
-                // Clear borders before finishing trial
+                // console.log("Goal fulfilled!");  // Comment out
                 this.clearSelectionBorders();
                 alert("Congratulations! You've achieved the goal!");
-                // End the trial with success status
-                this.jsPsych.finishTrial({
-                    success: true,
-                    final_state: this.currentConfig,
-                    goal_state: this.currentGoal
-                });
-                return; // Exit the function after finishing trial
+                this.jsPsych.finishTrial();
+                return;
             } else {
-                console.log("Goal not yet fulfilled");
+                // console.log("Goal not yet fulfilled");  // Comment out
+                this.clearSelectionBorders();
+                this.currentSelect = [];
             }
-
-            // clear up
-            this.clearSelectionBorders();
-            this.currentSelect = [];
         }
 
         isGoalFulfilled(currentState) {
-            console.log('Checking goal fulfillment...');
-            console.log('Current Goal:', this.currentGoal);
-            console.log('Current State:', this.currentConfig);
+            // console.log('Checking goal fulfillment...');  // Comment out
+            // console.log('Current Goal:', this.currentGoal);  // Comment out
+            // console.log('Current State:', this.currentConfig);  // Comment out
             
-            // Compare each property of each shape
             for (let key of ['a', 'b', 'c']) {
                 if (this.currentGoal[key].shape !== this.currentConfig[key].shape ||
                     this.currentGoal[key].color !== this.currentConfig[key].color ||
                     this.currentGoal[key].pattern !== this.currentConfig[key].pattern) {
-                    console.log(`Mismatch found in shape ${key}:`);
-                    console.log(`Goal: ${JSON.stringify(this.currentGoal[key])}`);
-                    console.log(`Current: ${JSON.stringify(this.currentConfig[key])}`);
+                    // console.log(`Mismatch found in shape ${key}:`);  // Comment out
+                    // console.log(`Goal: ${JSON.stringify(this.currentGoal[key])}`);  // Comment out
+                    // console.log(`Current: ${JSON.stringify(this.currentConfig[key])}`);  // Comment out
                     return false;
                 }
             }
