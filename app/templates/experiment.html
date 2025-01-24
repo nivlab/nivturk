@@ -9,9 +9,11 @@
 
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-selection.css" rel="stylesheet" type="text/css"></link>
 
 </head>
 <body></body>
@@ -27,20 +29,38 @@
   };
   window.addEventListener("beforeunload", verify_unload);
 
-  // Define example survey.
-  var likert_page = {
-    type: jsPsychSurveyLikert,
-    questions: [{prompt: "Are you seeing something right now?", labels: ["Yes", "No"]}],
-    on_start: function(data) {
-      pass_message('message to pass to nivturk');
-    }
-  };
-
   // Define global variables.
   var low_quality = false;
 
-  // Initialize timeline.
-  var timeline = [likert_page];
+  // Initialize timeline with goal selection only
+  var timeline = [];
+
+  // Set this to false to skip consent during development
+  var REQUIRE_CONSENT = false;
+
+  if (REQUIRE_CONSENT) {
+      var consent = {
+          type: jsPsychExternalHtml,
+          url: "/consent",
+          cont_btn: "start",
+      };
+      timeline.push(consent);
+  }
+
+  // Add your goal selection trial directly
+  var goal_selection = {
+      type: jsPsychGoalSelection,
+      preamble: "Please select your goals",
+      goals: [  // This parameter is required
+          {text: "Goal 1", id: 1},
+          {text: "Goal 2", id: 2},
+          {text: "Goal 3", id: 3}
+      ],
+      on_start: function(data) {
+          pass_message('Starting goal selection');
+      }
+  };
+  timeline.push(goal_selection);
 
   // Initialize jsPsych.
   var jsPsych = initJsPsych({
