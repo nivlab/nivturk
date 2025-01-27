@@ -15,6 +15,10 @@
 .source-wrapper {
     text-align: center;
     width: var(--shape-size);
+    height: var(--shape-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Common container styles */
@@ -185,13 +189,17 @@
     }
 }
 
-/* Update shapes container for 9 squares */
+/* Update shapes container for 18 shapes in 3x6 grid */
 .shapes-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);  /* 6 columns */
+    grid-template-rows: repeat(3, 1fr);     /* 3 rows */
     gap: 20px;
     margin-bottom: 20px;
     justify-items: center;
+    max-width: 900px;  /* Prevent the grid from getting too wide */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Apply styles to all shapes */
