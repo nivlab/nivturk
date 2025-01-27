@@ -14,6 +14,7 @@
 
 .source-wrapper {
     text-align: center;
+    width: var(--shape-size);
 }
 
 /* Common container styles */
@@ -41,6 +42,7 @@
     color: #666;
     font-size: 14px;
     margin-bottom: 20px;
+    text-align: center;  /* Center the text above the grid */
 }
 
 .target-areas-container {
@@ -119,13 +121,6 @@
     }
 }
 
-.goal-circle.dragging,
-.goal-square.dragging,
-.goal-star.dragging {
-    cursor: grabbing;
-    fill: var(--shape-color);
-}
-
 /* Add shrinking animation */
 @keyframes shrinkAndFade {
     0% {
@@ -190,19 +185,21 @@
     }
 }
 
-/* Add container for multiple shapes */
+/* Update shapes container for 9 squares */
 .shapes-container {
-    display: flex;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     margin-bottom: 20px;
+    justify-items: center;
 }
 
 /* Apply styles to all shapes */
 .goal-star, .goal-square, .goal-circle {
-    fill: var(--shape-color);
     cursor: grab;
     animation: float 3s ease-in-out infinite;
     transform-origin: center center;
+    position: relative;
 }
 
 /* Square specific styles */
@@ -216,9 +213,9 @@
 }
 
 /* Update dragging state for all shapes */
-.goal-star.dragging, .goal-square.dragging, .goal-circle.dragging {
+.dragging {
     cursor: grabbing;
-    fill: var(--shape-color);
+    fill: inherit;
 }
 
 /* Replace spin with wobble animation */
@@ -265,21 +262,30 @@
     fill: #004080;
 }
 
-/* Make shade rules more specific than the general shape rules */
-.goal-star.shade-light, 
-.goal-square.shade-light, 
-.goal-circle.shade-light {
-    fill: #b3d7ff;
+.plain {
+    /* Plain is our default */
+  }
+
+.striped {
+    mask: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        transparent 10px,
+        transparent 20px
+    );
 }
 
-.goal-star.shade-medium, 
-.goal-square.shade-medium, 
-.goal-circle.shade-medium {
-    fill: #007bff;
+.dotted {
+    mask: radial-gradient(
+        circle at 5px 5px,
+        #000 3px,
+        transparent 3px
+    ) 0 0/20px 20px;
 }
 
-.goal-star.shade-dark, 
-.goal-square.shade-dark, 
-.goal-circle.shade-dark {
-    fill: #004080;
-} 
+/* Add specific handling for textures in dragged state */
+.dragged-shape-container .striped,
+.dragged-shape-container .dotted {
+    mask-type: alpha;
+}

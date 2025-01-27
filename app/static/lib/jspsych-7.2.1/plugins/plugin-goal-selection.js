@@ -31,35 +31,60 @@ var jsPsychGoalSelection = (function (jspsych) {
         }
         trial(display_element, trial) {
             const startTime = performance.now();
-            // Add interaction history array
-            const interactionHistory = [];
             
-            // Create HTML
+            // Create array of all shape configurations
+            const shapeConfigs = [
+                // Squares
+                { shape: 'goal-square', shade: 'shade-light', texture: 'plain' },
+                { shape: 'goal-square', shade: 'shade-medium', texture: 'plain' },
+                { shape: 'goal-square', shade: 'shade-dark', texture: 'plain' },
+                { shape: 'goal-square', shade: 'shade-light', texture: 'striped' },
+                { shape: 'goal-square', shade: 'shade-medium', texture: 'striped' },
+                { shape: 'goal-square', shade: 'shade-dark', texture: 'striped' },
+                { shape: 'goal-square', shade: 'shade-light', texture: 'dotted' },
+                { shape: 'goal-square', shade: 'shade-medium', texture: 'dotted' },
+                { shape: 'goal-square', shade: 'shade-dark', texture: 'dotted' },
+                // Circles
+                { shape: 'goal-circle', shade: 'shade-light', texture: 'plain' },
+                { shape: 'goal-circle', shade: 'shade-medium', texture: 'plain' },
+                { shape: 'goal-circle', shade: 'shade-dark', texture: 'plain' },
+                { shape: 'goal-circle', shade: 'shade-light', texture: 'striped' },
+                { shape: 'goal-circle', shade: 'shade-medium', texture: 'striped' },
+                { shape: 'goal-circle', shade: 'shade-dark', texture: 'striped' },
+                { shape: 'goal-circle', shade: 'shade-light', texture: 'dotted' },
+                { shape: 'goal-circle', shade: 'shade-medium', texture: 'dotted' },
+                { shape: 'goal-circle', shade: 'shade-dark', texture: 'dotted' }
+            ];
+
+            // Shuffle the configurations
+            const shuffledConfigs = this.jsPsych.randomization.shuffle(shapeConfigs);
+            
+            // Store the randomized order with position indices
+            const randomizedOrder = shuffledConfigs.map((config, index) => ({
+                position: index,
+                shape: config.shape,
+                shade: config.shade,
+                texture: config.texture
+            }));
+
+            // Create HTML with shuffled shapes
             display_element.innerHTML = `
                 ${trial.preamble ? `<div class="jspsych-goal-selection-preamble">${trial.preamble}</div>` : ''}
                 <div class="jspsych-goal-selection-container">
+                    <div class="drag-instruction">Drag to create a copy</div>
                     <div class="shapes-container">
-                        <!-- Square Shape 1 (Light) -->
-                        <div class="source-wrapper">
-                            <svg class="source-container" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square shade-light"/>
-                            </svg>
-                            <div class="drag-instruction">Drag to create a copy</div>
-                        </div>
-                        <!-- Square Shape 2 -->
-                        <div class="source-wrapper">
-                            <svg class="source-container" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square"/>
-                            </svg>
-                            <div class="drag-instruction">Drag to create a copy</div>
-                        </div>
-                        <!-- Square Shape 3 (Dark) -->
-                        <div class="source-wrapper">
-                            <svg class="source-container" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square shade-dark"/>
-                            </svg>
-                            <div class="drag-instruction">Drag to create a copy</div>
-                        </div>
+                        ${shuffledConfigs.map(config => `
+                            <div class="source-wrapper">
+                                <svg class="source-container" viewBox="0 0 100 100">
+                                    ${config.shape === 'goal-circle' 
+                                        ? `<circle cx="50" cy="50" r="30" 
+                                            class="goal-circle ${config.shade} ${config.texture}"/>`
+                                        : `<rect x="20" y="20" width="60" height="60" rx="10" 
+                                            class="goal-square ${config.shade} ${config.texture}"/>`
+                                    }
+                                </svg>
+                            </div>
+                        `).join('')}
                     </div>
                     <div class="target-areas-container">
                         <div class="target-area-row">
@@ -80,6 +105,16 @@ var jsPsychGoalSelection = (function (jspsych) {
                 </div>
             `;
 
+            // Add interaction history array
+            const interactionHistory = [];
+
+            // Store initial configuration in interaction history
+            interactionHistory.push({
+                action: 'initial_configuration',
+                randomized_order: randomizedOrder,
+                timestamp: Date.now()
+            });
+
             const sourceStar = display_element.querySelector('.goal-star');
             const sourceSquare = display_element.querySelector('.goal-square');
             const sourceCircle = display_element.querySelector('.goal-circle');
@@ -88,15 +123,20 @@ var jsPsychGoalSelection = (function (jspsych) {
             let offsetX, offsetY;
 
             // Helper function to create draggable shape
-            function createDraggableShape(shape, shade, e) {
+            function createDraggableShape(shape, shade, texture, e) {
                 const clone = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                 clone.setAttribute('width', '80');
                 clone.setAttribute('height', '80');
                 clone.setAttribute('viewBox', '0 0 100 100');
 
-                // Apply both shape and shade classes
-                let shapeClass = `${shape} ${shade}`;
-                clone.innerHTML = `<rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>`;
+                // Apply shape, shade, and texture classes
+                let shapeClass = `${shape} ${shade} ${texture}`;
+                
+                if (shape === 'goal-circle') {
+                    clone.innerHTML = `<circle cx="50" cy="50" r="30" class="${shapeClass} dragging"/>`;
+                } else {
+                    clone.innerHTML = `<rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>`;
+                }
                 
                 const container = document.createElement('div');
                 container.className = 'dragged-shape-container dragging';
@@ -109,15 +149,24 @@ var jsPsychGoalSelection = (function (jspsych) {
                 return container;
             }
 
-            // Add event listeners for all shapes
+            // Event listener code for shape dragging
             const shapeElements = display_element.querySelectorAll('.source-container');
-            shapeElements.forEach(shapeElement => {
+            shapeElements.forEach((shapeElement, index) => {
                 shapeElement.addEventListener('mousedown', (e) => {
-                    const rectElement = shapeElement.querySelector('rect');
-                    const shapeType = rectElement.classList[0];
-                    const shade = rectElement.classList[1] || 'shade-medium'; // Default to medium if not specified
-                    console.log('Dragging shape:', shapeType, 'with shade:', shade); // Debugging log
-                    draggedElement = createDraggableShape(shapeType, shade, e);
+                    // Find the shape element (either rect or circle) within the source container
+                    const shape = shapeElement.querySelector('.goal-square, .goal-circle');
+                    if (!shape) return;
+
+                    const shapeType = shape.tagName.toLowerCase() === 'rect' ? 'goal-square' : 'goal-circle';
+                    const shade = shape.classList[1];  // Get shade class
+                    const texture = shape.classList[2]; // Get texture class
+                    
+                    // Add source position to interaction tracking
+                    const sourceConfig = randomizedOrder[index];
+                    
+                    draggedElement = createDraggableShape(shapeType, shade, texture, e);
+                    draggedElement.dataset.sourcePosition = index; // Store original position
+                    
                     const rect = shapeElement.getBoundingClientRect();
                     offsetX = e.clientX - rect.left;
                     offsetY = e.clientY - rect.top;
@@ -130,6 +179,15 @@ var jsPsychGoalSelection = (function (jspsych) {
                     
                     document.addEventListener('mousemove', onMouseMove);
                     document.addEventListener('mouseup', onMouseUp);
+
+                    // Record drag start in interaction history
+                    interactionHistory.push({
+                        action: 'drag_start',
+                        shapeId: draggedElement.dataset.shapeId,
+                        sourcePosition: index,
+                        shapeConfig: sourceConfig,
+                        timestamp: Date.now()
+                    });
                 });
             });
 
@@ -157,13 +215,14 @@ var jsPsychGoalSelection = (function (jspsych) {
                                 draggedElement.classList.add('dropped');
                                 droppedInArea = true;
 
-                                // Record drop interaction
+                                // Record drop with source position
                                 interactionHistory.push({
                                     action: 'drop',
                                     shapeId: draggedElement.dataset.shapeId,
+                                    sourcePosition: parseInt(draggedElement.dataset.sourcePosition),
                                     shapeType: draggedElement.dataset.shapeType,
                                     shapeClass: draggedElement.dataset.shapeClass,
-                                    position: area.dataset.position,
+                                    targetPosition: area.dataset.position,
                                     timestamp: Date.now()
                                 });
                             }
@@ -171,10 +230,10 @@ var jsPsychGoalSelection = (function (jspsych) {
                     });
 
                     if (!droppedInArea) {
-                        // Record failed drop attempt
                         interactionHistory.push({
                             action: 'failed_drop',
                             shapeId: draggedElement.dataset.shapeId,
+                            sourcePosition: parseInt(draggedElement.dataset.sourcePosition),
                             shapeType: draggedElement.dataset.shapeType,
                             shapeClass: draggedElement.dataset.shapeClass,
                             timestamp: Date.now()
@@ -223,22 +282,23 @@ var jsPsychGoalSelection = (function (jspsych) {
                 }
             });
 
-            // Update submit handler to include interaction history
+            // Update submit handler to include the randomization information
             submitBtn.addEventListener('click', () => {
-                // Get final state of selections
                 const finalSelections = Array.from(display_element.querySelectorAll('.target-area'))
                     .map(area => ({
                         position: area.dataset.position,
                         shape: area.children.length > 1 ? {
                             type: area.querySelector('.dragged-shape-container').dataset.shapeType,
-                            id: area.querySelector('.dragged-shape-container').dataset.shapeId
+                            id: area.querySelector('.dragged-shape-container').dataset.shapeId,
+                            sourcePosition: parseInt(area.querySelector('.dragged-shape-container').dataset.sourcePosition)
                         } : null
                     }));
 
                 this.jsPsych.finishTrial({
                     rt: Math.round(performance.now() - startTime),
                     interactions: interactionHistory,
-                    final_selections: finalSelections
+                    final_selections: finalSelections,
+                    randomized_order: randomizedOrder
                 });
             });
         }
