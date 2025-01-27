@@ -39,10 +39,10 @@ var jsPsychGoalSelection = (function (jspsych) {
                 ${trial.preamble ? `<div class="jspsych-goal-selection-preamble">${trial.preamble}</div>` : ''}
                 <div class="jspsych-goal-selection-container">
                     <div class="shapes-container">
-                        <!-- Square Shape 1 -->
+                        <!-- Square Shape 1 (Light) -->
                         <div class="source-wrapper">
                             <svg class="source-container" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square"/>
+                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square shade-light"/>
                             </svg>
                             <div class="drag-instruction">Drag to create a copy</div>
                         </div>
@@ -53,10 +53,10 @@ var jsPsychGoalSelection = (function (jspsych) {
                             </svg>
                             <div class="drag-instruction">Drag to create a copy</div>
                         </div>
-                        <!-- Square Shape 3 -->
+                        <!-- Square Shape 3 (Dark) -->
                         <div class="source-wrapper">
                             <svg class="source-container" viewBox="0 0 100 100">
-                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square"/>
+                                <rect x="20" y="20" width="60" height="60" rx="10" class="goal-square shade-dark"/>
                             </svg>
                             <div class="drag-instruction">Drag to create a copy</div>
                         </div>
@@ -88,13 +88,14 @@ var jsPsychGoalSelection = (function (jspsych) {
             let offsetX, offsetY;
 
             // Helper function to create draggable shape
-            function createDraggableShape(shape, shade, texture, e) {
+            function createDraggableShape(shape, shade, e) {
                 const clone = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                 clone.setAttribute('width', '80');
                 clone.setAttribute('height', '80');
                 clone.setAttribute('viewBox', '0 0 100 100');
 
-                let shapeClass = `${shape} ${shade} ${texture}`;
+                // Apply both shape and shade classes
+                let shapeClass = `${shape} ${shade}`;
                 clone.innerHTML = `<rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>`;
                 
                 const container = document.createElement('div');
@@ -112,10 +113,11 @@ var jsPsychGoalSelection = (function (jspsych) {
             const shapeElements = display_element.querySelectorAll('.source-container');
             shapeElements.forEach(shapeElement => {
                 shapeElement.addEventListener('mousedown', (e) => {
-                    const shapeType = shapeElement.querySelector('rect').classList[0];
-                    const shade = shapeElement.querySelector('rect').classList[1];
-                    const texture = shapeElement.querySelector('rect').classList[2];
-                    draggedElement = createDraggableShape(shapeType, shade, texture, e);
+                    const rectElement = shapeElement.querySelector('rect');
+                    const shapeType = rectElement.classList[0];
+                    const shade = rectElement.classList[1] || 'shade-medium'; // Default to medium if not specified
+                    console.log('Dragging shape:', shapeType, 'with shade:', shade); // Debugging log
+                    draggedElement = createDraggableShape(shapeType, shade, e);
                     const rect = shapeElement.getBoundingClientRect();
                     offsetX = e.clientX - rect.left;
                     offsetY = e.clientY - rect.top;

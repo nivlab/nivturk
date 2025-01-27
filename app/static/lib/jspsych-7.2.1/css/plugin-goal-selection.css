@@ -97,7 +97,6 @@
 .dragged-shape-container .goal-circle,
 .dragged-shape-container .goal-square,
 .dragged-shape-container .goal-star {
-    fill: var(--shape-color);
     transform-origin: center center;
 }
 
@@ -251,4 +250,36 @@
 .source-container {
     border: 1px solid transparent;  /* Helps with debugging - remove if not needed */
     background-color: transparent;
+}
+
+/* Define shades */
+.shade-light {
+    fill: #b3d7ff;
+}
+
+.shade-medium {
+    fill: #007bff;
+}
+
+.shade-dark {
+    fill: #004080;
+}
+
+/* Make shade rules more specific than the general shape rules */
+.goal-star.shade-light, 
+.goal-square.shade-light, 
+.goal-circle.shade-light {
+    fill: #b3d7ff;
+}
+
+.goal-star.shade-medium, 
+.goal-square.shade-medium, 
+.goal-circle.shade-medium {
+    fill: #007bff;
+}
+
+.goal-star.shade-dark, 
+.goal-square.shade-dark, 
+.goal-circle.shade-dark {
+    fill: #004080;
 } 
