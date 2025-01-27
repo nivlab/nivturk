@@ -189,20 +189,25 @@
     }
 }
 
-/* Update shapes container for 18 shapes in 3x6 grid */
+/* Update shapes container for 27 shapes (9 of each type) */
 .shapes-container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);  /* 6 columns */
+    grid-template-columns: repeat(9, 1fr);  /* 9 columns */
     grid-template-rows: repeat(3, 1fr);     /* 3 rows */
     gap: 20px;
     margin-bottom: 20px;
     justify-items: center;
-    max-width: 900px;  /* Prevent the grid from getting too wide */
+    max-width: 1200px;  /* Increased to accommodate more shapes */
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Apply styles to all shapes */
+/* Add star to shape styles */
+.goal-star {
+    transform-origin: center center;
+}
+
+/* Update all shape selectors to include star */
 .goal-star, .goal-square, .goal-circle {
     cursor: grab;
     transform-origin: center center;

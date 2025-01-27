@@ -53,7 +53,17 @@ var jsPsychGoalSelection = (function (jspsych) {
                 { shape: 'goal-circle', shade: 'shade-dark', texture: 'striped' },
                 { shape: 'goal-circle', shade: 'shade-light', texture: 'dotted' },
                 { shape: 'goal-circle', shade: 'shade-medium', texture: 'dotted' },
-                { shape: 'goal-circle', shade: 'shade-dark', texture: 'dotted' }
+                { shape: 'goal-circle', shade: 'shade-dark', texture: 'dotted' },
+                // Stars
+                { shape: 'goal-star', shade: 'shade-light', texture: 'plain' },
+                { shape: 'goal-star', shade: 'shade-medium', texture: 'plain' },
+                { shape: 'goal-star', shade: 'shade-dark', texture: 'plain' },
+                { shape: 'goal-star', shade: 'shade-light', texture: 'striped' },
+                { shape: 'goal-star', shade: 'shade-medium', texture: 'striped' },
+                { shape: 'goal-star', shade: 'shade-dark', texture: 'striped' },
+                { shape: 'goal-star', shade: 'shade-light', texture: 'dotted' },
+                { shape: 'goal-star', shade: 'shade-medium', texture: 'dotted' },
+                { shape: 'goal-star', shade: 'shade-dark', texture: 'dotted' }
             ];
 
             // Shuffle the configurations
@@ -76,19 +86,26 @@ var jsPsychGoalSelection = (function (jspsych) {
                         ${shuffledConfigs.map(config => `
                             <div class="source-wrapper">
                                 <svg class="source-container" viewBox="0 0 100 100">
-                                    ${config.shape === 'goal-circle' 
+                                    ${config.shape === 'goal-star' 
                                         ? `<g class="shape-group ${config.shade}">
-                                            <circle cx="50" cy="50" r="30" 
-                                                class="goal-circle ${config.texture}"/>
-                                            <circle cx="50" cy="50" r="30" 
+                                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                                class="goal-star ${config.texture}"/>
+                                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
                                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                            </g>`
-                                        : `<g class="shape-group ${config.shade}">
-                                            <rect x="20" y="20" width="60" height="60" rx="10" 
-                                                class="goal-square ${config.texture}"/>
-                                            <rect x="20" y="20" width="60" height="60" rx="10" 
-                                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                                           </g>`
+                                        : config.shape === 'goal-circle'
+                                            ? `<g class="shape-group ${config.shade}">
+                                                <circle cx="50" cy="50" r="30" 
+                                                    class="goal-circle ${config.texture}"/>
+                                                <circle cx="50" cy="50" r="30" 
+                                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                                               </g>`
+                                            : `<g class="shape-group ${config.shade}">
+                                                <rect x="20" y="20" width="60" height="60" rx="10" 
+                                                    class="goal-square ${config.texture}"/>
+                                                <rect x="20" y="20" width="60" height="60" rx="10" 
+                                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                                               </g>`
                                     }
                                 </svg>
                             </div>
@@ -137,7 +154,15 @@ var jsPsychGoalSelection = (function (jspsych) {
                 clone.setAttribute('height', '80');
                 clone.setAttribute('viewBox', '0 0 100 100');
                 
-                if (shape === 'goal-circle') {
+                if (shape === 'goal-star') {
+                    clone.innerHTML = `
+                        <g class="shape-group ${shade}">
+                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                class="goal-star ${texture} dragging"/>
+                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </g>`;
+                } else if (shape === 'goal-circle') {
                     clone.innerHTML = `
                         <g class="shape-group ${shade}">
                             <circle cx="50" cy="50" r="30" 
@@ -171,10 +196,12 @@ var jsPsychGoalSelection = (function (jspsych) {
             shapeElements.forEach((shapeElement, index) => {
                 shapeElement.addEventListener('mousedown', (e) => {
                     // Find the shape element (either rect or circle) within the source container
-                    const shape = shapeElement.querySelector('.goal-square, .goal-circle');
+                    const shape = shapeElement.querySelector('.goal-square, .goal-circle, .goal-star');
                     if (!shape) return;
 
-                    const shapeType = shape.tagName.toLowerCase() === 'rect' ? 'goal-square' : 'goal-circle';
+                    const shapeType = shape.tagName.toLowerCase() === 'path' ? 'goal-star' 
+                        : shape.tagName.toLowerCase() === 'rect' ? 'goal-square' 
+                        : 'goal-circle';
                     const shadeClass = shape.closest('.shape-group').classList[1];  // Get shade from group
                     const textureClass = shape.classList[1]; // Get texture class
                     
