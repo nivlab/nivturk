@@ -210,6 +210,80 @@
     position: relative;
 }
 
+/* Add animation delay classes */
+.source-wrapper:nth-child(1) .goal-square, 
+.source-wrapper:nth-child(1) .goal-circle {
+    animation-delay: 0s;
+}
+.source-wrapper:nth-child(2) .goal-square,
+.source-wrapper:nth-child(2) .goal-circle {
+    animation-delay: 0.2s;
+}
+.source-wrapper:nth-child(3) .goal-square,
+.source-wrapper:nth-child(3) .goal-circle {
+    animation-delay: 0.4s;
+}
+.source-wrapper:nth-child(4) .goal-square,
+.source-wrapper:nth-child(4) .goal-circle {
+    animation-delay: 0.6s;
+}
+.source-wrapper:nth-child(5) .goal-square,
+.source-wrapper:nth-child(5) .goal-circle {
+    animation-delay: 0.8s;
+}
+.source-wrapper:nth-child(6) .goal-square,
+.source-wrapper:nth-child(6) .goal-circle {
+    animation-delay: 1.0s;
+}
+.source-wrapper:nth-child(7) .goal-square,
+.source-wrapper:nth-child(7) .goal-circle {
+    animation-delay: 1.2s;
+}
+.source-wrapper:nth-child(8) .goal-square,
+.source-wrapper:nth-child(8) .goal-circle {
+    animation-delay: 1.4s;
+}
+.source-wrapper:nth-child(9) .goal-square,
+.source-wrapper:nth-child(9) .goal-circle {
+    animation-delay: 1.6s;
+}
+.source-wrapper:nth-child(10) .goal-square,
+.source-wrapper:nth-child(10) .goal-circle {
+    animation-delay: 1.8s;
+}
+.source-wrapper:nth-child(11) .goal-square,
+.source-wrapper:nth-child(11) .goal-circle {
+    animation-delay: 2.0s;
+}
+.source-wrapper:nth-child(12) .goal-square,
+.source-wrapper:nth-child(12) .goal-circle {
+    animation-delay: 2.2s;
+}
+.source-wrapper:nth-child(13) .goal-square,
+.source-wrapper:nth-child(13) .goal-circle {
+    animation-delay: 2.4s;
+}
+.source-wrapper:nth-child(14) .goal-square,
+.source-wrapper:nth-child(14) .goal-circle {
+    animation-delay: 2.6s;
+}
+.source-wrapper:nth-child(15) .goal-square,
+.source-wrapper:nth-child(15) .goal-circle {
+    animation-delay: 2.8s;
+}
+.source-wrapper:nth-child(16) .goal-square,
+.source-wrapper:nth-child(16) .goal-circle {
+    animation-delay: 3.0s;
+}
+.source-wrapper:nth-child(17) .goal-square,
+.source-wrapper:nth-child(17) .goal-circle {
+    animation-delay: 3.2s;
+}
+.source-wrapper:nth-child(18) .goal-square,
+.source-wrapper:nth-child(18) .goal-circle {
+    animation-delay: 3.4s;
+}
+
 /* Square specific styles */
 .goal-square {
     rx: 10px; /* Optional: rounds the corners of the square */
