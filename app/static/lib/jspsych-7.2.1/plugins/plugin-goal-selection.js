@@ -77,10 +77,18 @@ var jsPsychGoalSelection = (function (jspsych) {
                             <div class="source-wrapper">
                                 <svg class="source-container" viewBox="0 0 100 100">
                                     ${config.shape === 'goal-circle' 
-                                        ? `<circle cx="50" cy="50" r="30" 
-                                            class="goal-circle ${config.shade} ${config.texture}"/>`
-                                        : `<rect x="20" y="20" width="60" height="60" rx="10" 
-                                            class="goal-square ${config.shade} ${config.texture}"/>`
+                                        ? `<g class="shape-group">
+                                            <circle cx="50" cy="50" r="30" 
+                                                class="goal-circle ${config.shade} ${config.texture}"/>
+                                            <circle cx="50" cy="50" r="30" 
+                                                class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                                           </g>`
+                                        : `<g class="shape-group">
+                                            <rect x="20" y="20" width="60" height="60" rx="10" 
+                                                class="goal-square ${config.shade} ${config.texture}"/>
+                                            <rect x="20" y="20" width="60" height="60" rx="10" 
+                                                class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                                           </g>`
                                     }
                                 </svg>
                             </div>
@@ -129,13 +137,20 @@ var jsPsychGoalSelection = (function (jspsych) {
                 clone.setAttribute('height', '80');
                 clone.setAttribute('viewBox', '0 0 100 100');
 
-                // Apply shape, shade, and texture classes
                 let shapeClass = `${shape} ${shade} ${texture}`;
                 
                 if (shape === 'goal-circle') {
-                    clone.innerHTML = `<circle cx="50" cy="50" r="30" class="${shapeClass} dragging"/>`;
+                    clone.innerHTML = `
+                        <g class="shape-group">
+                            <circle cx="50" cy="50" r="30" class="${shapeClass} dragging"/>
+                            <circle cx="50" cy="50" r="30" class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                        </g>`;
                 } else {
-                    clone.innerHTML = `<rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>`;
+                    clone.innerHTML = `
+                        <g class="shape-group">
+                            <rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>
+                            <rect x="20" y="20" width="60" height="60" rx="10" class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                        </g>`;
                 }
                 
                 const container = document.createElement('div');

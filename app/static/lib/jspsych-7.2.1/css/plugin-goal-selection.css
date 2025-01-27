@@ -205,83 +205,79 @@
 /* Apply styles to all shapes */
 .goal-star, .goal-square, .goal-circle {
     cursor: grab;
-    animation: float 3s ease-in-out infinite;
     transform-origin: center center;
     position: relative;
 }
 
-/* Add animation delay classes */
-.source-wrapper:nth-child(1) .goal-square, 
-.source-wrapper:nth-child(1) .goal-circle {
+/* Apply animation to the shape group */
+.shape-group {
+    animation: float 3s ease-in-out infinite;
+    transform-origin: center center;
+}
+
+/* Add animation delays to the shape groups */
+.source-wrapper:nth-child(1) .shape-group {
     animation-delay: 0s;
 }
-.source-wrapper:nth-child(2) .goal-square,
-.source-wrapper:nth-child(2) .goal-circle {
+.source-wrapper:nth-child(2) .shape-group {
     animation-delay: 0.2s;
 }
-.source-wrapper:nth-child(3) .goal-square,
-.source-wrapper:nth-child(3) .goal-circle {
+.source-wrapper:nth-child(3) .shape-group {
     animation-delay: 0.4s;
 }
-.source-wrapper:nth-child(4) .goal-square,
-.source-wrapper:nth-child(4) .goal-circle {
+.source-wrapper:nth-child(4) .shape-group {
     animation-delay: 0.6s;
 }
-.source-wrapper:nth-child(5) .goal-square,
-.source-wrapper:nth-child(5) .goal-circle {
+.source-wrapper:nth-child(5) .shape-group {
     animation-delay: 0.8s;
 }
-.source-wrapper:nth-child(6) .goal-square,
-.source-wrapper:nth-child(6) .goal-circle {
+.source-wrapper:nth-child(6) .shape-group {
     animation-delay: 1.0s;
 }
-.source-wrapper:nth-child(7) .goal-square,
-.source-wrapper:nth-child(7) .goal-circle {
+.source-wrapper:nth-child(7) .shape-group {
     animation-delay: 1.2s;
 }
-.source-wrapper:nth-child(8) .goal-square,
-.source-wrapper:nth-child(8) .goal-circle {
+.source-wrapper:nth-child(8) .shape-group {
     animation-delay: 1.4s;
 }
-.source-wrapper:nth-child(9) .goal-square,
-.source-wrapper:nth-child(9) .goal-circle {
+.source-wrapper:nth-child(9) .shape-group {
     animation-delay: 1.6s;
 }
-.source-wrapper:nth-child(10) .goal-square,
-.source-wrapper:nth-child(10) .goal-circle {
+.source-wrapper:nth-child(10) .shape-group {
     animation-delay: 1.8s;
 }
-.source-wrapper:nth-child(11) .goal-square,
-.source-wrapper:nth-child(11) .goal-circle {
+.source-wrapper:nth-child(11) .shape-group {
     animation-delay: 2.0s;
 }
-.source-wrapper:nth-child(12) .goal-square,
-.source-wrapper:nth-child(12) .goal-circle {
+.source-wrapper:nth-child(12) .shape-group {
     animation-delay: 2.2s;
 }
-.source-wrapper:nth-child(13) .goal-square,
-.source-wrapper:nth-child(13) .goal-circle {
+.source-wrapper:nth-child(13) .shape-group {
     animation-delay: 2.4s;
 }
-.source-wrapper:nth-child(14) .goal-square,
-.source-wrapper:nth-child(14) .goal-circle {
+.source-wrapper:nth-child(14) .shape-group {
     animation-delay: 2.6s;
 }
-.source-wrapper:nth-child(15) .goal-square,
-.source-wrapper:nth-child(15) .goal-circle {
+.source-wrapper:nth-child(15) .shape-group {
     animation-delay: 2.8s;
 }
-.source-wrapper:nth-child(16) .goal-square,
-.source-wrapper:nth-child(16) .goal-circle {
+.source-wrapper:nth-child(16) .shape-group {
     animation-delay: 3.0s;
 }
-.source-wrapper:nth-child(17) .goal-square,
-.source-wrapper:nth-child(17) .goal-circle {
+.source-wrapper:nth-child(17) .shape-group {
     animation-delay: 3.2s;
 }
-.source-wrapper:nth-child(18) .goal-square,
-.source-wrapper:nth-child(18) .goal-circle {
+.source-wrapper:nth-child(18) .shape-group {
     animation-delay: 3.4s;
+}
+
+/* Remove the old animation delays from individual shapes */
+.source-wrapper:nth-child(1) .goal-square, 
+.source-wrapper:nth-child(1) .goal-circle,
+.source-wrapper:nth-child(2) .goal-square,
+.source-wrapper:nth-child(2) .goal-circle,
+/* ... and so on ... */ {
+    animation-delay: initial;
 }
 
 /* Square specific styles */
@@ -370,4 +366,23 @@
 .dragged-shape-container .striped,
 .dragged-shape-container .dotted {
     mask-type: alpha;
+}
+
+/* Ensure SVG elements stack correctly */
+.source-container svg, .dragged-shape-container svg {
+    overflow: visible;
+}
+
+/* Style for the outline */
+.shape-outline {
+    pointer-events: none;  /* Makes sure the outline doesn't interfere with interactions */
+}
+
+/* Make sure the outline stays on top */
+.goal-square, .goal-circle {
+    z-index: 1;
+}
+
+.shape-outline {
+    z-index: 2;
 }
