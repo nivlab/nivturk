@@ -360,10 +360,10 @@
 
 .dotted {
     mask: radial-gradient(
-        circle at 5px 5px,
-        #000 3px,
-        transparent 3px
-    ) 0 0/20px 20px;
+        circle at 3px 3px,  /* Even closer dots */
+        #000 1.5px,        /* Even smaller dots */
+        transparent 1.5px
+    ) 0 0/8px 8px;        /* Smaller repeat pattern */
 }
 
 /* Add specific handling for textures in dragged state */
