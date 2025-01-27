@@ -386,3 +386,47 @@
 .shape-outline {
     z-index: 2;
 }
+
+/* Move color definitions to the shape-group */
+.shape-group.shade-light {
+    color: #b3d7ff;
+}
+
+.shape-group.shade-medium {
+    color: #007bff;
+}
+
+.shape-group.shade-dark {
+    color: #004080;
+}
+
+/* Update fill to use currentColor */
+.goal-square, .goal-circle {
+    fill: currentColor;
+}
+
+/* Ensure dragged shapes maintain their appearance */
+.dragged-shape-container .shape-group {
+    animation: none; /* Prevent floating animation during drag */
+}
+
+.dragged-shape-container.dropped .shape-group {
+    animation: float 3s ease-in-out infinite; /* Restore animation after drop */
+}
+
+/* Make sure dragged shapes inherit colors correctly */
+.dragged-shape-container .goal-square,
+.dragged-shape-container .goal-circle {
+    fill: currentColor;
+}
+
+.dragged-shape-container .shape-outline {
+    stroke: currentColor;
+}
+
+/* Ensure textures work on dragged shapes */
+.dragged-shape-container .striped,
+.dragged-shape-container .dotted {
+    mask-type: alpha;
+    -webkit-mask-type: alpha;
+}

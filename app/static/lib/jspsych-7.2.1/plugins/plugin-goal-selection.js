@@ -77,17 +77,17 @@ var jsPsychGoalSelection = (function (jspsych) {
                             <div class="source-wrapper">
                                 <svg class="source-container" viewBox="0 0 100 100">
                                     ${config.shape === 'goal-circle' 
-                                        ? `<g class="shape-group">
+                                        ? `<g class="shape-group ${config.shade}">
                                             <circle cx="50" cy="50" r="30" 
-                                                class="goal-circle ${config.shade} ${config.texture}"/>
+                                                class="goal-circle ${config.texture}"/>
                                             <circle cx="50" cy="50" r="30" 
-                                                class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                            </g>`
-                                        : `<g class="shape-group">
+                                        : `<g class="shape-group ${config.shade}">
                                             <rect x="20" y="20" width="60" height="60" rx="10" 
-                                                class="goal-square ${config.shade} ${config.texture}"/>
+                                                class="goal-square ${config.texture}"/>
                                             <rect x="20" y="20" width="60" height="60" rx="10" 
-                                                class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                            </g>`
                                     }
                                 </svg>
@@ -136,20 +136,22 @@ var jsPsychGoalSelection = (function (jspsych) {
                 clone.setAttribute('width', '80');
                 clone.setAttribute('height', '80');
                 clone.setAttribute('viewBox', '0 0 100 100');
-
-                let shapeClass = `${shape} ${shade} ${texture}`;
                 
                 if (shape === 'goal-circle') {
                     clone.innerHTML = `
-                        <g class="shape-group">
-                            <circle cx="50" cy="50" r="30" class="${shapeClass} dragging"/>
-                            <circle cx="50" cy="50" r="30" class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                        <g class="shape-group ${shade}">
+                            <circle cx="50" cy="50" r="30" 
+                                class="goal-circle ${texture} dragging"/>
+                            <circle cx="50" cy="50" r="30" 
+                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                         </g>`;
                 } else {
                     clone.innerHTML = `
-                        <g class="shape-group">
-                            <rect x="20" y="20" width="60" height="60" rx="10" class="${shapeClass} dragging"/>
-                            <rect x="20" y="20" width="60" height="60" rx="10" class="shape-outline" fill="none" stroke="#333" stroke-width="2"/>
+                        <g class="shape-group ${shade}">
+                            <rect x="20" y="20" width="60" height="60" rx="10" 
+                                class="goal-square ${texture} dragging"/>
+                            <rect x="20" y="20" width="60" height="60" rx="10" 
+                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                         </g>`;
                 }
                 
@@ -159,7 +161,7 @@ var jsPsychGoalSelection = (function (jspsych) {
                 
                 container.dataset.shapeId = Date.now().toString();
                 container.dataset.shapeType = shape;
-                container.dataset.shapeClass = shapeClass;
+                container.dataset.shapeClass = `${shape} ${shade} ${texture}`; // Store full class info
                 
                 return container;
             }
@@ -173,14 +175,14 @@ var jsPsychGoalSelection = (function (jspsych) {
                     if (!shape) return;
 
                     const shapeType = shape.tagName.toLowerCase() === 'rect' ? 'goal-square' : 'goal-circle';
-                    const shade = shape.classList[1];  // Get shade class
-                    const texture = shape.classList[2]; // Get texture class
+                    const shadeClass = shape.closest('.shape-group').classList[1];  // Get shade from group
+                    const textureClass = shape.classList[1]; // Get texture class
                     
                     // Add source position to interaction tracking
                     const sourceConfig = randomizedOrder[index];
                     
-                    draggedElement = createDraggableShape(shapeType, shade, texture, e);
-                    draggedElement.dataset.sourcePosition = index; // Store original position
+                    draggedElement = createDraggableShape(shapeType, shadeClass, textureClass, e);
+                    draggedElement.dataset.sourcePosition = index;
                     
                     const rect = shapeElement.getBoundingClientRect();
                     offsetX = e.clientX - rect.left;
