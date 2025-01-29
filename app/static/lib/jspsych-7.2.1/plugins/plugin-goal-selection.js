@@ -44,16 +44,16 @@ var jsPsychGoalSelection = (function (jspsych) {
                 { shape: 'goal-square', shade: 'shade-light', texture: 'dotted' },
                 { shape: 'goal-square', shade: 'shade-medium', texture: 'dotted' },
                 { shape: 'goal-square', shade: 'shade-dark', texture: 'dotted' },
-                // Circles
-                { shape: 'goal-circle', shade: 'shade-light', texture: 'plain' },
-                { shape: 'goal-circle', shade: 'shade-medium', texture: 'plain' },
-                { shape: 'goal-circle', shade: 'shade-dark', texture: 'plain' },
-                { shape: 'goal-circle', shade: 'shade-light', texture: 'striped' },
-                { shape: 'goal-circle', shade: 'shade-medium', texture: 'striped' },
-                { shape: 'goal-circle', shade: 'shade-dark', texture: 'striped' },
-                { shape: 'goal-circle', shade: 'shade-light', texture: 'dotted' },
-                { shape: 'goal-circle', shade: 'shade-medium', texture: 'dotted' },
-                { shape: 'goal-circle', shade: 'shade-dark', texture: 'dotted' },
+                // Clouds (replacing Circles)
+                { shape: 'goal-cloud', shade: 'shade-light', texture: 'plain' },
+                { shape: 'goal-cloud', shade: 'shade-medium', texture: 'plain' },
+                { shape: 'goal-cloud', shade: 'shade-dark', texture: 'plain' },
+                { shape: 'goal-cloud', shade: 'shade-light', texture: 'striped' },
+                { shape: 'goal-cloud', shade: 'shade-medium', texture: 'striped' },
+                { shape: 'goal-cloud', shade: 'shade-dark', texture: 'striped' },
+                { shape: 'goal-cloud', shade: 'shade-light', texture: 'dotted' },
+                { shape: 'goal-cloud', shade: 'shade-medium', texture: 'dotted' },
+                { shape: 'goal-cloud', shade: 'shade-dark', texture: 'dotted' },
                 // Stars
                 { shape: 'goal-star', shade: 'shade-light', texture: 'plain' },
                 { shape: 'goal-star', shade: 'shade-medium', texture: 'plain' },
@@ -93,11 +93,11 @@ var jsPsychGoalSelection = (function (jspsych) {
                                             <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
                                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                            </g>`
-                                        : config.shape === 'goal-circle'
+                                        : config.shape === 'goal-cloud'
                                             ? `<g class="shape-group ${config.shade}">
-                                                <circle cx="50" cy="50" r="30" 
-                                                    class="goal-circle ${config.texture}"/>
-                                                <circle cx="50" cy="50" r="30" 
+                                                <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
+                                                    class="goal-cloud ${config.texture}"/>
+                                                <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
                                                     class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                                </g>`
                                             : `<g class="shape-group ${config.shade}">
@@ -142,7 +142,7 @@ var jsPsychGoalSelection = (function (jspsych) {
 
             const sourceStar = display_element.querySelector('.goal-star');
             const sourceSquare = display_element.querySelector('.goal-square');
-            const sourceCircle = display_element.querySelector('.goal-circle');
+            const sourceCloud = display_element.querySelector('.goal-cloud');
             const submitBtn = display_element.querySelector('.submit-btn');
             let draggedElement = null;
             let offsetX, offsetY;
@@ -162,12 +162,12 @@ var jsPsychGoalSelection = (function (jspsych) {
                             <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                         </g>`;
-                } else if (shape === 'goal-circle') {
+                } else if (shape === 'goal-cloud') {
                     clone.innerHTML = `
                         <g class="shape-group ${shade}">
-                            <circle cx="50" cy="50" r="30" 
-                                class="goal-circle ${texture} dragging"/>
-                            <circle cx="50" cy="50" r="30" 
+                            <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
+                                class="goal-cloud ${texture} dragging"/>
+                            <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                         </g>`;
                 } else {
@@ -196,12 +196,12 @@ var jsPsychGoalSelection = (function (jspsych) {
             shapeElements.forEach((shapeElement, index) => {
                 shapeElement.addEventListener('mousedown', (e) => {
                     // Find the shape element (either rect or circle) within the source container
-                    const shape = shapeElement.querySelector('.goal-square, .goal-circle, .goal-star');
+                    const shape = shapeElement.querySelector('.goal-square, .goal-cloud, .goal-star');
                     if (!shape) return;
 
-                    const shapeType = shape.tagName.toLowerCase() === 'path' ? 'goal-star' 
-                        : shape.tagName.toLowerCase() === 'rect' ? 'goal-square' 
-                        : 'goal-circle';
+                    const shapeType = shape.tagName.toLowerCase() === 'path' 
+                        ? (shape.classList.contains('goal-star') ? 'goal-star' : 'goal-cloud')
+                        : 'goal-square';
                     const shadeClass = shape.closest('.shape-group').classList[1];  // Get shade from group
                     const textureClass = shape.classList[1]; // Get texture class
                     

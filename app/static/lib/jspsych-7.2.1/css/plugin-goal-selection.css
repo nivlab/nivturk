@@ -100,7 +100,7 @@
         gentleDrift 4s ease-in-out infinite 0.8s;
 }
 
-.dragged-shape-container .goal-circle,
+.dragged-shape-container .goal-cloud,
 .dragged-shape-container .goal-square,
 .dragged-shape-container .goal-star {
     transform-origin: center center;
@@ -207,8 +207,8 @@
     transform-origin: center center;
 }
 
-/* Update all shape selectors to include star */
-.goal-star, .goal-square, .goal-circle {
+/* Update all shape selectors to include cloud instead of circle */
+.goal-star, .goal-square, .goal-cloud {
     cursor: grab;
     transform-origin: center center;
     position: relative;
@@ -361,10 +361,10 @@
 
 .dotted {
     mask: radial-gradient(
-        circle at 3px 3px,  /* Even closer dots */
-        #000 1.5px,        /* Even smaller dots */
-        transparent 1.5px
-    ) 0 0/8px 8px;        /* Smaller repeat pattern */
+        circle at 4px 4px,    /* Adjusted position for bigger dots */
+        #000 2.5px,          /* Increased dot size from 1.5px to 2.5px */
+        transparent 2.5px
+    ) 0 0/12px 12px;        /* Increased spacing from 8px to 12px to accommodate bigger dots */
 }
 
 /* Add specific handling for textures in dragged state */
@@ -421,7 +421,7 @@
 
 /* Make sure dragged shapes inherit colors correctly */
 .dragged-shape-container .goal-square,
-.dragged-shape-container .goal-circle {
+.dragged-shape-container .goal-cloud {
     fill: currentColor;
 }
 
