@@ -198,9 +198,16 @@
 /* Workspace shapes container */
 .workspace-shapes {
     display: flex;
-    gap: 40px;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Container for bottom shapes */
+.workspace-bottom-shapes {
+    display: flex;
+    gap: 40px;  /* Space between bottom shapes */
 }
 
 /* Individual workspace shapes */

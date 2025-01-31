@@ -85,7 +85,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
             </div>
             <div class="workspace-container">
                 <div class="workspace-shapes">
-                    <!-- First shape -->
+                    <!-- Top shape -->
                     <svg class="workspace-shape" viewBox="0 0 100 100">
                         <g class="shape-group shade-medium">
                             <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
@@ -94,24 +94,25 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                         </g>
                     </svg>
-                    <!-- Second shape -->
-                    <svg class="workspace-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-light">
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="goal-star dotted"/>
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <!-- Third shape -->
-                    <svg class="workspace-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-dark">
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="goal-star plain"/>
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
+                    <!-- Container for bottom shapes -->
+                    <div class="workspace-bottom-shapes">
+                        <svg class="workspace-shape" viewBox="0 0 100 100">
+                            <g class="shape-group shade-light">
+                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                    class="goal-star dotted"/>
+                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                            </g>
+                        </svg>
+                        <svg class="workspace-shape" viewBox="0 0 100 100">
+                            <g class="shape-group shade-dark">
+                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                    class="goal-star plain"/>
+                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
             </div>
             `;
