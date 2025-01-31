@@ -1,0 +1,213 @@
+/* Define variables */
+:root {
+    --shape-size: 80px;
+}
+
+/* Container styles */
+.jspsych-goal-display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;  /* Align to the left */
+    padding: 20px;
+    margin-left: 40px;  /* Add some margin from the left edge */
+    position: absolute;  /* Position absolutely */
+    top: 20px;          /* Distance from top */
+    left: 0;            /* Align to left edge */
+    z-index: 2;
+}
+
+.goal-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;  /* Align contents to the left */
+}
+
+.goal-display h3 {
+    margin: 0 0 20px 0;
+    text-align: left;  /* Left align text */
+}
+
+.goal-display-shapes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;         /* Reduce gap between shapes */
+    margin: 10px 0;    /* Reduce margin */
+    width: 200px;      /* Constrain width */
+}
+
+/* Top shape */
+.goal-display-shapes svg:first-child {
+    margin-bottom: 5px;  /* Small gap below top shape */
+}
+
+/* Bottom shapes container */
+.goal-display-shapes div:nth-child(2) {
+    display: flex;
+    gap: 20px;  /* Reduce space between bottom shapes */
+    justify-content: center;
+}
+
+.goal-display-shapes svg {
+    width: calc(var(--shape-size) * 0.8);  /* Make shapes slightly smaller */
+    height: calc(var(--shape-size) * 0.8);
+}
+
+/* Button alignment */
+.jspsych-goal-display-container .jspsych-btn {
+    margin-top: 15px;
+}
+
+/* Workspace styles */
+.workspace-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    z-index: 1;
+}
+
+.workspace-shape {
+    width: var(--shape-size);
+    height: var(--shape-size);
+}
+
+/* Parent shape */
+.workspace-shape {
+    transition: transform 0.3s ease-out;
+    position: relative;
+    z-index: 2;  /* Ensure it's above expanded shapes */
+    cursor: pointer;
+}
+
+.workspace-shape.parent-expanded {
+    transform: scale(0.8);
+}
+
+/* Expanded shapes container */
+.expanded-shapes {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--shape-size);
+    height: var(--shape-size);
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    z-index: 1;  /* Below the parent shape */
+    pointer-events: none;  /* Allow clicks to pass through to parent */
+}
+
+.expanded-shapes.hidden {
+    display: none;
+}
+
+.expanded-shapes.expanded {
+    opacity: 1;
+}
+
+.expanded-shapes.collapsing {
+    opacity: 0;
+}
+
+/* Individual expanded shape */
+.expanded-shape {
+    position: absolute;
+    width: var(--shape-size);
+    height: var(--shape-size);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;  /* Allow clicks to pass through */
+}
+
+.expanded-shapes.expanded .expanded-shape {
+    animation: expandOut 0.3s ease-out forwards;
+}
+
+.expanded-shapes.collapsing .expanded-shape {
+    animation: collapseIn 0.3s ease-out forwards;
+}
+
+/* Parent shape animation */
+.workspace-shape {
+    transition: transform 0.3s ease-out;
+}
+
+/* Animation keyframes for circular expansion */
+@keyframes expandOut {
+    0% {
+        transform: translate(-50%, -50%) scale(0) rotate(var(--start-angle));
+    }
+    100% {
+        transform: 
+            translate(
+                calc(-50% + var(--radius) * cos(var(--angle))), 
+                calc(-50% + var(--radius) * sin(var(--angle)))
+            )
+            scale(1)
+            rotate(var(--end-angle));
+    }
+}
+
+@keyframes collapseIn {
+    0% {
+        transform: 
+            translate(
+                calc(-50% + var(--radius) * cos(var(--angle))), 
+                calc(-50% + var(--radius) * sin(var(--angle)))
+            )
+            scale(1)
+            rotate(var(--end-angle));
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0) rotate(var(--start-angle));
+    }
+}
+
+/* Position each expanded shape in a circle */
+.expanded-shape:nth-child(1) {
+    --radius: 100px;
+    --angle: 210deg;    /* Bottom left */
+    --start-angle: 0deg;
+    --end-angle: 0deg;
+}
+
+.expanded-shape:nth-child(2) {
+    --radius: 100px;
+    --angle: 330deg;    /* Bottom right */
+    --start-angle: 0deg;
+    --end-angle: 0deg;
+}
+
+.expanded-shape:nth-child(3) {
+    --radius: 100px;
+    --angle: 90deg;     /* Top */
+    --start-angle: 0deg;
+    --end-angle: 0deg;
+}
+
+/* Workspace shapes container */
+.workspace-shapes {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Individual workspace shapes */
+.workspace-shape {
+    width: var(--shape-size);
+    height: var(--shape-size);
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+} 
