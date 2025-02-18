@@ -84,6 +84,11 @@ var jsPsychGoalDisplay = (function (jspsych) {
                 </div>
             </div>
             <div class="workspace-container">
+                <div class="feature-menu">
+                <button class="feature-btn" data-feature="texture">texture</button>
+                <button class="feature-btn" data-feature="shape">shape</button>
+                <button class="feature-btn" data-feature="color">color</button>
+                </div>
                 <div class="workspace-shapes">
                     <!-- Top shape -->
                     <svg class="workspace-shape" viewBox="0 0 100 100">
@@ -122,6 +127,21 @@ var jsPsychGoalDisplay = (function (jspsych) {
             button.addEventListener('click', () => {
                 this.jsPsych.finishTrial({
                     rt: Math.round(performance.now() - startTime)
+                });
+            });
+
+            // Handle feature button clicks
+            const featureButtons = display_element.querySelectorAll('.feature-btn');
+            featureButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    featureButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Store the active feature
+                    const activeFeature = button.dataset.feature;
+                    // You can use activeFeature later for shape interactions
                 });
             });
         }
