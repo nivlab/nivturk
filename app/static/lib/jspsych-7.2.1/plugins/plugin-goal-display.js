@@ -277,8 +277,13 @@ var jsPsychGoalDisplay = (function (jspsych) {
             const shapeElements = display_element.querySelectorAll('.workspace-shape');
             shapeElements.forEach(shape => {
                 shape.addEventListener('click', () => {
+                    // Prevent any interactions during animations
+                    if (recipientShape?.classList.contains('interaction-animation')) {
+                        return;
+                    }
+
                     if (shape === actorShape) {
-                        // Clicking the actor shape again deselects it
+                        // Only allow deselection if no animation is in progress
                         actorShape.classList.remove('actor-selected');
                         actorShape = null;
                     } else if (!actorShape) {
@@ -462,10 +467,13 @@ var jsPsychGoalDisplay = (function (jspsych) {
                             
                             // Reset selections after animation
                             setTimeout(() => {
-                                actorShape.classList.remove('actor-selected');
-                                recipientShape.classList.remove('recipient-selected', 'interaction-animation');
-                                actorShape = null;
-                                recipientShape = null;
+                                (async () => {
+                                    actorShape.classList.remove('actor-selected');
+                                    recipientShape.classList.remove('recipient-selected', 'interaction-animation');
+                                    await new Promise(resolve => setTimeout(resolve, 0)); // Let DOM updates complete
+                                    actorShape = null;
+                                    recipientShape = null;
+                                })();
 
                                 // Check if goal is achieved
                                 if (this.checkGoalAchieved(display_element)) {
