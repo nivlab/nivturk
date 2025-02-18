@@ -267,13 +267,13 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 // Define all possible shapes
                                 const allShapes = ['goal-star', 'goal-cloud', 'goal-square'];
                                 
-                                // Determine which shape to use (80% actor's shape, 20% random other shape)
+                                // Determine which shape to use (70% actor's shape, 30% random other shape)
                                 let newShapeType;
-                                if (Math.random() < 0.8) {
-                                    // 80% chance: Use actor's shape
+                                if (Math.random() < 0.7) {
+                                    // 70% chance: Use actor's shape
                                     newShapeType = actorShapeType;
                                 } else {
-                                    // 20% chance: Use random shape that's not actor's shape
+                                    // 30% chance: Use random shape that's not actor's shape
                                     const otherShapes = allShapes.filter(shape => shape !== actorShapeType);
                                     newShapeType = otherShapes[Math.floor(Math.random() * otherShapes.length)];
                                 }
