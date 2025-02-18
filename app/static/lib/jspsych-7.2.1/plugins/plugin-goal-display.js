@@ -260,20 +260,87 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 const actorPath = actorShape.querySelector('path, rect');
                                 const recipientPath = recipientShape.querySelector('path, rect');
                                 
-                                // Copy shape type class and path data
+                                // Get actor's shape type
                                 const actorShapeType = Array.from(actorPath.classList)
                                     .find(cls => cls.startsWith('goal-'));
-                                const actorClasses = actorPath.getAttribute('class');
                                 
-                                // Use setAttribute instead of className
-                                recipientPath.setAttribute('class', actorClasses);
-                                recipientPath.setAttribute('d', actorPath.getAttribute('d'));
+                                // Define all possible shapes
+                                const allShapes = ['goal-star', 'goal-cloud', 'goal-square'];
+                                
+                                // Determine which shape to use (80% actor's shape, 20% random other shape)
+                                let newShapeType;
+                                if (Math.random() < 0.8) {
+                                    // 80% chance: Use actor's shape
+                                    newShapeType = actorShapeType;
+                                } else {
+                                    // 20% chance: Use random shape that's not actor's shape
+                                    const otherShapes = allShapes.filter(shape => shape !== actorShapeType);
+                                    newShapeType = otherShapes[Math.floor(Math.random() * otherShapes.length)];
+                                }
+                                
+                                // Get the path data for the new shape
+                                let newPathData;
+                                if (newShapeType === 'goal-star') {
+                                    newPathData = "M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z";
+                                } else if (newShapeType === 'goal-cloud') {
+                                    newPathData = "M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z";
+                                } else {
+                                    // For square, we'll use rect element instead of path
+                                    newPathData = null;
+                                }
+                                
+                                // Get current classes except shape type
+                                const currentClasses = Array.from(recipientPath.classList)
+                                    .filter(cls => !cls.startsWith('goal-'))
+                                    .join(' ');
+                                
+                                // Apply new shape
+                                if (newShapeType === 'goal-square') {
+                                    // Handle square (rect element)
+                                    const currentGroup = recipientPath.closest('.shape-group');
+                                    const currentShade = Array.from(currentGroup.classList)
+                                        .find(cls => cls.startsWith('shade-'));
+                                    
+                                    // Update the entire group's HTML for square
+                                    currentGroup.innerHTML = `
+                                        <rect x="20" y="20" width="60" height="60" rx="10" 
+                                            class="${newShapeType} ${currentClasses}"/>
+                                        <rect x="20" y="20" width="60" height="60" rx="10" 
+                                            class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    `;
+                                } else {
+                                    // Handle star or cloud (path element)
+                                    const currentGroup = recipientPath.closest('.shape-group');
+                                    const currentShade = Array.from(currentGroup.classList)
+                                        .find(cls => cls.startsWith('shade-'));
+                                    
+                                    // Update the entire group's HTML for star/cloud
+                                    currentGroup.innerHTML = `
+                                        <path d="${newPathData}" 
+                                            class="${newShapeType} ${currentClasses}"/>
+                                        <path d="${newPathData}" 
+                                            class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    `;
+                                }
                                 
                                 // Update outline path if it exists
-                                const actorOutline = actorShape.querySelector('.shape-outline');
                                 const recipientOutline = recipientShape.querySelector('.shape-outline');
-                                if (actorOutline && recipientOutline) {
-                                    recipientOutline.setAttribute('d', actorOutline.getAttribute('d'));
+                                if (recipientOutline) {
+                                    if (newShapeType === 'goal-square') {
+                                        recipientOutline.removeAttribute('d');
+                                        recipientOutline.setAttribute('x', '20');
+                                        recipientOutline.setAttribute('y', '20');
+                                        recipientOutline.setAttribute('width', '60');
+                                        recipientOutline.setAttribute('height', '60');
+                                        recipientOutline.setAttribute('rx', '10');
+                                    } else {
+                                        recipientOutline.setAttribute('d', newPathData);
+                                        recipientOutline.removeAttribute('x');
+                                        recipientOutline.removeAttribute('y');
+                                        recipientOutline.removeAttribute('width');
+                                        recipientOutline.removeAttribute('height');
+                                        recipientOutline.removeAttribute('rx');
+                                    }
                                 }
                             }
                             
