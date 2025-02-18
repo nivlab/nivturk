@@ -124,52 +124,6 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     rt: Math.round(performance.now() - startTime)
                 });
             });
-
-            // Update the click event listener section
-            const workspaceShapes = display_element.querySelectorAll('.workspace-shape');
-            workspaceShapes.forEach((shape, index) => {
-                const expandedShapes = document.createElement('div');
-                expandedShapes.className = 'expanded-shapes hidden';
-                expandedShapes.innerHTML = `
-                    <svg class="expanded-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-light">
-                            <circle cx="50" cy="50" r="30" class="goal-cloud plain"/>
-                            <circle cx="50" cy="50" r="30" class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <svg class="expanded-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-medium">
-                            <circle cx="50" cy="50" r="30" class="goal-cloud plain"/>
-                            <circle cx="50" cy="50" r="30" class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                    <svg class="expanded-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-dark">
-                            <circle cx="50" cy="50" r="30" class="goal-cloud plain"/>
-                            <circle cx="50" cy="50" r="30" class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
-                    </svg>
-                `;
-                shape.parentNode.appendChild(expandedShapes);
-
-                let isExpanded = false;
-                shape.addEventListener('click', () => {
-                    isExpanded = !isExpanded;
-                    if (isExpanded) {
-                        expandedShapes.classList.remove('hidden');
-                        expandedShapes.classList.add('expanded');
-                        shape.classList.add('parent-expanded');
-                    } else {
-                        expandedShapes.classList.remove('expanded');
-                        expandedShapes.classList.add('collapsing');
-                        shape.classList.remove('parent-expanded');
-                        setTimeout(() => {
-                            expandedShapes.classList.add('hidden');
-                            expandedShapes.classList.remove('collapsing');
-                        }, 300);
-                    }
-                });
-            });
         }
     }
     GoalDisplayPlugin.info = info;

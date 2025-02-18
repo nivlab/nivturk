@@ -80,121 +80,6 @@
     height: var(--shape-size);
 }
 
-/* Parent shape */
-.workspace-shape {
-    transition: transform 0.3s ease-out;
-    position: relative;
-    z-index: 2;  /* Ensure it's above expanded shapes */
-    cursor: pointer;
-}
-
-.workspace-shape.parent-expanded {
-    transform: scale(0.8);
-}
-
-/* Expanded shapes container */
-.expanded-shapes {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: var(--shape-size);
-    height: var(--shape-size);
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
-    z-index: 1;  /* Below the parent shape */
-    pointer-events: none;  /* Allow clicks to pass through to parent */
-}
-
-.expanded-shapes.hidden {
-    display: none;
-}
-
-.expanded-shapes.expanded {
-    opacity: 1;
-}
-
-.expanded-shapes.collapsing {
-    opacity: 0;
-}
-
-/* Individual expanded shape */
-.expanded-shape {
-    position: absolute;
-    width: var(--shape-size);
-    height: var(--shape-size);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    pointer-events: none;  /* Allow clicks to pass through */
-}
-
-.expanded-shapes.expanded .expanded-shape {
-    animation: expandOut 0.3s ease-out forwards;
-}
-
-.expanded-shapes.collapsing .expanded-shape {
-    animation: collapseIn 0.3s ease-out forwards;
-}
-
-/* Parent shape animation */
-.workspace-shape {
-    transition: transform 0.3s ease-out;
-}
-
-/* Animation keyframes for circular expansion */
-@keyframes expandOut {
-    0% {
-        transform: translate(-50%, -50%) scale(0) rotate(var(--start-angle));
-    }
-    100% {
-        transform: 
-            translate(
-                calc(-50% + var(--radius) * cos(var(--angle))), 
-                calc(-50% + var(--radius) * sin(var(--angle)))
-            )
-            scale(1)
-            rotate(var(--end-angle));
-    }
-}
-
-@keyframes collapseIn {
-    0% {
-        transform: 
-            translate(
-                calc(-50% + var(--radius) * cos(var(--angle))), 
-                calc(-50% + var(--radius) * sin(var(--angle)))
-            )
-            scale(1)
-            rotate(var(--end-angle));
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(0) rotate(var(--start-angle));
-    }
-}
-
-/* Position each expanded shape in a circle */
-.expanded-shape:nth-child(1) {
-    --radius: 100px;
-    --angle: 210deg;    /* Bottom left */
-    --start-angle: 0deg;
-    --end-angle: 0deg;
-}
-
-.expanded-shape:nth-child(2) {
-    --radius: 100px;
-    --angle: 330deg;    /* Bottom right */
-    --start-angle: 0deg;
-    --end-angle: 0deg;
-}
-
-.expanded-shape:nth-child(3) {
-    --radius: 100px;
-    --angle: 90deg;     /* Top */
-    --start-angle: 0deg;
-    --end-angle: 0deg;
-}
-
 /* Workspace shapes container */
 .workspace-shapes {
     display: flex;
@@ -214,7 +99,6 @@
 .workspace-shape {
     width: var(--shape-size);
     height: var(--shape-size);
-    cursor: pointer;
     position: relative;
     z-index: 2;
 } 

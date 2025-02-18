@@ -50,26 +50,26 @@
   }
 
   
-  // var goal_selection = {
-  //     type: jsPsychGoalSelection,
-  //     preamble: "Please select your goals",
-  //     goals: [
-  //         {text: "Goal 1", id: 1},
-  //         {text: "Goal 2", id: 2},
-  //         {text: "Goal 3", id: 3}
-  //     ],
-  //     on_finish: function(data) {
-  //         // Store the selected goal for the next trial
-  //         jsPsych.data.get().last(1).values()[0].final_selections.forEach(selection => {
-  //             if (selection.shape) {
-  //                 // Save this selection to use in the next trial
-  //                 jsPsych.data.addProperties({
-  //                     selected_goal: selection.shape
-  //                 });
-  //             }
-  //         });
-  //     }
-  // };
+  var goal_selection = {
+      type: jsPsychGoalSelection,
+      preamble: "Please select your goals",
+      goals: [
+          {text: "Goal 1", id: 1},
+          {text: "Goal 2", id: 2},
+          {text: "Goal 3", id: 3}
+      ],
+      on_finish: function(data) {
+          // Store the selected goal for the next trial
+          jsPsych.data.get().last(1).values()[0].final_selections.forEach(selection => {
+              if (selection.shape) {
+                  // Save this selection to use in the next trial
+                  jsPsych.data.addProperties({
+                      selected_goal: selection.shape
+                  });
+              }
+          });
+      }
+  };
   
   
   var goal_display = {
@@ -92,7 +92,7 @@
   };
   
 
-  // timeline.push(goal_selection);
+  timeline.push(goal_selection);
   timeline.push(goal_display);
 
   // Initialize jsPsych.
