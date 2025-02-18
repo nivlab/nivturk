@@ -30,6 +30,55 @@ var jsPsychGoalDisplay = (function (jspsych) {
             this.jsPsych = jsPsych;
         }
 
+        doShapesMatch(shape1, shape2) {
+            const shape1Classes = Array.from(shape1.querySelector('path, rect').classList);
+            const shape2Classes = Array.from(shape2.querySelector('path, rect').classList);
+            
+            // Check if all relevant classes match (shape type, texture, and shade)
+            const shapeTypeMatch = shape1Classes.find(cls => cls.startsWith('goal-')) === 
+                                  shape2Classes.find(cls => cls.startsWith('goal-'));
+            const textureMatch = ['plain', 'striped', 'dotted'].some(texture => 
+                shape1Classes.includes(texture) && shape2Classes.includes(texture));
+            const shadeMatch = Array.from(shape1.querySelector('.shape-group').classList)
+                .find(cls => cls.startsWith('shade-')) === 
+                Array.from(shape2.querySelector('.shape-group').classList)
+                .find(cls => cls.startsWith('shade-'));
+            
+            return shapeTypeMatch && textureMatch && shadeMatch;
+        }
+
+        checkGoalAchieved(display_element) {
+            const workspaceShapes = Array.from(display_element.querySelectorAll('.workspace-shape'));
+            const goalShapes = Array.from(display_element.querySelectorAll('.goal-display-shapes .source-container'));
+            
+            // Check if each workspace shape matches corresponding goal shape
+            console.log(workspaceShapes);
+            console.log(goalShapes);
+            console.log(workspaceShapes.every((workspaceShape, index) => 
+                this.doShapesMatch(workspaceShape, goalShapes[index])));
+
+            return workspaceShapes.every((workspaceShape, index) => 
+                this.doShapesMatch(workspaceShape, goalShapes[index]));
+        }
+
+        createConfetti(display_element) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            confetti.style.opacity = Math.random();
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            
+            // Random confetti color
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            display_element.querySelector('.celebration-overlay').appendChild(confetti);
+            
+            // Remove confetti after animation
+            confetti.addEventListener('animationend', () => confetti.remove());
+        }
+
         trial(display_element, trial) {
             const startTime = performance.now();
 
@@ -118,6 +167,12 @@ var jsPsychGoalDisplay = (function (jspsych) {
                             </g>
                         </svg>
                     </div>
+                </div>
+            </div>
+            <div class="celebration-overlay hidden">
+                <div class="celebration-content">
+                    <h2>Goal Achieved!</h2>
+                    <p>Great work!</p>
                 </div>
             </div>
             `;
@@ -216,6 +271,27 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 recipientShape.classList.remove('recipient-selected', 'interaction-animation');
                                 actorShape = null;
                                 recipientShape = null;
+
+                                // Check if goal is achieved
+                                if (this.checkGoalAchieved(display_element)) {
+                                    // Show celebration
+                                    const celebrationOverlay = display_element.querySelector('.celebration-overlay');
+                                    celebrationOverlay.classList.remove('hidden');
+                                    celebrationOverlay.classList.add('show');
+                                    
+                                    // Add confetti animation
+                                    for (let i = 0; i < 50; i++) {
+                                        this.createConfetti(display_element);
+                                    }
+                                    
+                                    // Wait for celebration animation then move to next trial
+                                    setTimeout(() => {
+                                        this.jsPsych.finishTrial({
+                                            rt: Math.round(performance.now() - startTime),
+                                            goal_achieved: true
+                                        });
+                                    }, 2000);
+                                }
                             }, 1000);
                         }
                     }
