@@ -67,16 +67,17 @@
       on_finish: function(data) {
           const selections = jsPsych.data.get().last(1).values()[0].final_selections;
           
-          const selectedGoals = selections
-              .filter(sel => sel.shape)
-              .map(sel => {
-                  const shapeType = sel.shape.type;
-                  const shadeClass = sel.shape.sourcePosition >= 0 ? 
-                      Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+          // Create an ordered array based on position
+          const orderedSelections = ['top', 'bottom-left', 'bottom-right'].map(position => {
+              const selection = selections.find(sel => sel.position === position);
+              if (selection && selection.shape) {
+                  const shapeType = selection.shape.type;
+                  const shadeClass = selection.shape.sourcePosition >= 0 ? 
+                      Array.from(document.querySelectorAll('.source-container')[selection.shape.sourcePosition]
                           .querySelector('.shape-group').classList)
                           .find(cls => cls.startsWith('shade-')) : '';
-                  const textureClass = sel.shape.sourcePosition >= 0 ?
-                      Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+                  const textureClass = selection.shape.sourcePosition >= 0 ?
+                      Array.from(document.querySelectorAll('.source-container')[selection.shape.sourcePosition]
                           .querySelector('path, rect').classList)
                           .find(cls => ['plain', 'striped', 'dotted'].includes(cls)) : '';
                   
@@ -84,23 +85,21 @@
                       type: shapeType,
                       shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
                   };
-              });
-
+              }
+              return null;
+          }).filter(sel => sel !== null);  // Remove any null entries
+          
           // Check if this goal configuration has been used before
-          const goalString = JSON.stringify(selectedGoals.sort((a, b) => 
-              a.shapeClass.localeCompare(b.shapeClass)));
+          const goalString = JSON.stringify(orderedSelections);
           
           if (previousGoals.includes(goalString)) {
-              // If duplicate, don't store and show error
               data.duplicate_goal = true;
               alert("This goal has already been selected in a previous round. Please create a different goal.");
-              // Return to goal selection
               jsPsych.endCurrentTimeline();
           } else {
-              // If new goal, store it and continue
               previousGoals.push(goalString);
               jsPsych.data.addProperties({
-                  selected_goals: selectedGoals
+                  selected_goals: orderedSelections
               });
           }
       }
