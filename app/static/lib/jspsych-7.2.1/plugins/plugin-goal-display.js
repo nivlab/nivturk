@@ -250,15 +250,55 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 // Add next texture in cycle
                                 recipientElement.classList.add(nextTexture);
                             } else if (feature === 'color') {
-                                // Get color (shade) from actor's shape group
+                                // Get shades from both shapes
                                 const actorShade = Array.from(actorShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
+                                const recipientShade = Array.from(recipientShape.querySelector('.shape-group').classList)
                                     .find(cls => cls.startsWith('shade-'));
                                 const recipientGroup = recipientShape.querySelector('.shape-group');
                                 
+                                // Define shade order for incremental changes
+                                const shadeOrder = ['shade-light', 'shade-medium', 'shade-dark'];
+                                
+                                // Function to get new shade when shades are different
+                                function getIncrementalShade(currentShade, targetShade) {
+                                    const currentIndex = shadeOrder.indexOf(currentShade);
+                                    const targetIndex = shadeOrder.indexOf(targetShade);
+                                    
+                                    if (currentIndex < targetIndex) {
+                                        return shadeOrder[currentIndex + 1];
+                                    } else if (currentIndex > targetIndex) {
+                                        return shadeOrder[currentIndex - 1];
+                                    }
+                                    return currentShade;
+                                }
+                                
+                                let newShade;
+                                
+                                if (actorShade === recipientShade) {
+                                    // Same shade rules (80/20)
+                                    if (Math.random() < 0.8) {
+                                        // 80% chance: become medium
+                                        newShade = 'shade-medium';
+                                    } else {
+                                        // 20% chance
+                                        if (actorShade === 'shade-medium') {
+                                            // For medium: randomly jump to light or dark
+                                            newShade = Math.random() < 0.5 ? 'shade-light' : 'shade-dark';
+                                        } else {
+                                            // For light or dark: stay the same
+                                            newShade = actorShade;
+                                        }
+                                    }
+                                } else {
+                                    // Different shade rules: move one increment toward actor's shade
+                                    newShade = getIncrementalShade(recipientShade, actorShade);
+                                }
+                                
                                 // Remove existing shade
                                 recipientGroup.classList.remove('shade-light', 'shade-medium', 'shade-dark');
-                                // Add actor's shade
-                                recipientGroup.classList.add(actorShade);
+                                // Add new shade
+                                recipientGroup.classList.add(newShade);
                             } else if (feature === 'shape') {
                                 // Get shape type and path data
                                 const actorPath = actorShape.querySelector('path, rect');
