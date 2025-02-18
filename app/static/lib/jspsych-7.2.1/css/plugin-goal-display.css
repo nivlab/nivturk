@@ -79,6 +79,7 @@
 .workspace-shape {
     width: var(--shape-size);
     height: var(--shape-size);
+    cursor: pointer;
 }
 
 /* Workspace shapes container */
@@ -141,4 +142,60 @@
 .feature-btn.active {
     background-color: #007bff;
     color: white;
+}
+
+/* Selection styles */
+.workspace-shape {
+    cursor: pointer;
+}
+
+.actor-selected {
+    outline: 3px solid #4CAF50;  /* Green outline for actor */
+    border-radius: 5px;
+    animation: pulse-green 1.5s infinite;
+}
+
+.recipient-selected {
+    outline: 3px solid #2196F3;  /* Blue outline for recipient */
+    border-radius: 5px;
+}
+
+/* Pulse animation for actor selection */
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+/* Interaction animation */
+.interaction-animation {
+    animation: interact 1s ease-in-out;
+}
+
+@keyframes interact {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Make sure shapes are clickable */
+.workspace-shape g {
+    pointer-events: none;
+}
+
+.workspace-shape path,
+.workspace-shape rect {
+    pointer-events: none;
 } 

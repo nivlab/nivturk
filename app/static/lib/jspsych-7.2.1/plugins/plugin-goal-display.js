@@ -144,6 +144,83 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     // You can use activeFeature later for shape interactions
                 });
             });
+
+            // Add after the feature button click handlers
+            let actorShape = null;
+            let recipientShape = null;
+
+            // Handle workspace shape clicks
+            const workspaceShapes = display_element.querySelectorAll('.workspace-shape');
+            workspaceShapes.forEach(shape => {
+                shape.addEventListener('click', () => {
+                    if (!actorShape) {
+                        // First click - select actor
+                        actorShape = shape;
+                        shape.classList.add('actor-selected');
+                    } else if (shape !== actorShape && !recipientShape) {
+                        // Second click - select recipient and perform interaction
+                        recipientShape = shape;
+                        shape.classList.add('recipient-selected');
+                        
+                        // Get the active feature
+                        const activeFeatureBtn = display_element.querySelector('.feature-btn.active');
+                        if (activeFeatureBtn) {
+                            const feature = activeFeatureBtn.dataset.feature;
+                            
+                            // Transfer the feature from actor to recipient
+                            if (feature === 'texture') {
+                                // Get texture classes
+                                const actorTexture = Array.from(actorShape.querySelector('path, rect').classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                                const recipientElement = recipientShape.querySelector('path, rect');
+                                
+                                // Remove existing texture
+                                recipientElement.classList.remove('plain', 'striped', 'dotted');
+                                // Add actor's texture
+                                recipientElement.classList.add(actorTexture);
+                            } else if (feature === 'color') {
+                                // Get color (shade) from actor's shape group
+                                const actorShade = Array.from(actorShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
+                                const recipientGroup = recipientShape.querySelector('.shape-group');
+                                
+                                // Remove existing shade
+                                recipientGroup.classList.remove('shade-light', 'shade-medium', 'shade-dark');
+                                // Add actor's shade
+                                recipientGroup.classList.add(actorShade);
+                            } else if (feature === 'shape') {
+                                // Get shape type and path data
+                                const actorPath = actorShape.querySelector('path, rect');
+                                const recipientPath = recipientShape.querySelector('path, rect');
+                                
+                                // Copy shape type class and path data
+                                const actorShapeType = Array.from(actorPath.classList)
+                                    .find(cls => cls.startsWith('goal-'));
+                                recipientPath.className = actorPath.className;
+                                recipientPath.setAttribute('d', actorPath.getAttribute('d'));
+                                
+                                // Update outline path if it exists
+                                const actorOutline = actorShape.querySelector('.shape-outline');
+                                const recipientOutline = recipientShape.querySelector('.shape-outline');
+                                if (actorOutline && recipientOutline) {
+                                    recipientOutline.setAttribute('d', actorOutline.getAttribute('d'));
+                                }
+                            }
+                            
+                            // Add interaction animation
+                            shape.classList.add('interaction-animation');
+                            
+                            // Reset selections after animation
+                            setTimeout(() => {
+                                actorShape.classList.remove('actor-selected');
+                                recipientShape.classList.remove('recipient-selected', 'interaction-animation');
+                                actorShape = null;
+                                recipientShape = null;
+                            }, 1000);
+                        }
+                    }
+                });
+            });
         }
     }
     GoalDisplayPlugin.info = info;
