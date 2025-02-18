@@ -85,9 +85,9 @@ var jsPsychGoalDisplay = (function (jspsych) {
             </div>
             <div class="workspace-container">
                 <div class="feature-menu">
-                <button class="feature-btn" data-feature="texture">texture</button>
-                <button class="feature-btn" data-feature="shape">shape</button>
-                <button class="feature-btn" data-feature="color">color</button>
+                    <button class="feature-btn active" data-feature="texture">texture</button>
+                    <button class="feature-btn" data-feature="shape">shape</button>
+                    <button class="feature-btn" data-feature="color">color</button>
                 </div>
                 <div class="workspace-shapes">
                     <!-- Top shape -->
