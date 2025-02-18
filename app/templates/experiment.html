@@ -49,10 +49,15 @@
       timeline.push(consent);
   }
 
-  
+  // Add a counter for completed loops
+  var loopsCompleted = 0;
+  const TOTAL_LOOPS = 5;
+
   var goal_selection = {
       type: jsPsychGoalSelection,
-      preamble: "Please select your goals",
+      preamble: function() {
+          return `Round ${loopsCompleted + 1} of ${TOTAL_LOOPS}: Please select your goals`;
+      },
       goals: [
           {text: "Goal 1", id: 1},
           {text: "Goal 2", id: 2},
@@ -100,15 +105,26 @@
       button_label: "Continue",
       on_finish: function(data) {
           if (data.goal_achieved) {
-              timeline.push(goal_selection);
-              timeline.push(goal_display);
+              loopsCompleted++;
           }
       }
   };
   
 
-  timeline.push(goal_selection);
-  timeline.push(goal_display);
+  // Create a procedure that includes both trials
+  var goal_procedure = {
+      timeline: [goal_selection, goal_display],
+      loop_function: function() {
+          // Continue looping if goal wasn't achieved or if we haven't completed all loops
+          if (!jsPsych.data.get().last(1).values()[0].goal_achieved) {
+              return true;
+          }
+          return loopsCompleted < TOTAL_LOOPS;
+      }
+  };
+
+  // Add the procedure to the timeline once
+  timeline.push(goal_procedure);
 
   // Initialize jsPsych.
   var jsPsych = initJsPsych({
