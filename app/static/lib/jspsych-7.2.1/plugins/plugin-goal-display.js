@@ -25,6 +25,45 @@ var jsPsychGoalDisplay = (function (jspsych) {
         }
     };
 
+    // Add generateRandomShape function here
+    function generateRandomShape() {
+        const shapes = ['goal-star', 'goal-cloud', 'goal-square'];
+        const shades = ['shade-light', 'shade-medium', 'shade-dark'];
+        const textures = ['plain', 'striped', 'dotted'];
+        
+        return {
+            type: shapes[Math.floor(Math.random() * shapes.length)],
+            shadeClass: shades[Math.floor(Math.random() * shades.length)],
+            textureClass: textures[Math.floor(Math.random() * textures.length)]
+        };
+    }
+
+    // Add after generateRandomShape function
+    function renderWorkspaceShape(shapeData) {
+        const pathData = {
+            'goal-star': "M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z",
+            'goal-cloud': "M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z"
+        };
+
+        if (shapeData.type === 'goal-square') {
+            return `
+                <g class="shape-group ${shapeData.shadeClass}">
+                    <rect x="20" y="20" width="60" height="60" rx="10" 
+                        class="${shapeData.type} ${shapeData.textureClass}"/>
+                    <rect x="20" y="20" width="60" height="60" rx="10" 
+                        class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                </g>`;
+        } else {
+            return `
+                <g class="shape-group ${shapeData.shadeClass}">
+                    <path d="${pathData[shapeData.type]}" 
+                        class="${shapeData.type} ${shapeData.textureClass}"/>
+                    <path d="${pathData[shapeData.type]}" 
+                        class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+                </g>`;
+        }
+    }
+
     class GoalDisplayPlugin {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
@@ -51,11 +90,37 @@ var jsPsychGoalDisplay = (function (jspsych) {
             const workspaceShapes = Array.from(display_element.querySelectorAll('.workspace-shape'));
             const goalShapes = Array.from(display_element.querySelectorAll('.goal-display-shapes .source-container'));
             
-            // Check if each workspace shape matches corresponding goal shape
-            console.log(workspaceShapes);
-            console.log(goalShapes);
-            console.log(workspaceShapes.every((workspaceShape, index) => 
-                this.doShapesMatch(workspaceShape, goalShapes[index])));
+            // Print detailed information about each workspace shape
+            workspaceShapes.forEach((shape, index) => {
+                const shapeType = Array.from(shape.querySelector('path, rect').classList)
+                    .find(cls => cls.startsWith('goal-'));
+                const texture = Array.from(shape.querySelector('path, rect').classList)
+                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                const shade = Array.from(shape.querySelector('.shape-group').classList)
+                    .find(cls => cls.startsWith('shade-'));
+                
+                console.log(`Workspace Shape ${index + 1}:`, {
+                    type: shapeType,
+                    texture: texture,
+                    shade: shade
+                });
+            });
+
+            // Print goal shapes for comparison
+            goalShapes.forEach((shape, index) => {
+                const shapeType = Array.from(shape.querySelector('path, rect').classList)
+                    .find(cls => cls.startsWith('goal-'));
+                const texture = Array.from(shape.querySelector('path, rect').classList)
+                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                const shade = Array.from(shape.querySelector('.shape-group').classList)
+                    .find(cls => cls.startsWith('shade-'));
+                
+                console.log(`Goal Shape ${index + 1}:`, {
+                    type: shapeType,
+                    texture: texture,
+                    shade: shade
+                });
+            });
 
             return workspaceShapes.every((workspaceShape, index) => 
                 this.doShapesMatch(workspaceShape, goalShapes[index]));
@@ -79,8 +144,27 @@ var jsPsychGoalDisplay = (function (jspsych) {
             confetti.addEventListener('animationend', () => confetti.remove());
         }
 
+        doShapesMatchGoal(workspaceShapes, goalShapes) {
+            return workspaceShapes.every((workspaceShape, index) => {
+                const goalShape = goalShapes[index];
+                return workspaceShape.type === goalShape.type &&
+                       workspaceShape.shadeClass === goalShape.shapeClass.split(' ')[1] &&
+                       workspaceShape.textureClass === goalShape.shapeClass.split(' ')[2];
+            });
+        }
+
         trial(display_element, trial) {
             const startTime = performance.now();
+
+            // Generate random initial state that doesn't match goal state
+            let workspaceShapes;
+            do {
+                workspaceShapes = [
+                    generateRandomShape(),
+                    generateRandomShape(),
+                    generateRandomShape()
+                ];
+            } while (this.doShapesMatchGoal(workspaceShapes, trial.selected_goal));
 
             // Create the display HTML
             display_element.innerHTML = `
@@ -136,35 +220,20 @@ var jsPsychGoalDisplay = (function (jspsych) {
                 <div class="feature-menu">
                     <button class="feature-btn active" data-feature="texture">texture</button>
                     <button class="feature-btn" data-feature="shape">shape</button>
-                    <button class="feature-btn" data-feature="color">color</button>
+                    <button class="feature-btn" data-feature="color">shade</button>
                 </div>
                 <div class="workspace-shapes">
                     <!-- Top shape -->
                     <svg class="workspace-shape" viewBox="0 0 100 100">
-                        <g class="shape-group shade-medium">
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="goal-star striped"/>
-                            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </g>
+                        ${renderWorkspaceShape(workspaceShapes[0])}
                     </svg>
                     <!-- Container for bottom shapes -->
                     <div class="workspace-bottom-shapes">
                         <svg class="workspace-shape" viewBox="0 0 100 100">
-                            <g class="shape-group shade-light">
-                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                    class="goal-star dotted"/>
-                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                            </g>
+                            ${renderWorkspaceShape(workspaceShapes[1])}
                         </svg>
                         <svg class="workspace-shape" viewBox="0 0 100 100">
-                            <g class="shape-group shade-dark">
-                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                    class="goal-star plain"/>
-                                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-                            </g>
+                            ${renderWorkspaceShape(workspaceShapes[2])}
                         </svg>
                     </div>
                 </div>
@@ -205,8 +274,8 @@ var jsPsychGoalDisplay = (function (jspsych) {
             let recipientShape = null;
 
             // Handle workspace shape clicks
-            const workspaceShapes = display_element.querySelectorAll('.workspace-shape');
-            workspaceShapes.forEach(shape => {
+            const shapeElements = display_element.querySelectorAll('.workspace-shape');
+            shapeElements.forEach(shape => {
                 shape.addEventListener('click', () => {
                     if (shape === actorShape) {
                         // Clicking the actor shape again deselects it
