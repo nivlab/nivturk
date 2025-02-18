@@ -251,7 +251,10 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 // Copy shape type class and path data
                                 const actorShapeType = Array.from(actorPath.classList)
                                     .find(cls => cls.startsWith('goal-'));
-                                recipientPath.className = actorPath.className;
+                                const actorClasses = actorPath.getAttribute('class');
+                                
+                                // Use setAttribute instead of className
+                                recipientPath.setAttribute('class', actorClasses);
                                 recipientPath.setAttribute('d', actorPath.getAttribute('d'));
                                 
                                 // Update outline path if it exists

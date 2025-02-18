@@ -168,6 +168,13 @@
     transform: translateY(-1px);
 }
 
+/* Add a message for incomplete selection */
+.submit-btn:disabled::after {
+    content: " (Select exactly 3 shapes)";
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
 @keyframes dropAnimation {
     0% {
         transform: scale(1.1);

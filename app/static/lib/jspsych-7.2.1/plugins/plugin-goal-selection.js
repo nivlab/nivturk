@@ -252,6 +252,7 @@ var jsPsychGoalSelection = (function (jspsych) {
                         if (e.clientX >= rect.left && e.clientX <= rect.right &&
                             e.clientY >= rect.top && e.clientY <= rect.bottom) {
                             
+                            // Only allow drop if the area has less than 2 shapes (1 is the instruction div)
                             if (area.children.length <= 1) {
                                 draggedElement.classList.remove('dragging');
                                 draggedElement.style.position = 'static';
@@ -295,9 +296,13 @@ var jsPsychGoalSelection = (function (jspsych) {
 
             function updateSubmitButton() {
                 const targetAreas = display_element.querySelectorAll('.target-area');
-                const hasSelections = Array.from(targetAreas).some(area => area.children.length > 1); // Account for instruction div
-                submitBtn.disabled = !hasSelections;
-                if (hasSelections) {
+                // Count how many areas have shapes (excluding the instruction div)
+                const filledAreas = Array.from(targetAreas)
+                    .filter(area => area.children.length > 1).length;
+                
+                // Only enable if exactly 3 shapes are selected
+                submitBtn.disabled = filledAreas !== 3;
+                if (filledAreas === 3) {
                     submitBtn.classList.add('active');
                 } else {
                     submitBtn.classList.remove('active');
