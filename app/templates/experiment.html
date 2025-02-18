@@ -52,6 +52,7 @@
   // Add a counter for completed loops
   var loopsCompleted = 0;
   const TOTAL_LOOPS = 5;
+  var previousGoals = [];  // Array to store previous goals
 
   var goal_selection = {
       type: jsPsychGoalSelection,
@@ -64,12 +65,10 @@
           {text: "Goal 3", id: 3}
       ],
       on_finish: function(data) {
-          // Get the final selections from the trial data
           const selections = jsPsych.data.get().last(1).values()[0].final_selections;
           
-          // Create an array of selected goals in the format needed for goal-display
           const selectedGoals = selections
-              .filter(sel => sel.shape) // Filter out empty selections
+              .filter(sel => sel.shape)
               .map(sel => {
                   const shapeType = sel.shape.type;
                   const shadeClass = sel.shape.sourcePosition >= 0 ? 
@@ -86,11 +85,24 @@
                       shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
                   };
               });
+
+          // Check if this goal configuration has been used before
+          const goalString = JSON.stringify(selectedGoals.sort((a, b) => 
+              a.shapeClass.localeCompare(b.shapeClass)));
           
-          // Store these selections to use in the next trial
-          jsPsych.data.addProperties({
-              selected_goals: selectedGoals
-          });
+          if (previousGoals.includes(goalString)) {
+              // If duplicate, don't store and show error
+              data.duplicate_goal = true;
+              alert("This goal has already been selected in a previous round. Please create a different goal.");
+              // Return to goal selection
+              jsPsych.endCurrentTimeline();
+          } else {
+              // If new goal, store it and continue
+              previousGoals.push(goalString);
+              jsPsych.data.addProperties({
+                  selected_goals: selectedGoals
+              });
+          }
       }
   };
   

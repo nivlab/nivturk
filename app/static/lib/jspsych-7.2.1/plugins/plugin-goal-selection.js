@@ -294,18 +294,63 @@ var jsPsychGoalSelection = (function (jspsych) {
                 document.removeEventListener('mouseup', onMouseUp);
             }
 
+            // Add this function to check for duplicates
+            function checkForDuplicateGoal(selections) {
+                // Format current selections
+                const currentGoal = selections
+                    .filter(sel => sel.shape)
+                    .map(sel => {
+                        const shapeType = sel.shape.type;
+                        const shadeClass = sel.shape.sourcePosition >= 0 ? 
+                            Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+                                .querySelector('.shape-group').classList)
+                                .find(cls => cls.startsWith('shade-')) : '';
+                        const textureClass = sel.shape.sourcePosition >= 0 ?
+                            Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+                                .querySelector('path, rect').classList)
+                                .find(cls => ['plain', 'striped', 'dotted'].includes(cls)) : '';
+                        
+                        return {
+                            type: shapeType,
+                            shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
+                        };
+                    });
+
+                const goalString = JSON.stringify(currentGoal.sort((a, b) => 
+                    a.shapeClass.localeCompare(b.shapeClass)));
+                
+                return window.previousGoals && window.previousGoals.includes(goalString);
+            }
+
+            // Modify the updateSubmitButton function
             function updateSubmitButton() {
                 const targetAreas = display_element.querySelectorAll('.target-area');
-                // Count how many areas have shapes (excluding the instruction div)
                 const filledAreas = Array.from(targetAreas)
                     .filter(area => area.children.length > 1).length;
                 
-                // Only enable if exactly 3 shapes are selected
-                submitBtn.disabled = filledAreas !== 3;
+                // Get current selections
+                const selections = Array.from(targetAreas).map(area => ({
+                    shape: area.children.length > 1 ? {
+                        type: area.querySelector('.dragged-shape-container').dataset.shapeType,
+                        sourcePosition: parseInt(area.querySelector('.dragged-shape-container').dataset.sourcePosition)
+                    } : null
+                }));
+
+                // Check both conditions: 3 shapes and not duplicate
+                const isDuplicate = filledAreas === 3 && checkForDuplicateGoal(selections);
+                submitBtn.disabled = filledAreas !== 3 || isDuplicate;
+                
                 if (filledAreas === 3) {
-                    submitBtn.classList.add('active');
+                    if (isDuplicate) {
+                        submitBtn.classList.remove('active');
+                        submitBtn.setAttribute('data-error', 'This goal has already been selected');
+                    } else {
+                        submitBtn.classList.add('active');
+                        submitBtn.removeAttribute('data-error');
+                    }
                 } else {
                     submitBtn.classList.remove('active');
+                    submitBtn.removeAttribute('data-error');
                 }
             }
 

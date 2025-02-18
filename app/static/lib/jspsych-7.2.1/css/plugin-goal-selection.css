@@ -176,11 +176,21 @@
     transform: translateY(-1px);
 }
 
-/* Add a message for incomplete selection */
+/* Update the error message styling */
 .submit-btn:disabled::after {
-    content: " (Select exactly 3 shapes)";
+    content: "Select exactly 3 shapes";  /* Default message */
     font-size: 0.8em;
-    opacity: 0.8;
+    opacity: 1;
+    display: block;
+    margin-top: 5px;
+    color: #000000;
+    font-weight: 500;  /* Make text slightly bolder */
+}
+
+.submit-btn[data-error]::after {
+    content: attr(data-error);  /* Use the custom error message when present */
+    color: #000000;
+    font-weight: 500;
 }
 
 @keyframes dropAnimation {
