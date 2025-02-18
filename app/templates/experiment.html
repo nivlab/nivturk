@@ -59,14 +59,32 @@
           {text: "Goal 3", id: 3}
       ],
       on_finish: function(data) {
-          // Store the selected goal for the next trial
-          jsPsych.data.get().last(1).values()[0].final_selections.forEach(selection => {
-              if (selection.shape) {
-                  // Save this selection to use in the next trial
-                  jsPsych.data.addProperties({
-                      selected_goal: selection.shape
-                  });
-              }
+          // Get the final selections from the trial data
+          const selections = jsPsych.data.get().last(1).values()[0].final_selections;
+          
+          // Create an array of selected goals in the format needed for goal-display
+          const selectedGoals = selections
+              .filter(sel => sel.shape) // Filter out empty selections
+              .map(sel => {
+                  const shapeType = sel.shape.type;
+                  const shadeClass = sel.shape.sourcePosition >= 0 ? 
+                      Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+                          .querySelector('.shape-group').classList)
+                          .find(cls => cls.startsWith('shade-')) : '';
+                  const textureClass = sel.shape.sourcePosition >= 0 ?
+                      Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
+                          .querySelector('path, rect').classList)
+                          .find(cls => ['plain', 'striped', 'dotted'].includes(cls)) : '';
+                  
+                  return {
+                      type: shapeType,
+                      shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
+                  };
+              });
+          
+          // Store these selections to use in the next trial
+          jsPsych.data.addProperties({
+              selected_goals: selectedGoals
           });
       }
   };
@@ -74,31 +92,22 @@
   
   var goal_display = {
       type: jsPsychGoalDisplay,
-      selected_goal: [
-          {
-              type: 'goal-star',
-              shapeClass: 'goal-star shade-medium striped'
-          },
-          {
-              type: 'goal-star',
-              shapeClass: 'goal-star shade-medium striped'
-          },
-          {
-              type: 'goal-star',
-              shapeClass: 'goal-star shade-medium striped'
-          }
-      ],
+      selected_goal: function() {
+          const data = jsPsych.data.get();
+          const selectedGoals = data.last(1).values()[0].selected_goals;
+          return selectedGoals || [];  // Return empty array if no goals selected
+      },
       button_label: "Continue",
       on_finish: function(data) {
           if (data.goal_achieved) {
-              // Return to goal selection if goal was achieved
               timeline.push(goal_selection);
+              timeline.push(goal_display);
           }
       }
   };
   
 
-  //timeline.push(goal_selection);
+  timeline.push(goal_selection);
   timeline.push(goal_display);
 
   // Initialize jsPsych.

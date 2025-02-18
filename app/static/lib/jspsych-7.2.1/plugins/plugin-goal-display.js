@@ -306,27 +306,33 @@ var jsPsychGoalDisplay = (function (jspsych) {
 })(jsPsychModule); 
 
 // Helper function to render shape (add this to the class)
-function renderShape(goal) {
-    if (goal.type === 'goal-star') {
-        return `<g class="shape-group ${goal.shapeClass.split(' ')[1]}">
+function renderShape(shapeData) {
+    if (!shapeData) return '';
+    
+    const shapeType = shapeData.type;
+    const shapeClasses = shapeData.shapeClass;
+    const shadeClass = shapeClasses.split(' ')[1]; // Get the shade class
+
+    if (shapeType === 'goal-star') {
+        return `<g class="shape-group ${shadeClass}">
             <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                class="${goal.shapeClass}"/>
+                class="${shapeClasses}"/>
             <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-           </g>`;
-    } else if (goal.type === 'goal-cloud') {
-        return `<g class="shape-group ${goal.shapeClass.split(' ')[1]}">
+        </g>`;
+    } else if (shapeType === 'goal-cloud') {
+        return `<g class="shape-group ${shadeClass}">
             <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
-                class="${goal.shapeClass}"/>
+                class="${shapeClasses}"/>
             <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-           </g>`;
+        </g>`;
     } else {
-        return `<g class="shape-group ${goal.shapeClass.split(' ')[1]}">
+        return `<g class="shape-group ${shadeClass}">
             <rect x="20" y="20" width="60" height="60" rx="10" 
-                class="${goal.shapeClass}"/>
+                class="${shapeClasses}"/>
             <rect x="20" y="20" width="60" height="60" rx="10" 
                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-           </g>`;
+        </g>`;
     }
 } 
