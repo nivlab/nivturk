@@ -208,7 +208,11 @@ var jsPsychGoalDisplay = (function (jspsych) {
             const workspaceShapes = display_element.querySelectorAll('.workspace-shape');
             workspaceShapes.forEach(shape => {
                 shape.addEventListener('click', () => {
-                    if (!actorShape) {
+                    if (shape === actorShape) {
+                        // Clicking the actor shape again deselects it
+                        actorShape.classList.remove('actor-selected');
+                        actorShape = null;
+                    } else if (!actorShape) {
                         // First click - select actor
                         actorShape = shape;
                         shape.classList.add('actor-selected');
