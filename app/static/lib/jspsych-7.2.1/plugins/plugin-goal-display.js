@@ -216,6 +216,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     <button class="jspsych-btn">${trial.button_label}</button>
                 </div>
             </div>
+            <div class="instruction-text">Achieve your chosen goal by first choosing the feature you want to change. Then choose an actor and then a recipient shape.</div>
             <div class="workspace-container">
                 <div class="feature-menu">
                     <button class="feature-btn active" data-feature="texture">texture</button>

@@ -267,4 +267,20 @@
         transform: scale(1);
         opacity: 1;
     }
+}
+
+.instruction-text {
+    text-align: center;
+    color: #333;
+    font-size: 1.1em;
+    position: absolute;
+    top: 10%;  /* Move up from 20% to 10% */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    z-index: 2;
+    box-sizing: border-box;
 } 
