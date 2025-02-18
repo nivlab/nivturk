@@ -224,15 +224,27 @@ var jsPsychGoalDisplay = (function (jspsych) {
                             
                             // Transfer the feature from actor to recipient
                             if (feature === 'texture') {
-                                // Get texture classes
-                                const actorTexture = Array.from(actorShape.querySelector('path, rect').classList)
-                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                                // Get current texture of recipient
                                 const recipientElement = recipientShape.querySelector('path, rect');
+                                const currentTexture = Array.from(recipientElement.classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                                
+                                // Define texture cycle order
+                                const textureCycle = ['striped', 'dotted', 'plain'];
+                                
+                                // Find next texture in cycle
+                                let nextTexture;
+                                const currentIndex = textureCycle.indexOf(currentTexture);
+                                if (currentIndex === -1 || currentIndex === textureCycle.length - 1) {
+                                    nextTexture = textureCycle[0]; // Start with stripes if current texture not found or at end
+                                } else {
+                                    nextTexture = textureCycle[currentIndex + 1];
+                                }
                                 
                                 // Remove existing texture
                                 recipientElement.classList.remove('plain', 'striped', 'dotted');
-                                // Add actor's texture
-                                recipientElement.classList.add(actorTexture);
+                                // Add next texture in cycle
+                                recipientElement.classList.add(nextTexture);
                             } else if (feature === 'color') {
                                 // Get color (shade) from actor's shape group
                                 const actorShade = Array.from(actorShape.querySelector('.shape-group').classList)
