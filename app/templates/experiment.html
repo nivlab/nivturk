@@ -11,11 +11,14 @@
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-display.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-instructions.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-tutorial-display.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-selection.css" rel="stylesheet" type="text/css"></link>
   <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-display.css" rel="stylesheet" type="text/css"></link>
+  <link href="../static/lib/jspsych-7.2.1/css/plugin-tutorial-display.css" rel="stylesheet" type="text/css"></link>
 
 </head>
 <body></body>
@@ -134,7 +137,52 @@
       }
   };
 
-  // Add the procedure to the timeline once
+  // Add instructions before the goal procedure
+  var instructions = {
+      type: jsPsychInstructions,
+      pages: [
+          `<div class="instruction-page">
+              <h2>Welcome to the ShapeWorld task!</h2>
+              <p>In this task, you will be able to select your own goals and achieve them.</p>
+              <p>We first start by explaining how to achieve goals in ShapeWorld.</p>
+          </div>`
+      ],
+      show_clickable_nav: true,
+      button_label_next: "Begin Task",
+      allow_backward: false
+  };
+
+  // Add CSS for the instruction page
+  const style = document.createElement('style');
+  style.innerHTML = `
+      .instruction-page {
+          max-width: 800px;
+          margin: 0 auto;
+          text-align: center;
+          padding: 40px;
+      }
+      .instruction-page h2 {
+          color: #333;
+          margin-bottom: 30px;
+      }
+      .instruction-page p {
+          font-size: 1.2em;
+          line-height: 1.6;
+          color: #444;
+          margin-bottom: 20px;
+      }
+  `;
+  document.head.appendChild(style);
+
+  // Add tutorial before the main task
+  var tutorial = {
+      type: jsPsychTutorialDisplay,
+      button_label_next: "Next"
+  };
+
+  // Update timeline
+  timeline.push(instructions);
+  timeline.push(tutorial);  // Add tutorial here
   timeline.push(goal_procedure);
 
   // Initialize jsPsych.
