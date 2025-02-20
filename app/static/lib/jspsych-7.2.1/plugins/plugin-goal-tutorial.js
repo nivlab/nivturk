@@ -271,6 +271,9 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     celebrationOverlay.classList.remove('hidden');
                                     celebrationOverlay.classList.add('show');
                                     
+                                    // Add instruction container removal here
+                                    display_element.querySelector('.instruction-container').style.display = 'none';
+                                    
                                     for (let i = 0; i < 50; i++) {
                                         this.createConfetti(display_element);
                                     }
@@ -309,7 +312,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 
                 // Update button states
                 prevBtn.disabled = currentPage === 1;
-                nextBtn.textContent = currentPage === totalPages ? "Begin" : "Next";
+                nextBtn.disabled = currentPage === totalPages;  // Disable next button on last page instead of changing text
             }
 
             prevBtn.addEventListener('click', () => {
@@ -323,9 +326,6 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 if (currentPage < totalPages) {
                     currentPage++;
                     updateInstructionVisibility();
-                } else {
-                    // Remove instruction container and show the task
-                    display_element.querySelector('.instruction-container').style.display = 'none';
                 }
             });
         }
