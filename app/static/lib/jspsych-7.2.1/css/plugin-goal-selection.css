@@ -1,15 +1,24 @@
 /* Define consistent colors */
 :root {
     --shape-color: #007bff;
-    --shape-size: 80px;
+    --shape-size: 70px;
+}
+
+.jspsych-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;  /* Add small padding */
 }
 
 .jspsych-goal-selection-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 10px;  /* Reduce gap from 20px */
+    padding: 10px;  /* Reduce padding from 20px */
     -webkit-user-select: none;  /* Safari */
     -moz-user-select: none;     /* Firefox */
     -ms-user-select: none;      /* IE10+/Edge */
@@ -23,6 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 2px 0;  /* Further reduce margins */
 }
 
 /* Common container styles */
@@ -41,7 +51,8 @@
 
 /* Source specific */
 .source-container {
-    margin-bottom: 10px;
+    margin: 5px;  /* Reduce margins */
+    padding: 5px;  /* Reduce padding */
     border: 1px solid transparent;  /* Helps with debugging - remove if not needed */
     background-color: transparent;
 }
@@ -49,7 +60,7 @@
 .drag-instruction {
     color: #666;
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;  /* Reduce from 20px */
     text-align: center;  /* Center the text above the grid */
 }
 
@@ -57,22 +68,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 10px;  /* Reduce from 20px */
+    margin-bottom: 10px;  /* Reduce from 20px */
 }
 
 .target-area-row {
     display: flex;
-    gap: 30px;
+    gap: 20px;  /* Reduce from 30px */
     justify-content: center;
 }
 
 .target-area {
-    width: 150px;
-    height: 150px;
+    width: 120px;  /* Reduce from 150px */
+    height: 120px;  /* Reduce from 150px */
     border: 2px dashed #ccc;
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 8px;
+    padding: 10px;  /* Reduce padding */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -459,4 +470,33 @@
 .dragged-shape-container .dotted {
     mask-type: alpha;
     -webkit-mask-type: alpha;
+}
+
+.jspsych-goal-selection-preamble {
+    font-size: 1.5em;
+    line-height: 1.4;  /* Reduce line height slightly */
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    margin: 10px 0 10px;  /* Reduce margins */
+    padding: 0 20px;
+}
+
+.jspsych-goal-selection-instruction {
+    margin-top: 5px;  /* Reduce top margin */
+    margin-bottom: 10px;  /* Add bottom margin */
+    color: #666;
+    text-align: center;
+}
+
+/* Adjust goal display area */
+.goal-display-shapes {
+    margin: 10px auto;  /* Reduce margin */
+    gap: 10px;  /* Reduce gap between shapes */
+}
+
+/* Make shapes slightly smaller if needed */
+.source-container svg {
+    width: 80px;  /* Adjust size as needed */
+    height: 80px;
 }

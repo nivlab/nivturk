@@ -60,7 +60,7 @@
   var goal_selection = {
       type: jsPsychGoalSelection,
       preamble: function() {
-          return `Build your goal using the items below (round ${loopsCompleted + 1} of ${TOTAL_LOOPS}).`;
+          return `Build a goal of your own using the items below (round ${loopsCompleted + 1} of ${TOTAL_LOOPS}).`;
       },
       goals: [
           {text: "Goal 1", id: 1},
@@ -137,7 +137,8 @@
       }
   };
 
-  // Add instructions before the goal procedure
+  // Comment out instructions and tutorial
+  /*
   var instructions = {
       type: jsPsychInstructions,
       pages: [
@@ -205,10 +206,12 @@
       allow_backward: true
   };
 
-  // Update timeline to include post-tutorial instructions
-  timeline.push(instructions);
-  timeline.push(tutorial);
-  timeline.push(post_tutorial_instructions);
+  // Comment out the pushes to timeline
+  // timeline.push(instructions);
+  // timeline.push(tutorial);
+  // timeline.push(post_tutorial_instructions);
+  */
+
   timeline.push(goal_procedure);
 
   // Initialize jsPsych.
