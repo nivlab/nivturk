@@ -52,17 +52,6 @@
       timeline.push(consent);
   }
 
-  // Add tutorial before main experiment
-  var tutorial = {
-      type: jsPsychGoalTutorial,
-      preamble: `
-          
-      `,
-      button_label: "Start Main Experiment"
-  };
-  
-  timeline.push(tutorial);
-
   // Add a counter for completed loops
   var loopsCompleted = 0;
   const TOTAL_LOOPS = 5;
@@ -159,7 +148,7 @@
           </div>`
       ],
       show_clickable_nav: true,
-      button_label_next: "Begin Task",
+      button_label_next: "Begin Tutorial",
       allow_backward: false
   };
 
@@ -185,15 +174,14 @@
   `;
   document.head.appendChild(style);
 
-  // Add tutorial before the main task
+  // Add tutorial
   var tutorial = {
-      type: jsPsychGoalTutorial,
-      button_label_next: "Next"
+      type: jsPsychGoalTutorial
   };
 
-  // Update timeline
+  // Update timeline - remove duplicate tutorial
   timeline.push(instructions);
-  timeline.push(tutorial);  // Add tutorial here
+  timeline.push(tutorial);
   timeline.push(goal_procedure);
 
   // Initialize jsPsych.

@@ -84,7 +84,6 @@ var jsPsychGoalTutorial = (function (jspsych) {
                             </div>
                         </div>
                     </div>
-                    <button class="jspsych-btn">${trial.button_label}</button>
                 </div>
                 <div class="workspace-container">
                     <div class="feature-menu">
@@ -113,14 +112,6 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     </div>
                 </div>
             `;
-
-            // Add button click event
-            const button = display_element.querySelector('.jspsych-btn');
-            button.addEventListener('click', () => {
-                this.jsPsych.finishTrial({
-                    rt: Math.round(performance.now() - startTime)
-                });
-            });
 
             // Handle feature button clicks
             const featureButtons = display_element.querySelectorAll('.feature-btn');
@@ -294,7 +285,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 });
             });
 
-            // Add instruction navigation logic after the HTML setup
+            // Update the instruction navigation logic
             let currentPage = 1;
             const totalPages = 4;
 
