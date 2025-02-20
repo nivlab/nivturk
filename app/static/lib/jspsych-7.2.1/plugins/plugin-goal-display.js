@@ -256,11 +256,11 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     
                     <h4>Shade:</h4>
                     <ul>
-                        <li>become more like actor</li>
-                        <li>if already same:</li>
+                        <li>Become more like actor</li>
+                        <li>If already same:</li>
                         <ul>
-                            <li>mostly become medium</li>
-                            <li>sometimes high or low</li>
+                            <li>Mostly become medium</li>
+                            <li>Sometimes high or low</li>
                         </ul>
                     </ul>
                 </div>
