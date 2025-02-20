@@ -9,11 +9,14 @@
 
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-text.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-html-form.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-fullscreen.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-display.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-tutorial.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-instructions.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-html-button-response.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -126,7 +129,8 @@
   };
   
 
-  // Create a procedure that includes both trials
+  // Comment out the main experiment loop
+  /*
   var goal_procedure = {
       timeline: [goal_selection, goal_display],
       loop_function: function() {
@@ -137,83 +141,189 @@
           return loopsCompleted < TOTAL_LOOPS;
       }
   };
-
-  // Comment out instructions and tutorial
-  /*
-  var instructions = {
-      type: jsPsychInstructions,
-      pages: [
-          `<div class="instruction-page">
-              <h2>Welcome to the ShapeWorld task!</h2>
-              <p>In this task, you will be able to select your own goals and achieve them.</p>
-              <p>We first start by explaining how to achieve goals in ShapeWorld.</p>
-          </div>`
-      ],
-      show_clickable_nav: true,
-      button_label_next: "Begin Tutorial",
-      allow_backward: false
-  };
-
-  // Add CSS for the instruction page
-  const style = document.createElement('style');
-  style.innerHTML = `
-      .instruction-page {
-          max-width: 800px;
-          margin: 0 auto;
-          text-align: center;
-          padding: 40px;
-      }
-      .instruction-page h2 {
-          color: #333;
-          margin-bottom: 30px;
-      }
-      .instruction-page p {
-          font-size: 1.2em;
-          line-height: 1.6;
-          color: #444;
-          margin-bottom: 20px;
-      }
-  `;
-  document.head.appendChild(style);
-
-  // Add tutorial
-  var tutorial = {
-      type: jsPsychGoalTutorial
-  };
-
-  // Add post-tutorial instructions
-  var post_tutorial_instructions = {
-      type: jsPsychInstructions,
-      pages: [
-          `<div class="instruction-page">
-              <h2>Great job with the tutorial!</h2>
-              <p>Well done! For the rest of this task, you will select your own goal configurations. You can then attempt to achieve your own goal like you did with the practice goal. You just cannot choose the same exact goal twice.</p>
-          </div>`,
-          
-          `<div class="instruction-page">
-              <h2>There is no way to get stuck.</h2>
-              <p>When building your goal, you will not know what items you will start with. However, you will always be able to achieve any goal that you build for yourself. There is no way to get permanently stuck on this task.</p>
-          </div>`,
-          
-          `<div class="instruction-page">
-            <h2>You can give up, but it won't count towards your total.</h2>  
-            <p>From now on, you will have a button to give up on the current goal. Giving up will let you choose a new goal, but it won't count towards your total. To finish this task, you must accomplish 20 goals.</p>
-          </div>`
-      ],
-      show_clickable_nav: true,
-      button_label_next: "Next",
-      button_label_previous: "Previous",
-      button_label_finish: "Begin Task",
-      allow_backward: true
-  };
-
-  // Comment out the pushes to timeline
-  // timeline.push(instructions);
-  // timeline.push(tutorial);
-  // timeline.push(post_tutorial_instructions);
+  timeline.push(goal_procedure);
   */
 
-  timeline.push(goal_procedure);
+  // Add debrief questionnaire
+  var debrief = {
+      type: jsPsychSurveyHtmlForm,
+      preamble: `
+          <h2>Goal Selection Study Debrief Questions</h2>
+          <p>Thank you for your participation in our research study.</p>
+          <p>Before we end, we have a few additional questions we would like to ask you. 
+          Please be honest – your responses here will not affect your payment or bonus, but 
+          can help us improve our experiments in the future.</p>
+      `,
+      html: `
+          <div class="debrief-questions">
+              <div class="question-container">
+                  <p>1. What strategy/strategies did you use to select your goals, if any?</p>
+                  <textarea name="strategies" rows="3" cols="50"></textarea>
+              </div>
+
+              <div class="question-container">
+                  <p>2. How enjoyable did you find the task? [0=Not at all, 7=Very much]</p>
+                  <input type="range" name="enjoyable" min="0" max="7" value="4" step="1">
+                  <div class="range-labels">
+                      <span>0<br>Not at all</span>
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                      <span>6</span>
+                      <span>7<br>Very much</span>
+                  </div>
+              </div>
+
+              <div class="question-container">
+                  <p>3. How motivated were you to complete the task? [0=Not at all, 7=Very much]</p>
+                  <input type="range" name="motivated" min="0" max="7" value="4" step="1">
+                  <div class="range-labels">
+                      <span>0<br>Not at all</span>
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                      <span>6</span>
+                      <span>7<br>Very much</span>
+                  </div>
+              </div>
+
+              <div class="question-container">
+                  <p>4. How often did you stop paying attention to the task? [0=Not at all, 7=Very much]</p>
+                  <input type="range" name="attention" min="0" max="7" value="4" step="1">
+                  <div class="range-labels">
+                      <span>0<br>Not at all</span>
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                      <span>6</span>
+                      <span>7<br>Very much</span>
+                  </div>
+              </div>
+
+              <div class="question-container">
+                  <p>5. How clear were the task instructions? [0=Not at all, 7=Very much]</p>
+                  <input type="range" name="clarity" min="0" max="7" value="4" step="1">
+                  <div class="range-labels">
+                      <span>0<br>Not at all</span>
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                      <span>6</span>
+                      <span>7<br>Very much</span>
+                  </div>
+              </div>
+
+              <div class="question-container">
+                  <p>6. Do you have any suggestions how we could improve the instructions?</p>
+                  <textarea name="instruction_feedback" rows="3" cols="50"></textarea>
+              </div>
+
+              <div class="question-container">
+                  <p>7. If you could suggest one improvement to the experience of this experiment, what would it be?</p>
+                  <textarea name="improvement" rows="3" cols="50"></textarea>
+              </div>
+
+              <div class="question-container">
+                  <p>8. Do you have any other comments or feedback? Please share:</p>
+                  <textarea name="feedback" rows="3" cols="50"></textarea>
+              </div>
+          </div>
+      `,
+      button_label: 'Submit Responses',
+      css_classes: ['debrief-survey']
+  };
+
+  // Add some CSS for the debrief questionnaire
+  const debriefStyle = document.createElement('style');
+  debriefStyle.innerHTML = `
+      .debrief-questions {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+      }
+      .question-container {
+          margin-bottom: 25px;
+      }
+      .range-labels {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 5px;
+          font-size: 0.9em;
+          color: #666;
+          padding: 0 10px;
+      }
+      .range-labels span {
+          text-align: center;
+          line-height: 1.2;
+      }
+      textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-family: inherit;
+      }
+      input[type="range"] {
+          width: 100%;
+          margin: 10px 0;
+      }
+  `;
+  document.head.appendChild(debriefStyle);
+
+  // Add debrief to timeline
+  timeline.push(debrief);
+
+  // Add final debrief page after the questionnaire
+  var final_debrief = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+          <div class="debrief-final" style="max-width: 800px; margin: 0 auto; text-align: left; line-height: 1.6;">
+              <h2>Goal Selection Study Debrief</h2>
+              
+              <p>Thank you for your participation in our research study.</p>
+              
+              <p>Much research shows that goals change how people learn and make decisions. This study 
+              examines how people choose their own goals, and then make decisions in order to achieve 
+              those goals.</p>
+              
+              <p>If you are interested in reading some research about this topic, here are two references:</p>
+              <ul>
+                  <li>Molinaro, G., & Collins, A. G. E. (2023). A goal-centric outlook on learning. 
+                  <i>Trends in Cognitive Sciences</i>. 
+                  <a href="https://doi.org/10.1016/j.tics.2023.08.011" target="_blank">https://doi.org/10.1016/j.tics.2023.08.011</a></li>
+                  
+                  <li>Chu, J., Tenenbaum, J. B., & Schulz, L. E. (2024). In praise of folly: Flexible goals 
+                  and human cognition. <i>Trends in Cognitive Sciences, 28</i>(7), 628-642. 
+                  <a href="https://doi.org/10.1016/j.tics.2024.03.006" target="_blank">https://doi.org/10.1016/j.tics.2024.03.006</a></li>
+              </ul>
+              
+              <p>If you have any questions or comments, please do not hesitate to ask us. Thank you for 
+              your participation.</p>
+              
+              <div style="margin-top: 30px;">
+                  <p><strong>Primary Investigator:</strong><br>
+                  Yael Niv, PhD<br>
+                  Princeton Neuroscience Institute Rm 143,<br>
+                  Princeton University<br>
+                  Phone: (609) 258-0826<br>
+                  Email: <a href="mailto:yael@princeton.edu">yael@princeton.edu</a></p>
+              </div>
+          </div>
+      `,
+      choices: ['Finish'],
+      css_classes: ['debrief-final']
+  };
+
+  // Add to timeline after the questionnaire
+  timeline.push(final_debrief);
 
   // Initialize jsPsych
   var jsPsych = initJsPsych({
