@@ -60,7 +60,7 @@
 
   // Add a counter for completed loops
   var loopsCompleted = 0;
-  const TOTAL_LOOPS = 1;
+  const TOTAL_LOOPS = 5;
   var previousGoals = [];  // Array to store previous goals
 
   var goal_selection = {
@@ -217,9 +217,9 @@
   };
 
   // Add instructions and tutorial to timeline (after fullscreen, before main experiment)
-  //timeline.push(instructions);
-  //timeline.push(tutorial);
-  //timeline.push(post_tutorial_instructions);
+  timeline.push(instructions);
+  timeline.push(tutorial);
+  timeline.push(post_tutorial_instructions);
 
   // Define debrief questionnaire
   var debrief = {
@@ -444,7 +444,7 @@
   };
 
   // Add everything to timeline in correct order
-  //timeline.push(goal_procedure);  // Main experiment loop
+  timeline.push(goal_procedure);  // Main experiment loop
   timeline.push(debrief);        // Debrief questionnaire 
   timeline.push(final_debrief);  // Final debrief page
 
