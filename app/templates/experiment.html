@@ -233,84 +233,86 @@
       `,
       html: `
           <div class="debrief-questions">
-              <div class="question-container">
-                  <p>1. What strategy/strategies did you use to select your goals, if any?</p>
-                  <textarea name="strategies" rows="3" cols="50"></textarea>
-              </div>
-
-              <div class="question-container">
-                  <p>2. How enjoyable did you find the task? [0=Not at all, 7=Very much]</p>
-                  <input type="range" name="enjoyable" min="0" max="7" value="4" step="1">
-                  <div class="range-labels">
-                      <span>0<br>Not at all</span>
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                      <span>5</span>
-                      <span>6</span>
-                      <span>7<br>Very much</span>
+              <div class="debrief-content">
+                  <div class="question-container">
+                      <p>1. What strategy/strategies did you use to select your goals, if any?</p>
+                      <textarea name="strategies" rows="3" cols="50"></textarea>
                   </div>
-              </div>
 
-              <div class="question-container">
-                  <p>3. How motivated were you to complete the task? [0=Not at all, 7=Very much]</p>
-                  <input type="range" name="motivated" min="0" max="7" value="4" step="1">
-                  <div class="range-labels">
-                      <span>0<br>Not at all</span>
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                      <span>5</span>
-                      <span>6</span>
-                      <span>7<br>Very much</span>
+                  <div class="question-container">
+                      <p>2. How enjoyable did you find the task? [0=Not at all, 7=Very much]</p>
+                      <input type="range" name="enjoyable" min="0" max="7" value="4" step="1">
+                      <div class="range-labels">
+                          <span>0<br>Not at all</span>
+                          <span>1</span>
+                          <span>2</span>
+                          <span>3</span>
+                          <span>4</span>
+                          <span>5</span>
+                          <span>6</span>
+                          <span>7<br>Very much</span>
+                      </div>
                   </div>
-              </div>
 
-              <div class="question-container">
-                  <p>4. How often did you stop paying attention to the task? [0=Not at all, 7=Very much]</p>
-                  <input type="range" name="attention" min="0" max="7" value="4" step="1">
-                  <div class="range-labels">
-                      <span>0<br>Not at all</span>
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                      <span>5</span>
-                      <span>6</span>
-                      <span>7<br>Very much</span>
+                  <div class="question-container">
+                      <p>3. How motivated were you to complete the task? [0=Not at all, 7=Very much]</p>
+                      <input type="range" name="motivated" min="0" max="7" value="4" step="1">
+                      <div class="range-labels">
+                          <span>0<br>Not at all</span>
+                          <span>1</span>
+                          <span>2</span>
+                          <span>3</span>
+                          <span>4</span>
+                          <span>5</span>
+                          <span>6</span>
+                          <span>7<br>Very much</span>
+                      </div>
                   </div>
-              </div>
 
-              <div class="question-container">
-                  <p>5. How clear were the task instructions? [0=Not at all, 7=Very much]</p>
-                  <input type="range" name="clarity" min="0" max="7" value="4" step="1">
-                  <div class="range-labels">
-                      <span>0<br>Not at all</span>
-                      <span>1</span>
-                      <span>2</span>
-                      <span>3</span>
-                      <span>4</span>
-                      <span>5</span>
-                      <span>6</span>
-                      <span>7<br>Very much</span>
+                  <div class="question-container">
+                      <p>4. How often did you stop paying attention to the task? [0=Not at all, 7=Very much]</p>
+                      <input type="range" name="attention" min="0" max="7" value="4" step="1">
+                      <div class="range-labels">
+                          <span>0<br>Not at all</span>
+                          <span>1</span>
+                          <span>2</span>
+                          <span>3</span>
+                          <span>4</span>
+                          <span>5</span>
+                          <span>6</span>
+                          <span>7<br>Very much</span>
+                      </div>
                   </div>
-              </div>
 
-              <div class="question-container">
-                  <p>6. Do you have any suggestions how we could improve the instructions?</p>
-                  <textarea name="instruction_feedback" rows="3" cols="50"></textarea>
-              </div>
+                  <div class="question-container">
+                      <p>5. How clear were the task instructions? [0=Not at all, 7=Very much]</p>
+                      <input type="range" name="clarity" min="0" max="7" value="4" step="1">
+                      <div class="range-labels">
+                          <span>0<br>Not at all</span>
+                          <span>1</span>
+                          <span>2</span>
+                          <span>3</span>
+                          <span>4</span>
+                          <span>5</span>
+                          <span>6</span>
+                          <span>7<br>Very much</span>
+                      </div>
+                  </div>
 
-              <div class="question-container">
-                  <p>7. If you could suggest one improvement to the experience of this experiment, what would it be?</p>
-                  <textarea name="improvement" rows="3" cols="50"></textarea>
-              </div>
+                  <div class="question-container">
+                      <p>6. Do you have any suggestions how we could improve the instructions?</p>
+                      <textarea name="instruction_feedback" rows="3" cols="50"></textarea>
+                  </div>
 
-              <div class="question-container">
-                  <p>8. Do you have any other comments or feedback? Please share:</p>
-                  <textarea name="feedback" rows="3" cols="50"></textarea>
+                  <div class="question-container">
+                      <p>7. If you could suggest one improvement to the experience of this experiment, what would it be?</p>
+                      <textarea name="improvement" rows="3" cols="50"></textarea>
+                  </div>
+
+                  <div class="question-container">
+                      <p>8. Do you have any other comments or feedback? Please share:</p>
+                      <textarea name="feedback" rows="3" cols="50"></textarea>
+                  </div>
               </div>
           </div>
       `,
@@ -321,23 +323,25 @@
   // Update CSS for the debrief questionnaire
   const debriefStyle = document.createElement('style');
   debriefStyle.innerHTML = `
+      /* Main container */
+      .jspsych-content {
+          height: auto !important;  /* Override any fixed height */
+          min-height: 100vh;
+          padding: 20px 0;
+      }
+
       .debrief-questions {
           max-width: 800px;
           margin: 0 auto;
           padding: 20px;
-          height: calc(100vh - 200px); /* Fixed height with room for header/buttons */
-          overflow-y: auto;
           position: relative;
       }
       
-      /* Ensure the preamble stays at the top */
+      /* Preamble styling */
       .jspsych-survey-html-form-preamble {
-          position: sticky;
-          top: 0;
           background: white;
           padding: 20px 0;
-          margin: 0;
-          z-index: 1;
+          margin: 0 0 30px 0;  /* Add bottom margin for spacing */
       }
       
       /* Container for all questions */
@@ -346,13 +350,17 @@
           padding: 10px 0;
       }
       
-      /* Ensure the submit button stays visible */
+      /* Submit button styling */
       .jspsych-survey-html-form-submit {
-          position: sticky;
-          bottom: 0;
+          margin: 40px 0 80px 0;
+          padding: 15px 30px;
           background: white;
-          padding: 20px 0;
-          margin-top: 20px;
+          font-size: 1.1em;
+      }
+      
+      /* Questions content container */
+      .debrief-content {
+          padding-bottom: 40px;
       }
       
       /* Rest of the styles remain the same */
@@ -378,22 +386,6 @@
       input[type="range"] {
           width: 100%;
           margin: 10px 0;
-      }
-      
-      /* Scrollbar styles remain the same */
-      .debrief-questions::-webkit-scrollbar {
-          width: 10px;
-      }
-      .debrief-questions::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 5px;
-      }
-      .debrief-questions::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 5px;
-      }
-      .debrief-questions::-webkit-scrollbar-thumb:hover {
-          background: #555;
       }
   `;
   document.head.appendChild(debriefStyle);
