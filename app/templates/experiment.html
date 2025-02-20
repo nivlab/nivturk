@@ -9,6 +9,7 @@
 
   <!-- Load jsPsych plug-ins -->
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-fullscreen.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-display.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-tutorial.js"></script>
@@ -214,7 +215,7 @@
 
   timeline.push(goal_procedure);
 
-  // Initialize jsPsych.
+  // Initialize jsPsych
   var jsPsych = initJsPsych({
     on_finish: function() {
 
@@ -242,6 +243,18 @@
 
     }
   });
+
+  // Add fullscreen trial at the start
+  var fullscreen_trial = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: true,
+      message: '<p>The experiment will switch to full screen mode when you press the button below.</p>',
+      button_label: "Enter Fullscreen",
+      delay_after: 0
+  };
+
+  // Add fullscreen trial to beginning of timeline
+  timeline.unshift(fullscreen_trial);
 
   // Execute timeline.
   jsPsych.run(timeline);
