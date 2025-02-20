@@ -71,4 +71,52 @@
 
 .page-counter {
     display: none;  /* Hide the page counter */
+}
+
+.rules-container {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 300px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.rules-content {
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.rules-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.rules-content h4 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.rules-content p, .rules-content ul {
+    margin: 8px 0;
+    color: #555;
+}
+
+.rules-content ul {
+    padding-left: 20px;
+}
+
+.rules-content ul ul {
+    margin-top: 5px;
+}
+
+/* Adjust workspace container to make room for rules */
+.workspace-container {
+    margin-right: 320px;
 } 

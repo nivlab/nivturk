@@ -101,6 +101,30 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         </div>
                     </div>
                 </div>
+                <div class="rules-container">
+                    <div class="rules-content">
+                        <h3>Rules:</h3>
+                        
+                        <h4>Texture:</h4>
+                        <p>The recipient item texture cycles between plain, striped, and dotted in that order when acted on.</p>
+                        
+                        <h4>Shape:</h4>
+                        <ul>
+                            <li>Most of the time, the recipient item will take on the shape of the actor item.</li>
+                            <li>Sometimes, the recipient item will change to a random shape that is not the actor shape.</li>
+                        </ul>
+                        
+                        <h4>Shade:</h4>
+                        <ul>
+                            <li>If the two items have different shades, the recipient item will become more like the actor item by one step (e.g., dark to medium).</li>
+                            <li>If the two items have the same shade, most of the time the recipient item will become medium shade, but sometimes:</li>
+                            <ul>
+                                <li>If both items are medium shade, the recipient will change to either high or low shade.</li>
+                                <li>If both items are high shade or both are low shade, the recipient won't change.</li>
+                            </ul>
+                        </ul>
+                    </div>
+                </div>
                 <div class="celebration-overlay hidden">
                     <div class="celebration-content">
                         <h2>Goal Achieved!</h2>
