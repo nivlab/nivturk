@@ -106,7 +106,9 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         <h3>Rules:</h3>
                         
                         <h4>Texture:</h4>
-                        <p>The recipient item texture cycles between plain, striped, and dotted in that order when acted on.</p>
+                        <ul>
+                            <li>The recipient item texture cycles between plain, striped, and dotted in that order when acted on.</li>
+                        </ul>
                         
                         <h4>Shape:</h4>
                         <ul>

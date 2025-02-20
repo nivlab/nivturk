@@ -89,23 +89,27 @@
 .rules-content {
     font-size: 0.9em;
     line-height: 1.4;
+    text-align: left;
 }
 
 .rules-content h3 {
     margin-top: 0;
     margin-bottom: 15px;
     color: #333;
+    text-align: left;
 }
 
 .rules-content h4 {
     margin-top: 15px;
     margin-bottom: 8px;
     color: #444;
+    text-align: left;
 }
 
-.rules-content p, .rules-content ul {
+.rules-content p {
     margin: 8px 0;
     color: #555;
+    text-align: left;
 }
 
 .rules-content ul {
