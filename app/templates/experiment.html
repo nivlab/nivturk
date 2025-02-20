@@ -114,9 +114,9 @@
       selected_goal: function() {
           const data = jsPsych.data.get();
           const selectedGoals = data.last(1).values()[0].selected_goals;
-          return selectedGoals || [];  // Return empty array if no goals selected
+          return selectedGoals || [];
       },
-      button_label: "Continue",
+      button_label: "Give Up On This Goal",
       on_finish: function(data) {
           if (data.goal_achieved) {
               loopsCompleted++;

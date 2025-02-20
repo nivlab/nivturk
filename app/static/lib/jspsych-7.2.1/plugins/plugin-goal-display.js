@@ -213,7 +213,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     </svg>`
                         }
                     </div>
-                    <button class="jspsych-btn">${trial.button_label}</button>
+                    <button class="jspsych-btn give-up-btn">Give Up On This Goal</button>
                 </div>
             </div>
             <div class="instruction-text">Achieve your chosen goal by first choosing the feature you want to change. Then choose an actor and then a recipient shape.</div>

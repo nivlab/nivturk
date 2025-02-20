@@ -125,6 +125,7 @@ var jsPsychGoalSelection = (function (jspsych) {
                                 <div class="target-instruction">Drop here</div>
                             </div>
                         </div>
+                        <div class="remove-instruction">*Click a shape to remove it</div>
                     </div>
                     <button class="submit-btn" disabled>Submit Selection</button>
                 </div>
