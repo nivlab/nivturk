@@ -47,10 +47,10 @@ var jsPsychGoalTutorial = (function (jspsych) {
             // Create the display HTML - same structure as goal-display
             display_element.innerHTML = `
                 ${trial.preamble ? `<div class="jspsych-goal-display-preamble">${trial.preamble}</div>` : ''}
-                <div class="instruction-container">
+                <div class="instruction-text-container">
                     <div class="instruction-content">
                         <div class="instruction-text" data-page="1">
-                            Above is a configuration of three items. In the top left corner is the goal configuration that you are trying to match.
+                            Below is a configuration of three items. In the top left corner is the goal configuration that you are trying to match.
                         </div>
                         <div class="instruction-text hidden" data-page="2">
                             You can make the items change by choosing an "actor" item and a "recipient" item. The item you click first will be the actor, and the item you click second will be the recipient. The actor will change the recipient.
@@ -60,10 +60,6 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         </div>
                         <div class="instruction-text hidden" data-page="4">
                             On the right is a menu that explains the rules for how recipient items change when they are acted on. Read the rules here, and try to exactly match the goal configuration in the top left corner. Note: it is always possible to achieve any goal.
-                        </div>
-                        <div class="instruction-nav">
-                            <button class="instruction-btn prev-btn" disabled>Previous</button>
-                            <button class="instruction-btn next-btn">Next</button>
                         </div>
                     </div>
                 </div>
@@ -109,6 +105,12 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     <div class="celebration-content">
                         <h2>Goal Achieved!</h2>
                         <p>Great work! You're ready for the main experiment.</p>
+                    </div>
+                </div>
+                <div class="instruction-nav-container">
+                    <div class="instruction-nav">
+                        <button class="instruction-btn prev-btn" disabled>Previous</button>
+                        <button class="instruction-btn next-btn">Next</button>
                     </div>
                 </div>
             `;
@@ -262,8 +264,9 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     celebrationOverlay.classList.remove('hidden');
                                     celebrationOverlay.classList.add('show');
                                     
-                                    // Add instruction container removal here
-                                    display_element.querySelector('.instruction-container').style.display = 'none';
+                                    // Hide both instruction containers
+                                    display_element.querySelector('.instruction-text-container').style.display = 'none';
+                                    display_element.querySelector('.instruction-nav-container').style.display = 'none';
                                     
                                     for (let i = 0; i < 50; i++) {
                                         this.createConfetti(display_element);

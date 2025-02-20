@@ -1,17 +1,25 @@
 /* Inherit styles from goal-display plugin */
 @import url('plugin-goal-display.css');
 
-.instruction-container {
+.instruction-text-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1000px;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.instruction-nav-container {
     position: fixed;
     bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;  /* Increase width */
-    max-width: 1000px;  /* Increase max-width */
-    min-height: 120px;  /* Ensure minimum height */
+    width: 90%;
+    max-width: 1000px;
     z-index: 1000;
-    padding: 20px;
-    padding-bottom: 30px;  /* Add extra padding at bottom */
 }
 
 .instruction-content {
@@ -19,15 +27,15 @@
 }
 
 .instruction-text {
-    font-size: 1.1em;  /* Slightly smaller font to help fit content */
-    line-height: 1.4;  /* Slightly tighter line height */
+    font-size: 1.1em;
+    line-height: 1.4;
     margin-bottom: 15px;
     transition: opacity 0.3s ease;
     text-align: center;
     color: #333;
     padding: 10px;
     box-sizing: border-box;
-    overflow-wrap: break-word;  /* Prevent text from overflowing */
+    overflow-wrap: break-word;
 }
 
 .instruction-text.hidden {
@@ -39,12 +47,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0 40px;  /* Increase horizontal padding for better spacing */
+    padding: 0 40px;
 }
 
 .instruction-btn {
