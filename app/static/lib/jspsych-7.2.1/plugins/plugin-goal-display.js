@@ -239,6 +239,32 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     </div>
                 </div>
             </div>
+            <div class="rules-container">
+                <div class="rules-content">
+                    <h3>Interaction Rules</h3>
+                    
+                    <h4>Texture:</h4>
+                    <ul>
+                        <li>cycle: plain &rarr; striped &rarr; dotted &rarr; plain</li>
+                    </ul>
+                    
+                    <h4>Shape:</h4>
+                    <ul>
+                        <li>Mostly: copy actor</li>
+                        <li>Sometimes: not actor</li>
+                    </ul>
+                    
+                    <h4>Shade:</h4>
+                    <ul>
+                        <li>become more like actor</li>
+                        <li>if already same:</li>
+                        <ul>
+                            <li>mostly become medium</li>
+                            <li>sometimes high or low</li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
             <div class="celebration-overlay hidden">
                 <div class="celebration-content">
                     <h2>Goal Achieved!</h2>
