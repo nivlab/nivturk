@@ -1,21 +1,71 @@
 /* Inherit styles from goal-display plugin */
 @import url('plugin-goal-display.css');
 
-/* Override instruction text positioning for tutorial */
-.instruction-text {
-    text-align: center;
-    color: #333;
-    font-size: 1.1em;
-    position: absolute;
-    top: 5%;   /* Move up to 5% from top */
+.instruction-container {
+    position: fixed;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 500px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    z-index: 2;
+    width: 90%;  /* Increase width */
+    max-width: 1000px;  /* Increase max-width */
+    min-height: 120px;  /* Ensure minimum height */
+    z-index: 1000;
+    padding: 20px;
+    padding-bottom: 30px;  /* Add extra padding at bottom */
+}
+
+.instruction-content {
+    padding: 10px;
+}
+
+.instruction-text {
+    font-size: 1.1em;  /* Slightly smaller font to help fit content */
+    line-height: 1.4;  /* Slightly tighter line height */
+    margin-bottom: 15px;
+    transition: opacity 0.3s ease;
+    text-align: center;
+    color: #333;
+    padding: 10px;
     box-sizing: border-box;
-    margin-bottom: 30px;  /* Add margin to create more space */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Add subtle shadow for better visibility */
+    overflow-wrap: break-word;  /* Prevent text from overflowing */
+}
+
+.instruction-text.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.instruction-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0 40px;  /* Increase horizontal padding for better spacing */
+}
+
+.instruction-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.instruction-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.instruction-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-counter {
+    display: none;  /* Hide the page counter */
 } 

@@ -47,6 +47,26 @@ var jsPsychGoalTutorial = (function (jspsych) {
             // Create the display HTML - same structure as goal-display
             display_element.innerHTML = `
                 ${trial.preamble ? `<div class="jspsych-goal-display-preamble">${trial.preamble}</div>` : ''}
+                <div class="instruction-container">
+                    <div class="instruction-content">
+                        <div class="instruction-text" data-page="1">
+                            Above is a configuration of three items. In the top left corner is the goal configuration that you are trying to match.
+                        </div>
+                        <div class="instruction-text hidden" data-page="2">
+                            You can make the items change by choosing an "actor" item and a "recipient" item. The item you click first will be the actor, and the item you click second will be the recipient. The actor will change the recipient.
+                        </div>
+                        <div class="instruction-text hidden" data-page="3">
+                            Notice that each item has a shape (star, cloud, square), a shade (dark, medium, light), and a texture (plain, striped, and dotted).
+                        </div>
+                        <div class="instruction-text hidden" data-page="4">
+                            On the right is a menu that explains the rules for how recipient items change when they are acted on. Read the rules here, and try to exactly match the goal configuration in the top left corner. Note: it is always possible to achieve any goal.
+                        </div>
+                        <div class="instruction-nav">
+                            <button class="instruction-btn prev-btn" disabled>Previous</button>
+                            <button class="instruction-btn next-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="jspsych-goal-display-container">
                     <div class="goal-display">
                         <h3>Goal Configuration:</h3>
@@ -66,7 +86,6 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     </div>
                     <button class="jspsych-btn">${trial.button_label}</button>
                 </div>
-                <div class="instruction-text">Achieve your chosen goal by first choosing the feature you want to change. Then choose an actor and then a recipient shape.</div>
                 <div class="workspace-container">
                     <div class="feature-menu">
                         <button class="feature-btn active" data-feature="texture">texture</button>
@@ -270,6 +289,44 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         }
                     }
                 });
+            });
+
+            // Add instruction navigation logic after the HTML setup
+            let currentPage = 1;
+            const totalPages = 4;
+
+            const prevBtn = display_element.querySelector('.prev-btn');
+            const nextBtn = display_element.querySelector('.next-btn');
+
+            function updateInstructionVisibility() {
+                // Hide all instruction texts
+                display_element.querySelectorAll('.instruction-text').forEach(text => {
+                    text.classList.add('hidden');
+                });
+                
+                // Show current page
+                display_element.querySelector(`.instruction-text[data-page="${currentPage}"]`).classList.remove('hidden');
+                
+                // Update button states
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.textContent = currentPage === totalPages ? "Begin" : "Next";
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateInstructionVisibility();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateInstructionVisibility();
+                } else {
+                    // Remove instruction container and show the task
+                    display_element.querySelector('.instruction-container').style.display = 'none';
+                }
             });
         }
 

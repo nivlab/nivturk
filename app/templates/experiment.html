@@ -12,6 +12,7 @@
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-display.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-tutorial.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-instructions.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -186,7 +187,7 @@
 
   // Add tutorial before the main task
   var tutorial = {
-      type: jsPsychTutorialDisplay,
+      type: jsPsychGoalTutorial,
       button_label_next: "Next"
   };
 
