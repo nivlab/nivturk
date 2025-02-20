@@ -11,14 +11,13 @@
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-survey-likert.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-selection.js"></script>
   <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-display.js"></script>
-  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-instructions.js"></script>
-  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-tutorial-display.js"></script>
+  <script src="../static/lib/jspsych-7.2.1/plugins/plugin-goal-tutorial.js"></script>
 
   <!-- Load CSS styles -->
   <link href="../static/lib/jspsych-7.2.1/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-selection.css" rel="stylesheet" type="text/css"></link>
   <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-display.css" rel="stylesheet" type="text/css"></link>
-  <link href="../static/lib/jspsych-7.2.1/css/plugin-tutorial-display.css" rel="stylesheet" type="text/css"></link>
+  <link href="../static/lib/jspsych-7.2.1/css/plugin-goal-tutorial.css" rel="stylesheet" type="text/css"></link>
 
 </head>
 <body></body>
@@ -51,6 +50,17 @@
       };
       timeline.push(consent);
   }
+
+  // Add tutorial before main experiment
+  var tutorial = {
+      type: jsPsychGoalTutorial,
+      preamble: `
+          
+      `,
+      button_label: "Start Main Experiment"
+  };
+  
+  timeline.push(tutorial);
 
   // Add a counter for completed loops
   var loopsCompleted = 0;

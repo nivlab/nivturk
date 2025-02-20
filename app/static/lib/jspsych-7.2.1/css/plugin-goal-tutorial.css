@@ -1,0 +1,21 @@
+/* Inherit styles from goal-display plugin */
+@import url('plugin-goal-display.css');
+
+/* Override instruction text positioning for tutorial */
+.instruction-text {
+    text-align: center;
+    color: #333;
+    font-size: 1.1em;
+    position: absolute;
+    top: 5%;   /* Move up to 5% from top */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    z-index: 2;
+    box-sizing: border-box;
+    margin-bottom: 30px;  /* Add margin to create more space */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Add subtle shadow for better visibility */
+} 
