@@ -179,9 +179,36 @@
       type: jsPsychGoalTutorial
   };
 
-  // Update timeline - remove duplicate tutorial
+  // Add post-tutorial instructions
+  var post_tutorial_instructions = {
+      type: jsPsychInstructions,
+      pages: [
+          `<div class="instruction-page">
+              <h2>Great job with the tutorial!</h2>
+              <p>Well done! For the rest of this task, you will select your own goal configurations. You can then attempt to achieve your own goal like you did with the practice goal. You just cannot choose the same exact goal twice.</p>
+          </div>`,
+          
+          `<div class="instruction-page">
+              <h2>There is no way to get stuck.</h2>
+              <p>When building your goal, you will not know what items you will start with. However, you will always be able to achieve any goal that you build for yourself. There is no way to get permanently stuck on this task.</p>
+          </div>`,
+          
+          `<div class="instruction-page">
+            <h2>You can give up, but it won't count towards your total.</h2>  
+            <p>From now on, you will have a button to give up on the current goal. Giving up will let you choose a new goal, but it won't count towards your total. To finish this task, you must accomplish 20 goals.</p>
+          </div>`
+      ],
+      show_clickable_nav: true,
+      button_label_next: "Next",
+      button_label_previous: "Previous",
+      button_label_finish: "Begin Task",
+      allow_backward: true
+  };
+
+  // Update timeline to include post-tutorial instructions
   timeline.push(instructions);
   timeline.push(tutorial);
+  timeline.push(post_tutorial_instructions);
   timeline.push(goal_procedure);
 
   // Initialize jsPsych.

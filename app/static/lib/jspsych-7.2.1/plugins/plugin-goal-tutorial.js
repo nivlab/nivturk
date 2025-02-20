@@ -50,7 +50,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 <div class="instruction-text-container">
                     <div class="instruction-content">
                         <div class="instruction-text" data-page="1">
-                            This is the screen you will see when you are trying to achieve a goal. Click the "Next" button to continue to read all the instructions before trying this example. 
+                            This is the screen you will see when you are trying to achieve a goal. Click the "Next" button to read all the instructions before trying this example. 
                         </div>
                         <div class="instruction-text hidden" data-page="2">
                             In the top left corner is a goal configuration. The task here is to make the below items match that configuration.
