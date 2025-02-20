@@ -50,16 +50,28 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 <div class="instruction-text-container">
                     <div class="instruction-content">
                         <div class="instruction-text" data-page="1">
-                            Below is a configuration of three items. In the top left corner is the goal configuration that you are trying to match.
+                            This is the screen you will see when you are trying to achieve a goal. Click the "Next" button to continue to read all the instructions before trying this example. 
                         </div>
                         <div class="instruction-text hidden" data-page="2">
-                            You can make the items change by choosing an "actor" item and a "recipient" item. The item you click first will be the actor, and the item you click second will be the recipient. The actor will change the recipient.
+                            In the top left corner is a goal configuration. The task here is to make the below items match that configuration.
                         </div>
                         <div class="instruction-text hidden" data-page="3">
-                            Notice that each item has a shape (star, cloud, square), a shade (dark, medium, light), and a texture (plain, striped, and dotted).
+                            You can make the items below change by making them interact. 
                         </div>
                         <div class="instruction-text hidden" data-page="4">
-                            On the right is a menu that explains the rules for how recipient items change when they are acted on. Read the rules here, and try to exactly match the goal configuration in the top left corner. Note: it is always possible to achieve any goal.
+                            The item you click first will be the actor, and the item you click second will be the recipient. The actor will change the recipient, but only for the feature (texture, shape, or shade) that is currently selected.
+                        </div>
+                        <div class="instruction-text hidden" data-page="5">
+                            Each item has a shape (star, cloud, square), a shade (dark, medium, light), and a texture (plain, striped, and dotted).
+                        </div>
+                        <div class="instruction-text hidden" data-page="6">
+                            On the right is a menu that explains the rules for how recipient items change when they are acted on.
+                        </div>
+                        <div class="instruction-text hidden" data-page="7">
+                            No matter what happens, you can always achieve a selected goal. It might just take some effort.
+                        </div>
+                        <div class="instruction-text hidden" data-page="8">
+                            Later, you will be able to choose what goal configuration you want to achieve. For now, read the rules to the right and try to achieve the goal configuration in the top left corner.
                         </div>
                     </div>
                 </div>
@@ -316,7 +328,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
 
             // Update the instruction navigation logic
             let currentPage = 1;
-            const totalPages = 4;
+            const totalPages = 8;
 
             const prevBtn = display_element.querySelector('.prev-btn');
             const nextBtn = display_element.querySelector('.next-btn');

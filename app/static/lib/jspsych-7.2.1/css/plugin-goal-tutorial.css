@@ -6,20 +6,19 @@
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 1000px;
+    width: 600px;
+    max-width: 700px;
     z-index: 1000;
     padding: 20px;
 }
 
 .instruction-nav-container {
     position: fixed;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1000px;
+    top: 7.5%;
+    left: 0;
+    width: 100%;  /* Full page width */
     z-index: 1000;
+    pointer-events: none;
 }
 
 .instruction-content {
@@ -45,12 +44,15 @@
 
 .instruction-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;  /* Center the flex container */
     align-items: center;
-    padding: 0 40px;
+    gap: 600px;  /* Fixed gap between buttons */
+    margin: 0 auto;
+    transform: none;
 }
 
 .instruction-btn {
+    pointer-events: auto;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -58,6 +60,7 @@
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin: 0;
 }
 
 .instruction-btn:hover:not(:disabled) {
