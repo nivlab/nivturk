@@ -196,17 +196,17 @@
       pages: [
           `<div class="instruction-page">
               <h2>Great job with the tutorial!</h2>
-              <p>Well done! For the rest of this task, you will select your own goal configurations. You can then attempt to achieve your own goal like you did with the practice goal. You just cannot choose the same exact goal twice.</p>
+              <p>Well done! For the rest of this task, you will select your own goals. You can then attempt to achieve your goals like you did with the practice goal. Note: You can choose any goal you want, you just cannot choose the same exact goal twice.</p>
           </div>`,
           
           `<div class="instruction-page">
               <h2>There is no way to get stuck.</h2>
-              <p>When building your goal, you will not know what items you will start with. <b>Importantly, the items you start with after choosing your goal is totally random.</b> However, you will always be able to achieve any goal that you build for yourself. There is no way to get permanently stuck on this task.</p>
+              <p>You will always be able to achieve any goal that you build for yourself. There is no way to get permanently stuck on this task.</p>
           </div>`,
           
           `<div class="instruction-page">
               <h2>You can give up, but it won't count towards your total.</h2>  
-              <p>From now on, you will have a button to give up on the current goal. Giving up will let you choose a new goal, but it won't count towards your total. To finish this task, you must accomplish 20 goals.</p>
+              <p>On the left, you will have a button that lets you give up on the current goal. Giving up will let you choose a new goal, but it won't count towards your total. To finish this task, you must accomplish 20 goals.</p>
           </div>`
       ],
       show_clickable_nav: true,
@@ -235,12 +235,17 @@
           <div class="debrief-questions">
               <div class="debrief-content">
                   <div class="question-container">
-                      <p>1. What strategy/strategies did you use to select your goals, if any?</p>
+                      <p>1. What strategy/strategies did you use to select your goals?</p>
                       <textarea name="strategies" rows="3" cols="50"></textarea>
                   </div>
 
                   <div class="question-container">
-                      <p>2. How enjoyable did you find the task? [0=Not at all, 7=Very much]</p>
+                      <p>2. What strategy/strategies did you use to achieve your goals?</p>
+                      <textarea name="achievement_strategies" rows="3" cols="50"></textarea>
+                  </div>
+
+                  <div class="question-container">
+                      <p>3. How enjoyable did you find the task? [0=Not at all, 7=Very much]</p>
                       <input type="range" name="enjoyable" min="0" max="7" value="4" step="1">
                       <div class="range-labels">
                           <span>0<br>Not at all</span>
@@ -255,7 +260,7 @@
                   </div>
 
                   <div class="question-container">
-                      <p>3. How motivated were you to complete the task? [0=Not at all, 7=Very much]</p>
+                      <p>4. How motivated were you to complete the task quickly? [0=Not at all, 7=Very much]</p>
                       <input type="range" name="motivated" min="0" max="7" value="4" step="1">
                       <div class="range-labels">
                           <span>0<br>Not at all</span>
@@ -270,7 +275,7 @@
                   </div>
 
                   <div class="question-container">
-                      <p>4. How often did you stop paying attention to the task? [0=Not at all, 7=Very much]</p>
+                      <p>5. How often did you stop paying attention to the task? [0=Almost never, 7=Very often]</p>
                       <input type="range" name="attention" min="0" max="7" value="4" step="1">
                       <div class="range-labels">
                           <span>0<br>Not at all</span>
@@ -285,7 +290,7 @@
                   </div>
 
                   <div class="question-container">
-                      <p>5. How clear were the task instructions? [0=Not at all, 7=Very much]</p>
+                      <p>6. How clear were the task instructions? [0=Not at all, 7=Very much]</p>
                       <input type="range" name="clarity" min="0" max="7" value="4" step="1">
                       <div class="range-labels">
                           <span>0<br>Not at all</span>
@@ -300,17 +305,17 @@
                   </div>
 
                   <div class="question-container">
-                      <p>6. Do you have any suggestions how we could improve the instructions?</p>
+                      <p>7. Do you have any suggestions how we could improve the instructions?</p>
                       <textarea name="instruction_feedback" rows="3" cols="50"></textarea>
                   </div>
 
                   <div class="question-container">
-                      <p>7. If you could suggest one improvement to the experience of this experiment, what would it be?</p>
+                      <p>8. If you could suggest one improvement to the experience of this experiment, what would it be?</p>
                       <textarea name="improvement" rows="3" cols="50"></textarea>
                   </div>
 
                   <div class="question-container">
-                      <p>8. Do you have any other comments or feedback? Please share:</p>
+                      <p>9. Do you have any other comments or feedback? Please share:</p>
                       <textarea name="feedback" rows="3" cols="50"></textarea>
                   </div>
               </div>
