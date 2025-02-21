@@ -74,29 +74,19 @@
           {text: "Goal 3", id: 3}
       ],
       on_finish: function(data) {
-          const selections = jsPsych.data.get().last(1).values()[0].final_selections;
+          const selections = jsPsych.data.get().last(1).values()[0].final_goal;
           
           // Create an ordered array based on position
           const orderedSelections = ['top', 'bottom-left', 'bottom-right'].map(position => {
               const selection = selections.find(sel => sel.position === position);
-              if (selection && selection.shape) {
-                  const shapeType = selection.shape.type;
-                  const shadeClass = selection.shape.sourcePosition >= 0 ? 
-                      Array.from(document.querySelectorAll('.source-container')[selection.shape.sourcePosition]
-                          .querySelector('.shape-group').classList)
-                          .find(cls => cls.startsWith('shade-')) : '';
-                  const textureClass = selection.shape.sourcePosition >= 0 ?
-                      Array.from(document.querySelectorAll('.source-container')[selection.shape.sourcePosition]
-                          .querySelector('path, rect').classList)
-                          .find(cls => ['plain', 'striped', 'dotted'].includes(cls)) : '';
-                  
+              if (selection && selection.item) {
                   return {
-                      type: shapeType,
-                      shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
+                      type: selection.item.type,
+                      shapeClass: `${selection.item.type} ${selection.item.shade} ${selection.item.texture}`
                   };
               }
               return null;
-          }).filter(sel => sel !== null);  // Remove any null entries
+          }).filter(sel => sel !== null);
           
           // Check if this goal configuration has been used before
           const goalString = JSON.stringify(orderedSelections);

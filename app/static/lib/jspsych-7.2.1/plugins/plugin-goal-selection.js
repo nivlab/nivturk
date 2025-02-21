@@ -29,8 +29,47 @@ var jsPsychGoalSelection = (function (jspsych) {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
         }
+
+        // Add the helper function as a method of the class
+        getItemProperties(container, sourcePosition) {
+            const shapeGroup = container.querySelector('.shape-group');
+            const shapeElement = container.querySelector('path, rect');
+            
+            const item = {
+                type: container.dataset.shapeType,
+                source_position: parseInt(sourcePosition),
+                shade: 'unknown-shade',
+                texture: 'unknown-texture'
+            };
+
+            if (!shapeGroup) {
+                console.error('Missing shape-group element in container:', container);
+            } else {
+                const shade = Array.from(shapeGroup.classList).find(cls => cls.startsWith('shade-'));
+                if (!shade) {
+                    console.error('No shade class found in shape-group:', shapeGroup.classList);
+                } else {
+                    item.shade = shade;
+                }
+            }
+
+            if (!shapeElement) {
+                console.error('Missing shape element (path/rect) in container:', container);
+            } else {
+                const texture = Array.from(shapeElement.classList).find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                if (!texture) {
+                    console.error('No texture class found in shape element:', shapeElement.classList);
+                } else {
+                    item.texture = texture;
+                }
+            }
+
+            return item;
+        }
+
         trial(display_element, trial) {
             const startTime = performance.now();
+            const plugin = this;  // Store reference to plugin instance
             
             // Create array of all shape configurations
             const shapeConfigs = [
@@ -69,12 +108,15 @@ var jsPsychGoalSelection = (function (jspsych) {
             // Shuffle the configurations
             const shuffledConfigs = this.jsPsych.randomization.shuffle(shapeConfigs);
             
-            // Store the randomized order with position indices
+            // Store the randomized order with position indices and consistent item format
             const randomizedOrder = shuffledConfigs.map((config, index) => ({
                 position: index,
-                shape: config.shape,
-                shade: config.shade,
-                texture: config.texture
+                item: {
+                    type: config.shape,
+                    shade: config.shade,
+                    texture: config.texture,
+                    source_position: index
+                }
             }));
 
             // Create HTML with shuffled shapes
@@ -131,15 +173,12 @@ var jsPsychGoalSelection = (function (jspsych) {
                 </div>
             `;
 
-            // Add interaction history array
-            const interactionHistory = [];
-
-            // Store initial configuration in interaction history
-            interactionHistory.push({
+            // Add interaction history array with more detailed tracking
+            const interactionHistory = [{
                 action: 'initial_configuration',
-                randomized_order: randomizedOrder,
-                timestamp: Date.now()
-            });
+                timestamp: Date.now(),
+                item_array: randomizedOrder
+            }];
 
             const sourceStar = display_element.querySelector('.goal-star');
             const sourceSquare = display_element.querySelector('.goal-square');
@@ -228,10 +267,14 @@ var jsPsychGoalSelection = (function (jspsych) {
                     // Record drag start in interaction history
                     interactionHistory.push({
                         action: 'drag_start',
-                        shapeId: draggedElement.dataset.shapeId,
-                        sourcePosition: index,
-                        shapeConfig: sourceConfig,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        source_position: index,
+                        item: {
+                            type: shapeType,
+                            shade: shadeClass,
+                            texture: textureClass,
+                            source_position: index
+                        }
                     });
                 });
             });
@@ -253,7 +296,6 @@ var jsPsychGoalSelection = (function (jspsych) {
                         if (e.clientX >= rect.left && e.clientX <= rect.right &&
                             e.clientY >= rect.top && e.clientY <= rect.bottom) {
                             
-                            // Only allow drop if the area has less than 2 shapes (1 is the instruction div)
                             if (area.children.length <= 1) {
                                 draggedElement.classList.remove('dragging');
                                 draggedElement.style.position = 'static';
@@ -261,15 +303,12 @@ var jsPsychGoalSelection = (function (jspsych) {
                                 draggedElement.classList.add('dropped');
                                 droppedInArea = true;
 
-                                // Record drop with source position
                                 interactionHistory.push({
                                     action: 'drop',
-                                    shapeId: draggedElement.dataset.shapeId,
-                                    sourcePosition: parseInt(draggedElement.dataset.sourcePosition),
-                                    shapeType: draggedElement.dataset.shapeType,
-                                    shapeClass: draggedElement.dataset.shapeClass,
-                                    targetPosition: area.dataset.position,
-                                    timestamp: Date.now()
+                                    timestamp: Date.now(),
+                                    source_position: parseInt(draggedElement.dataset.sourcePosition),
+                                    target_position: area.dataset.position,
+                                    item: plugin.getItemProperties(draggedElement, draggedElement.dataset.sourcePosition)
                                 });
                             }
                         }
@@ -278,11 +317,9 @@ var jsPsychGoalSelection = (function (jspsych) {
                     if (!droppedInArea) {
                         interactionHistory.push({
                             action: 'failed_drop',
-                            shapeId: draggedElement.dataset.shapeId,
-                            sourcePosition: parseInt(draggedElement.dataset.sourcePosition),
-                            shapeType: draggedElement.dataset.shapeType,
-                            shapeClass: draggedElement.dataset.shapeClass,
-                            timestamp: Date.now()
+                            timestamp: Date.now(),
+                            source_position: parseInt(draggedElement.dataset.sourcePosition),
+                            item: plugin.getItemProperties(draggedElement, draggedElement.dataset.sourcePosition)
                         });
                         draggedElement.remove();
                     }
@@ -355,18 +392,15 @@ var jsPsychGoalSelection = (function (jspsych) {
                 }
             }
 
-            // Add click handler for removing shapes
+            // Update click handler for removing shapes
             display_element.addEventListener('click', (e) => {
                 const container = e.target.closest('.dragged-shape-container');
                 if (container && !container.classList.contains('dragging')) {
-                    // Record removal interaction
                     interactionHistory.push({
                         action: 'remove',
-                        shapeId: container.dataset.shapeId,
-                        shapeType: container.dataset.shapeType,
-                        shapeClass: container.dataset.shapeClass,
-                        position: container.parentElement.dataset.position,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        target_position: container.parentElement.dataset.position,
+                        item: plugin.getItemProperties(container, container.dataset.sourcePosition)
                     });
 
                     container.classList.add('removing');
@@ -377,23 +411,38 @@ var jsPsychGoalSelection = (function (jspsych) {
                 }
             });
 
-            // Update submit handler to include the randomization information
+            // Update submit handler
             submitBtn.addEventListener('click', () => {
                 const finalSelections = Array.from(display_element.querySelectorAll('.target-area'))
-                    .map(area => ({
-                        position: area.dataset.position,
-                        shape: area.children.length > 1 ? {
-                            type: area.querySelector('.dragged-shape-container').dataset.shapeType,
-                            id: area.querySelector('.dragged-shape-container').dataset.shapeId,
-                            sourcePosition: parseInt(area.querySelector('.dragged-shape-container').dataset.sourcePosition)
-                        } : null
-                    }));
+                    .map(area => {
+                        const container = area.querySelector('.dragged-shape-container');
+                        if (!container) {
+                            return {
+                                position: area.dataset.position,
+                                item: null
+                            };
+                        }
+                        
+                        return {
+                            position: area.dataset.position,
+                            item: plugin.getItemProperties(container, container.dataset.sourcePosition)
+                        };
+                    });
 
-                this.jsPsych.finishTrial({
+                console.log('Final data:', {
+                    trial_type: "goal-selection",
                     rt: Math.round(performance.now() - startTime),
-                    interactions: interactionHistory,
-                    final_selections: finalSelections,
-                    randomized_order: randomizedOrder
+                    item_array: randomizedOrder,
+                    selection_actions: interactionHistory,
+                    final_goal: finalSelections
+                });
+
+                plugin.jsPsych.finishTrial({
+                    trial_type: "goal-selection",
+                    rt: Math.round(performance.now() - startTime),
+                    item_array: randomizedOrder,
+                    selection_actions: interactionHistory,
+                    final_goal: finalSelections
                 });
             });
         }
