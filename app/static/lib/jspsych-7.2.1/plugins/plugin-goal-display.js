@@ -369,7 +369,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                                 goal: formattedGoal,
                                                 pursuit_array: this.pursuitActions,
                                                 abandoned: false,
-                                                steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
+                                                steps: this.pursuitActions.length,
                                                 goal_achieved: true
                                             };
                                             console.log('Goal Display Trial Data (Goal Achieved):', data);
@@ -461,7 +461,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                                 goal: formattedGoal,
                                                 pursuit_array: this.pursuitActions,
                                                 abandoned: false,
-                                                steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
+                                                steps: this.pursuitActions.length,
                                                 goal_achieved: true
                                             };
                                             console.log('Goal Display Trial Data (Goal Achieved):', data);
@@ -590,7 +590,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                                 goal: formattedGoal,
                                                 pursuit_array: this.pursuitActions,
                                                 abandoned: false,
-                                                steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
+                                                steps: this.pursuitActions.length,
                                                 goal_achieved: true
                                             };
                                             console.log('Goal Display Trial Data (Goal Achieved):', data);
@@ -613,7 +613,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     goal: formattedGoal,
                     pursuit_array: this.pursuitActions,
                     abandoned: true,
-                    steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
+                    steps: this.pursuitActions.length,
                     goal_achieved: false
                 };
                 console.log('Goal Display Trial Data (Abandoned):', data);
