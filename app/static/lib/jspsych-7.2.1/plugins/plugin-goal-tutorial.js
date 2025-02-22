@@ -339,9 +339,12 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                         const data = {
                                             trial_type: "goal-tutorial",
                                             rt: Math.round(performance.now() - this.startTime),
-                                            goal: trial.tutorial_goal, // Using tutorial goal instead of selected goal
+                                            goal: goalShapes.map(shape => ({
+                                                type: shape.type,
+                                                shade: shape.shadeClass,
+                                                texture: shape.textureClass
+                                            })),
                                             pursuit_array: this.pursuitActions,
-                                            abandoned: false,
                                             steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
                                             goal_achieved: true
                                         };

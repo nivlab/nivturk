@@ -235,7 +235,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     
                     <h4>Texture:</h4>
                     <ul>
-                        <li>cycle: plain &rarr; striped &rarr; dotted &rarr; plain</li>
+                        <li>Cycle: plain &rarr; striped &rarr; dotted &rarr; plain</li>
                     </ul>
                     
                     <h4>Shape:</h4>
