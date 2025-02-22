@@ -423,9 +423,16 @@ var jsPsychGoalSelection = (function (jspsych) {
                             };
                         }
                         
+                        const shapeElement = container.querySelector('path, rect');
+                        const shapeGroup = container.querySelector('.shape-group');
+                        
                         return {
                             position: area.dataset.position,
-                            item: plugin.getItemProperties(container, container.dataset.sourcePosition)
+                            item: {
+                                type: Array.from(shapeElement.classList).find(cls => cls.startsWith('goal-')),
+                                shade: Array.from(shapeGroup.classList).find(cls => cls.startsWith('shade-')),
+                                texture: Array.from(shapeElement.classList).find(cls => ['plain', 'striped', 'dotted'].includes(cls))
+                            }
                         };
                     });
 
