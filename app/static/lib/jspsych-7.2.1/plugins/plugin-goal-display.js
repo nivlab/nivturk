@@ -493,7 +493,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     
                                     // Save data and finish trial
                                     setTimeout(() => {
-                                        this.jsPsych.finishTrial({
+                                        const data = {
                                             trial_type: "goal-display",
                                             rt: Math.round(performance.now() - this.startTime),
                                             goal: trial.selected_goal,
@@ -501,7 +501,9 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                             abandoned: false,
                                             steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
                                             goal_achieved: true
-                                        });
+                                        };
+                                        console.log('Goal Display Trial Data (Goal Achieved):', data);
+                                        this.jsPsych.finishTrial(data);
                                     }, 2000);
                                 }
                             }, 1000);
@@ -513,7 +515,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
             // Add give up button handler
             const giveUpBtn = display_element.querySelector('.give-up-btn');
             giveUpBtn.addEventListener('click', () => {
-                this.jsPsych.finishTrial({
+                const data = {
                     trial_type: "goal-display",
                     rt: Math.round(performance.now() - this.startTime),
                     goal: trial.selected_goal,
@@ -521,7 +523,9 @@ var jsPsychGoalDisplay = (function (jspsych) {
                     abandoned: true,
                     steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
                     goal_achieved: false
-                });
+                };
+                console.log('Goal Display Trial Data (Abandoned):', data);
+                this.jsPsych.finishTrial(data);
             });
         }
     }
