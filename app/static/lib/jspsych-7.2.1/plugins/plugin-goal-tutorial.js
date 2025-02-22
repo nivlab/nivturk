@@ -25,10 +25,13 @@ var jsPsychGoalTutorial = (function (jspsych) {
     class GoalTutorialPlugin {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
+            this.pursuitActions = [];
+            this.startTime = null;
         }
 
         trial(display_element, trial) {
-            const startTime = performance.now();
+            this.startTime = performance.now();
+            this.pursuitActions = [];
 
             // Predefined goal state
             const goalShapes = [
@@ -150,21 +153,23 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 </div>
             `;
 
-            // Handle feature button clicks
+            // Add tracking for feature button clicks
             const featureButtons = display_element.querySelectorAll('.feature-btn');
+            let selectedFeature = 'texture'; // Default feature
             featureButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     featureButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
+                    selectedFeature = button.dataset.feature;
                 });
             });
 
             let actorShape = null;
             let recipientShape = null;
 
-            // Handle workspace shape clicks
+            // Handle workspace shape clicks with action tracking
             const shapeElements = display_element.querySelectorAll('.workspace-shape');
-            shapeElements.forEach(shape => {
+            shapeElements.forEach((shape, index) => {
                 shape.addEventListener('click', () => {
                     // Prevent interactions during animations
                     if (recipientShape?.classList.contains('interaction-animation')) {
@@ -172,15 +177,36 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     }
 
                     if (shape === actorShape) {
+                        // Deselect actor
                         actorShape.classList.remove('actor-selected');
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'deselect_actor',
+                            position: index
+                        });
                         actorShape = null;
                     } else if (!actorShape) {
+                        // Select actor
                         actorShape = shape;
                         shape.classList.add('actor-selected');
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'select_actor',
+                            position: index
+                        });
                     } else if (shape !== actorShape && !recipientShape) {
+                        // Record interaction
                         recipientShape = shape;
                         shape.classList.add('recipient-selected');
                         
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'interaction',
+                            actor_position: Array.from(shapeElements).indexOf(actorShape),
+                            recipient_position: index,
+                            feature: selectedFeature
+                        });
+
                         // Get the active feature
                         const activeFeatureBtn = display_element.querySelector('.feature-btn.active');
                         if (activeFeatureBtn) {
@@ -303,15 +329,24 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     display_element.querySelector('.instruction-text-container').style.display = 'none';
                                     display_element.querySelector('.instruction-nav-container').style.display = 'none';
                                     
+                                    // Add confetti animation
                                     for (let i = 0; i < 50; i++) {
                                         this.createConfetti(display_element);
                                     }
                                     
+                                    // Save data and finish trial
                                     setTimeout(() => {
-                                        this.jsPsych.finishTrial({
-                                            rt: Math.round(performance.now() - startTime),
+                                        const data = {
+                                            trial_type: "goal-tutorial",
+                                            rt: Math.round(performance.now() - this.startTime),
+                                            goal: trial.tutorial_goal, // Using tutorial goal instead of selected goal
+                                            pursuit_array: this.pursuitActions,
+                                            abandoned: false,
+                                            steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
                                             goal_achieved: true
-                                        });
+                                        };
+                                        console.log('Goal Tutorial Trial Data:', data);
+                                        this.jsPsych.finishTrial(data);
                                     }, 2000);
                                 }
                                 
