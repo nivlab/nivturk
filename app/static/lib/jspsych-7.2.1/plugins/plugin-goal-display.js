@@ -67,6 +67,8 @@ var jsPsychGoalDisplay = (function (jspsych) {
     class GoalDisplayPlugin {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
+            this.pursuitActions = [];
+            this.startTime = null;
         }
 
         doShapesMatch(shape1, shape2) {
@@ -122,7 +124,8 @@ var jsPsychGoalDisplay = (function (jspsych) {
         }
 
         trial(display_element, trial) {
-            const startTime = performance.now();
+            this.startTime = performance.now();
+            this.pursuitActions = [];
 
             // Generate random initial state that doesn't match goal state
             let workspaceShapes;
@@ -241,26 +244,14 @@ var jsPsychGoalDisplay = (function (jspsych) {
             </div>
             `;
 
-            // Add button click event
-            const button = display_element.querySelector('.jspsych-btn');
-            button.addEventListener('click', () => {
-                this.jsPsych.finishTrial({
-                    rt: Math.round(performance.now() - startTime)
-                });
-            });
-
-            // Handle feature button clicks
+            // Add tracking for feature button clicks
             const featureButtons = display_element.querySelectorAll('.feature-btn');
+            let selectedFeature = 'texture'; // Default feature
             featureButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Remove active class from all buttons
                     featureButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
                     button.classList.add('active');
-                    
-                    // Store the active feature
-                    const activeFeature = button.dataset.feature;
-                    // You can use activeFeature later for shape interactions
+                    selectedFeature = button.dataset.feature;
                 });
             });
 
@@ -268,28 +259,46 @@ var jsPsychGoalDisplay = (function (jspsych) {
             let actorShape = null;
             let recipientShape = null;
 
-            // Handle workspace shape clicks
+            // Handle workspace shape clicks with action tracking
             const shapeElements = display_element.querySelectorAll('.workspace-shape');
-            shapeElements.forEach(shape => {
+            shapeElements.forEach((shape, index) => {
                 shape.addEventListener('click', () => {
-                    // Prevent any interactions during animations
+                    // Prevent interactions during animations
                     if (recipientShape?.classList.contains('interaction-animation')) {
                         return;
                     }
 
                     if (shape === actorShape) {
-                        // Only allow deselection if no animation is in progress
+                        // Deselect actor
                         actorShape.classList.remove('actor-selected');
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'deselect_actor',
+                            position: index
+                        });
                         actorShape = null;
                     } else if (!actorShape) {
-                        // First click - select actor
+                        // Select actor
                         actorShape = shape;
                         shape.classList.add('actor-selected');
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'select_actor',
+                            position: index
+                        });
                     } else if (shape !== actorShape && !recipientShape) {
-                        // Second click - select recipient and perform interaction
+                        // Record interaction
                         recipientShape = shape;
                         shape.classList.add('recipient-selected');
                         
+                        this.pursuitActions.push({
+                            timestamp: Date.now(),
+                            action: 'interaction',
+                            actor_position: Array.from(shapeElements).indexOf(actorShape),
+                            recipient_position: index,
+                            feature: selectedFeature
+                        });
+
                         // Get the active feature
                         const activeFeatureBtn = display_element.querySelector('.feature-btn.active');
                         if (activeFeatureBtn) {
@@ -482,10 +491,15 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                         this.createConfetti(display_element);
                                     }
                                     
-                                    // Wait for celebration animation then move to next trial
+                                    // Save data and finish trial
                                     setTimeout(() => {
                                         this.jsPsych.finishTrial({
-                                            rt: Math.round(performance.now() - startTime),
+                                            trial_type: "goal-display",
+                                            rt: Math.round(performance.now() - this.startTime),
+                                            goal: trial.selected_goal,
+                                            pursuit_array: this.pursuitActions,
+                                            abandoned: false,
+                                            steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
                                             goal_achieved: true
                                         });
                                     }, 2000);
@@ -493,6 +507,20 @@ var jsPsychGoalDisplay = (function (jspsych) {
                             }, 1000);
                         }
                     }
+                });
+            });
+
+            // Add give up button handler
+            const giveUpBtn = display_element.querySelector('.give-up-btn');
+            giveUpBtn.addEventListener('click', () => {
+                this.jsPsych.finishTrial({
+                    trial_type: "goal-display",
+                    rt: Math.round(performance.now() - this.startTime),
+                    goal: trial.selected_goal,
+                    pursuit_array: this.pursuitActions,
+                    abandoned: true,
+                    steps: this.pursuitActions.filter(a => a.action === 'interaction').length,
+                    goal_achieved: false
                 });
             });
         }
