@@ -90,38 +90,6 @@ var jsPsychGoalDisplay = (function (jspsych) {
             const workspaceShapes = Array.from(display_element.querySelectorAll('.workspace-shape'));
             const goalShapes = Array.from(display_element.querySelectorAll('.goal-display-shapes .source-container'));
             
-            // Print detailed information about each workspace shape
-            workspaceShapes.forEach((shape, index) => {
-                const shapeType = Array.from(shape.querySelector('path, rect').classList)
-                    .find(cls => cls.startsWith('goal-'));
-                const texture = Array.from(shape.querySelector('path, rect').classList)
-                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
-                const shade = Array.from(shape.querySelector('.shape-group').classList)
-                    .find(cls => cls.startsWith('shade-'));
-                
-                console.log(`Workspace Shape ${index + 1}:`, {
-                    type: shapeType,
-                    texture: texture,
-                    shade: shade
-                });
-            });
-
-            // Print goal shapes for comparison
-            goalShapes.forEach((shape, index) => {
-                const shapeType = Array.from(shape.querySelector('path, rect').classList)
-                    .find(cls => cls.startsWith('goal-'));
-                const texture = Array.from(shape.querySelector('path, rect').classList)
-                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
-                const shade = Array.from(shape.querySelector('.shape-group').classList)
-                    .find(cls => cls.startsWith('shade-'));
-                
-                console.log(`Goal Shape ${index + 1}:`, {
-                    type: shapeType,
-                    texture: texture,
-                    shade: shade
-                });
-            });
-
             return workspaceShapes.every((workspaceShape, index) => 
                 this.doShapesMatch(workspaceShape, goalShapes[index]));
         }
