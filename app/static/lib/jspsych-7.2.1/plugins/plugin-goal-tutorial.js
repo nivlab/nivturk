@@ -303,26 +303,20 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     result: nextTexture
                                 });
                             } else if (feature === 'color') {
+                                // Get shades from both shapes
                                 const actorShade = Array.from(actorShape.querySelector('.shape-group').classList)
                                     .find(cls => cls.startsWith('shade-'));
                                 const recipientShade = Array.from(recipientShape.querySelector('.shape-group').classList)
                                     .find(cls => cls.startsWith('shade-'));
                                 const recipientGroup = recipientShape.querySelector('.shape-group');
                                 
+                                // Get the recipient's texture for pattern update
+                                const recipientElement = recipientShape.querySelector('path, rect');
+                                const currentTexture = Array.from(recipientElement.classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+
+                                // Rest of the existing shade logic...
                                 const shadeOrder = ['shade-light', 'shade-medium', 'shade-dark'];
-                                
-                                function getIncrementalShade(currentShade, targetShade) {
-                                    const currentIndex = shadeOrder.indexOf(currentShade);
-                                    const targetIndex = shadeOrder.indexOf(targetShade);
-                                    
-                                    if (currentIndex < targetIndex) {
-                                        return shadeOrder[currentIndex + 1];
-                                    } else if (currentIndex > targetIndex) {
-                                        return shadeOrder[currentIndex - 1];
-                                    }
-                                    return currentShade;
-                                }
-                                
                                 let newShade;
                                 
                                 if (actorShade === recipientShade) {
@@ -339,36 +333,43 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     newShade = getIncrementalShade(recipientShade, actorShade);
                                 }
                                 
+                                // Remove existing shade
                                 recipientGroup.classList.remove('shade-light', 'shade-medium', 'shade-dark');
+                                // Add new shade
                                 recipientGroup.classList.add(newShade);
+
+                                // Update the pattern fill with the new shade
+                                recipientElement.style.fill = getPatternFill(currentTexture, newShade, uniqueId);
                             } else if (feature === 'shape') {
                                 const actorPath = actorShape.querySelector('path, rect');
                                 const recipientPath = recipientShape.querySelector('path, rect');
                                 
+                                // Get current texture and shade
+                                const currentTexture = Array.from(recipientPath.classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                                const currentShade = Array.from(recipientShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
+                                
+                                // Get actor's shape type
                                 const actorShapeType = Array.from(actorPath.classList)
                                     .find(cls => cls.startsWith('goal-'));
                                 
-                                const allShapes = ['goal-star', 'goal-cloud', 'goal-square'];
-                                
+                                // Determine new shape
                                 let newShapeType;
                                 if (Math.random() < 0.7) {
                                     newShapeType = actorShapeType;
                                 } else {
-                                    const otherShapes = allShapes.filter(shape => shape !== actorShapeType);
+                                    const otherShapes = ['goal-star', 'goal-cloud', 'goal-square'].filter(shape => shape !== actorShapeType);
                                     newShapeType = otherShapes[Math.floor(Math.random() * otherShapes.length)];
                                 }
                                 
+                                // Apply new shape while preserving texture and shade
                                 const currentGroup = recipientPath.closest('.shape-group');
-                                const currentShade = Array.from(currentGroup.classList)
-                                    .find(cls => cls.startsWith('shade-'));
-                                const currentClasses = Array.from(recipientPath.classList)
-                                    .filter(cls => !cls.startsWith('goal-'))
-                                    .join(' ');
-
                                 if (newShapeType === 'goal-square') {
                                     currentGroup.innerHTML = `
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
-                                            class="${newShapeType} ${currentClasses}"/>
+                                            class="${newShapeType} ${currentTexture}"
+                                            style="fill: ${getPatternFill(currentTexture, currentShade, uniqueId)}"/>
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     `;
@@ -379,7 +380,8 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     
                                     currentGroup.innerHTML = `
                                         <path d="${pathData}" 
-                                            class="${newShapeType} ${currentClasses}"/>
+                                            class="${newShapeType} ${currentTexture}"
+                                            style="fill: ${getPatternFill(currentTexture, currentShade, uniqueId)}"/>
                                         <path d="${pathData}" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     `;
@@ -550,4 +552,18 @@ function renderWorkspaceShape(shapeData, uniqueId) {
                     class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
             </g>`;
     }
+}
+
+// Add this function back before the shade interaction code
+function getIncrementalShade(currentShade, targetShade) {
+    const shadeOrder = ['shade-light', 'shade-medium', 'shade-dark'];
+    const currentIndex = shadeOrder.indexOf(currentShade);
+    const targetIndex = shadeOrder.indexOf(targetShade);
+    
+    if (currentIndex < targetIndex) {
+        return shadeOrder[currentIndex + 1];
+    } else if (currentIndex > targetIndex) {
+        return shadeOrder[currentIndex - 1];
+    }
+    return currentShade;
 }
