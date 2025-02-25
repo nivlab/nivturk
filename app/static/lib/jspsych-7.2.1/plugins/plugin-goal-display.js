@@ -495,6 +495,11 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     .find(cls => cls.startsWith('shade-'));
                                 const recipientGroup = recipientShape.querySelector('.shape-group');
                                 
+                                // Get the recipient's texture for pattern update
+                                const recipientElement = recipientShape.querySelector('path, rect');
+                                const currentTexture = Array.from(recipientElement.classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+
                                 // Define shade order for incremental changes
                                 const shadeOrder = ['shade-light', 'shade-medium', 'shade-dark'];
                                 
@@ -537,6 +542,9 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                 recipientGroup.classList.remove('shade-light', 'shade-medium', 'shade-dark');
                                 // Add new shade
                                 recipientGroup.classList.add(newShade);
+
+                                // Update the pattern fill with the new shade
+                                recipientElement.style.fill = getPatternFill(currentTexture, newShade, uniqueId);
 
                                 // Add interaction animation
                                 shape.classList.add('interaction-animation');
