@@ -90,8 +90,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 10px; /* Reduce gap to account for wrapper margins */
 }
 
 /* Container for bottom shapes */
@@ -99,7 +98,7 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    padding: 5px;
+    padding: 0; /* Remove padding since wrappers handle spacing */
 }
 
 /* Feature menu styles */
@@ -399,11 +398,13 @@
     padding: 5px;
     border-radius: 5px;
     margin: 5px;
+    border: 2px solid transparent; /* Reserve space for the border */
+    transition: border-color 0.2s ease; /* Smooth transition for border */
 }
 
 .workspace-shape-wrapper.actor-selected {
-    background-color: rgba(40, 167, 69, 0.2); /* Light green background */
-    border: 2px solid #28a745;
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: #28a745; /* Change only the border color */
 }
 
 /* Update workspace shape styles */
