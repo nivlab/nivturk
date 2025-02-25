@@ -317,15 +317,6 @@
     animation-delay: 3.4s;
 }
 
-/* Remove the old animation delays from individual shapes */
-.source-wrapper:nth-child(1) .goal-square, 
-.source-wrapper:nth-child(1) .goal-circle,
-.source-wrapper:nth-child(2) .goal-square,
-.source-wrapper:nth-child(2) .goal-circle,
-/* ... and so on ... */ {
-    animation-delay: initial;
-}
-
 /* Square specific styles */
 .goal-square {
     rx: 10px; /* Optional: rounds the corners of the square */
@@ -374,7 +365,8 @@
 }
 
 /* Define shades */
-.shade-light {
+/* Comment out ALL fill-related CSS temporarily */
+/*.shade-light {
     fill: #b3d7ff;
 }
 
@@ -386,32 +378,12 @@
     fill: #004080;
 }
 
+.goal-square, .goal-circle, .goal-star, .goal-cloud {
+    fill: currentColor;
+}*/
+
 .plain {
     /* Plain is our default */
-  }
-
-.striped {
-    mask: repeating-linear-gradient(
-        45deg,
-        #000,
-        #000 10px,
-        transparent 10px,
-        transparent 20px
-    );
-}
-
-.dotted {
-    mask: radial-gradient(
-        circle at 4px 4px,    /* Adjusted position for bigger dots */
-        #000 2.5px,          /* Increased dot size from 1.5px to 2.5px */
-        transparent 2.5px
-    ) 0 0/12px 12px;        /* Increased spacing from 8px to 12px to accommodate bigger dots */
-}
-
-/* Add specific handling for textures in dragged state */
-.dragged-shape-container .striped,
-.dragged-shape-container .dotted {
-    mask-type: alpha;
 }
 
 /* Ensure SVG elements stack correctly */
@@ -421,11 +393,11 @@
 
 /* Style for the outline */
 .shape-outline {
-    pointer-events: none;  /* Makes sure the outline doesn't interfere with interactions */
+    pointer-events: none;
 }
 
 /* Make sure the outline stays on top */
-.goal-square, .goal-circle {
+.goal-square, .goal-circle, .goal-star, .goal-cloud {
     z-index: 1;
 }
 
@@ -434,20 +406,16 @@
 }
 
 /* Move color definitions to the shape-group */
-.shape-group.shade-light {
+/* Comment out these rules temporarily */
+/*.shape-group.shade-light {
     color: #b3d7ff;
 }
-
-.shape-group.shade-medium {
-    color: #007bff;
-}
-
-.shape-group.shade-dark {
-    color: #004080;
-}
+.goal-square {
+    fill: currentColor;
+}*/
 
 /* Update fill to use currentColor */
-.goal-square, .goal-circle {
+.goal-square, .goal-circle, .goal-star, .goal-cloud {
     fill: currentColor;
 }
 
@@ -468,13 +436,6 @@
 
 .dragged-shape-container .shape-outline {
     stroke: currentColor;
-}
-
-/* Ensure textures work on dragged shapes */
-.dragged-shape-container .striped,
-.dragged-shape-container .dotted {
-    mask-type: alpha;
-    -webkit-mask-type: alpha;
 }
 
 .jspsych-goal-selection-preamble {
@@ -516,4 +477,22 @@
     top: 50%;
     transform: translateY(-50%);
     white-space: nowrap;  /* Prevent text wrapping */
+}
+
+/* Restore color definitions for shape groups */
+.shape-group.shade-light {
+    color: #b3d7ff;
+}
+
+.shape-group.shade-medium {
+    color: #007bff;
+}
+
+.shape-group.shade-dark {
+    color: #004080;
+}
+
+/* Remove any direct fill definitions that might interfere with patterns */
+.goal-square, .goal-circle, .goal-star, .goal-cloud {
+    /* remove fill: currentColor; */
 }
