@@ -61,7 +61,6 @@
   // Add a counter for completed loops
   var loopsCompleted = 0;
   const TOTAL_LOOPS = 20;
-  var previousGoals = [];  // Array to store previous goals
 
   var goal_selection = {
       type: jsPsychGoalSelection,
@@ -88,19 +87,9 @@
               return null;
           }).filter(sel => sel !== null);
           
-          // Check if this goal configuration has been used before
-          const goalString = JSON.stringify(orderedSelections);
-          
-          if (previousGoals.includes(goalString)) {
-              data.duplicate_goal = true;
-              alert("This goal has already been selected in a previous round. Please create a different goal.");
-              jsPsych.endCurrentTimeline();
-          } else {
-              previousGoals.push(goalString);
-              jsPsych.data.addProperties({
-                  selected_goals: orderedSelections
-              });
-          }
+          jsPsych.data.addProperties({
+              selected_goals: orderedSelections
+          });
       }
   };
   
@@ -207,9 +196,9 @@
   };
 
   // Add instructions and tutorial to timeline (after fullscreen, before main experiment)
-  timeline.push(instructions);
-  timeline.push(tutorial);
-  timeline.push(post_tutorial_instructions);
+//   timeline.push(instructions);
+//   timeline.push(tutorial);
+//   timeline.push(post_tutorial_instructions);
 
   // Define debrief questionnaire
   var debrief = {

@@ -67,6 +67,42 @@ var jsPsychGoalSelection = (function (jspsych) {
             return item;
         }
 
+        // Add a method to check for duplicate goals
+        checkForDuplicateGoal(selections) {
+            // Get previous goals from jsPsych data and convert to array
+            const previousTrials = this.jsPsych.data.get().filter({trial_type: 'goal-selection'}).values();
+            
+            // Format current goal for comparison
+            const currentGoal = selections
+                .filter(sel => sel.position && sel.item)
+                .map(sel => ({
+                    type: sel.item.type,
+                    shade: sel.item.shade,
+                    texture: sel.item.texture
+                }))
+                .sort((a, b) => // Sort to ensure consistent comparison
+                    `${a.type}${a.shade}${a.texture}`.localeCompare(`${b.type}${b.shade}${b.texture}`)
+                );
+                
+            // Check against previous goals
+            return previousTrials.some(trial => {
+                if (!trial.final_goal) return false;
+                
+                const previousGoal = trial.final_goal
+                    .filter(sel => sel.position && sel.item)
+                    .map(sel => ({
+                        type: sel.item.type,
+                        shade: sel.item.shade,
+                        texture: sel.item.texture
+                    }))
+                    .sort((a, b) => 
+                        `${a.type}${a.shade}${a.texture}`.localeCompare(`${b.type}${b.shade}${b.texture}`)
+                    );
+                    
+                return JSON.stringify(currentGoal) === JSON.stringify(previousGoal);
+            });
+        }
+
         trial(display_element, trial) {
             // Generate unique ID for this trial's patterns
             const uniqueId = Date.now();
@@ -399,35 +435,7 @@ var jsPsychGoalSelection = (function (jspsych) {
                 document.removeEventListener('mouseup', onMouseUp);
             }
 
-            // Add this function to check for duplicates
-            function checkForDuplicateGoal(selections) {
-                // Format current selections
-                const currentGoal = selections
-                    .filter(sel => sel.shape)
-                    .map(sel => {
-                        const shapeType = sel.shape.type;
-                        const shadeClass = sel.shape.sourcePosition >= 0 ? 
-                            Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
-                                .querySelector('.shape-group').classList)
-                                .find(cls => cls.startsWith('shade-')) : '';
-                        const textureClass = sel.shape.sourcePosition >= 0 ?
-                            Array.from(document.querySelectorAll('.source-container')[sel.shape.sourcePosition]
-                                .querySelector('path, rect').classList)
-                                .find(cls => ['plain', 'striped', 'dotted'].includes(cls)) : '';
-                        
-                        return {
-                            type: shapeType,
-                            shapeClass: `${shapeType} ${shadeClass} ${textureClass}`
-                        };
-                    });
-
-                const goalString = JSON.stringify(currentGoal.sort((a, b) => 
-                    a.shapeClass.localeCompare(b.shapeClass)));
-                
-                return window.previousGoals && window.previousGoals.includes(goalString);
-            }
-
-            // Modify the updateSubmitButton function
+            // Update the updateSubmitButton function
             function updateSubmitButton() {
                 const targetAreas = display_element.querySelectorAll('.target-area');
                 const filledAreas = Array.from(targetAreas)
@@ -435,14 +443,15 @@ var jsPsychGoalSelection = (function (jspsych) {
                 
                 // Get current selections
                 const selections = Array.from(targetAreas).map(area => ({
-                    shape: area.children.length > 1 ? {
-                        type: area.querySelector('.dragged-shape-container').dataset.shapeType,
-                        sourcePosition: parseInt(area.querySelector('.dragged-shape-container').dataset.sourcePosition)
-                    } : null
+                    position: area.dataset.position,
+                    item: area.children.length > 1 ? plugin.getItemProperties(
+                        area.querySelector('.dragged-shape-container'),
+                        area.querySelector('.dragged-shape-container').dataset.sourcePosition
+                    ) : null
                 }));
 
                 // Check both conditions: 3 shapes and not duplicate
-                const isDuplicate = filledAreas === 3 && checkForDuplicateGoal(selections);
+                const isDuplicate = filledAreas === 3 && plugin.checkForDuplicateGoal(selections);
                 submitBtn.disabled = filledAreas !== 3 || isDuplicate;
                 
                 if (filledAreas === 3) {
