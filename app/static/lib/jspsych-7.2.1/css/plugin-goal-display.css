@@ -81,6 +81,8 @@
     width: var(--shape-size);
     height: var(--shape-size);
     cursor: pointer;
+    position: relative;
+    display: block;
 }
 
 /* Workspace shapes container */
@@ -95,15 +97,9 @@
 /* Container for bottom shapes */
 .workspace-bottom-shapes {
     display: flex;
-    gap: 40px;  /* Space between bottom shapes */
-}
-
-/* Individual workspace shapes */
-.workspace-shape {
-    width: var(--shape-size);
-    height: var(--shape-size);
-    position: relative;
-    z-index: 2;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px;
 }
 
 /* Feature menu styles */
@@ -390,4 +386,39 @@
 .dragged-shape-container .goal-square,
 .dragged-shape-container .goal-cloud {
     /* remove fill: currentColor; */
+}
+
+/* Remove the previous actor selection styles */
+.workspace-shape.actor-selected::before {
+    content: none;
+}
+
+/* Add new wrapper and highlight styles */
+.workspace-shape-wrapper {
+    position: relative;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.workspace-shape-wrapper.actor-selected {
+    background-color: rgba(40, 167, 69, 0.2); /* Light green background */
+    border: 2px solid #28a745;
+}
+
+/* Update workspace shape styles */
+.workspace-shape {
+    width: var(--shape-size);
+    height: var(--shape-size);
+    cursor: pointer;
+    position: relative;
+    display: block;
+}
+
+/* Update bottom shapes container */
+.workspace-bottom-shapes {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px;
 } 

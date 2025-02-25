@@ -313,17 +313,23 @@ var jsPsychGoalDisplay = (function (jspsych) {
                 </div>
                 <div class="workspace-shapes">
                     <!-- Top shape -->
-                    <svg class="workspace-shape" viewBox="0 0 100 100">
-                        ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
-                    </svg>
+                    <div class="workspace-shape-wrapper">
+                        <svg class="workspace-shape" viewBox="0 0 100 100">
+                            ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
+                        </svg>
+                    </div>
                     <!-- Container for bottom shapes -->
                     <div class="workspace-bottom-shapes">
-                        <svg class="workspace-shape" viewBox="0 0 100 100">
-                            ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
-                        </svg>
-                        <svg class="workspace-shape" viewBox="0 0 100 100">
-                            ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
-                        </svg>
+                        <div class="workspace-shape-wrapper">
+                            <svg class="workspace-shape" viewBox="0 0 100 100">
+                                ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
+                            </svg>
+                        </div>
+                        <div class="workspace-shape-wrapper">
+                            <svg class="workspace-shape" viewBox="0 0 100 100">
+                                ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -377,7 +383,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
             let recipientShape = null;
 
             // Handle workspace shape clicks with action tracking
-            const shapeElements = display_element.querySelectorAll('.workspace-shape');
+            const shapeElements = display_element.querySelectorAll('.workspace-shape-wrapper');
             shapeElements.forEach((shape, index) => {
                 shape.addEventListener('click', () => {
                     // Prevent interactions during animations
