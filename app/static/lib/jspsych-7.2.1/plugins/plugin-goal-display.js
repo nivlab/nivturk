@@ -1,6 +1,50 @@
 var jsPsychGoalDisplay = (function (jspsych) {
     'use strict';
   
+    // Move getPatternFill to the top level of the module
+    function getPatternFill(texture, shade, uniqueId) {
+        const shadeName = shade.split('-')[1];
+        return texture === 'striped' ? `url(#striped-pattern-${shadeName}-${uniqueId})` : 
+               texture === 'dotted' ? `url(#dotted-pattern-${shadeName}-${uniqueId})` : 
+               'currentColor';
+    }
+
+    // Move renderShape inside the module as well
+    function renderShape(shapeData, uniqueId) {
+        if (!shapeData) return '';
+        
+        const shapeType = shapeData.type;
+        const shapeClasses = shapeData.shapeClass;
+        const shadeClass = shapeClasses.split(' ')[1];
+        const textureClass = shapeClasses.split(' ')[2];
+
+        if (shapeType === 'goal-star') {
+            return `<g class="shape-group ${shadeClass}" style="fill: none;">
+                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                    class="${shapeClasses}"
+                    style="fill: ${getPatternFill(textureClass, shadeClass, uniqueId)}"/>
+                <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
+                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+            </g>`;
+        } else if (shapeType === 'goal-cloud') {
+            return `<g class="shape-group ${shadeClass}" style="fill: none;">
+                <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
+                    class="${shapeClasses}"
+                    style="fill: ${getPatternFill(textureClass, shadeClass, uniqueId)}"/>
+                <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
+                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+            </g>`;
+        } else {
+            return `<g class="shape-group ${shadeClass}" style="fill: none;">
+                <rect x="20" y="20" width="60" height="60" rx="10" 
+                    class="${shapeClasses}"
+                    style="fill: ${getPatternFill(textureClass, shadeClass, uniqueId)}"/>
+                <rect x="20" y="20" width="60" height="60" rx="10" 
+                    class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
+            </g>`;
+        }
+    }
+
     const info = {
         name: "goal-display",
         parameters: {
@@ -39,7 +83,7 @@ var jsPsychGoalDisplay = (function (jspsych) {
     }
 
     // Add after generateRandomShape function
-    function renderWorkspaceShape(shapeData) {
+    function renderWorkspaceShape(shapeData, uniqueId) {
         const pathData = {
             'goal-star': "M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z",
             'goal-cloud': "M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z"
@@ -47,17 +91,19 @@ var jsPsychGoalDisplay = (function (jspsych) {
 
         if (shapeData.type === 'goal-square') {
             return `
-                <g class="shape-group ${shapeData.shadeClass}">
+                <g class="shape-group ${shapeData.shadeClass}" style="fill: none;">
                     <rect x="20" y="20" width="60" height="60" rx="10" 
-                        class="${shapeData.type} ${shapeData.textureClass}"/>
+                        class="${shapeData.type} ${shapeData.textureClass}"
+                        style="fill: ${getPatternFill(shapeData.textureClass, shapeData.shadeClass, uniqueId)}"/>
                     <rect x="20" y="20" width="60" height="60" rx="10" 
                         class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                 </g>`;
         } else {
             return `
-                <g class="shape-group ${shapeData.shadeClass}">
+                <g class="shape-group ${shapeData.shadeClass}" style="fill: none;">
                     <path d="${pathData[shapeData.type]}" 
-                        class="${shapeData.type} ${shapeData.textureClass}"/>
+                        class="${shapeData.type} ${shapeData.textureClass}"
+                        style="fill: ${getPatternFill(shapeData.textureClass, shapeData.shadeClass, uniqueId)}"/>
                     <path d="${pathData[shapeData.type]}" 
                         class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                 </g>`;
@@ -139,6 +185,55 @@ var jsPsychGoalDisplay = (function (jspsych) {
             this.startTime = performance.now();
             this.pursuitActions = [];
 
+            // Add pattern definitions at the start
+            const uniqueId = Date.now();
+            const svgDefs = `
+                <svg width="0" height="0" style="position: absolute;">
+                    <defs>
+                        <!-- Light shade patterns -->
+                        <pattern id="striped-pattern-light-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#b3d7ff"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-light-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#b3d7ff"/>
+                        </pattern>
+
+                        <!-- Medium shade patterns -->
+                        <pattern id="striped-pattern-medium-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#007bff"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-medium-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#007bff"/>
+                        </pattern>
+
+                        <!-- Dark shade patterns -->
+                        <pattern id="striped-pattern-dark-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#004080"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-dark-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#004080"/>
+                        </pattern>
+                    </defs>
+                </svg>
+            `;
+            
+            document.body.insertAdjacentHTML('afterbegin', svgDefs);
+
             // Convert goal format to match state format
             const formattedGoal = trial.selected_goal.map(item => ({
                 type: item.type,
@@ -166,22 +261,23 @@ var jsPsychGoalDisplay = (function (jspsych) {
                             ${Array.isArray(trial.selected_goal) ? `
                                 <!-- Top shape -->
                                 <svg class="source-container" viewBox="0 0 100 100">
-                                    ${renderShape(trial.selected_goal[0])}
+                                    ${renderShape(trial.selected_goal[0], uniqueId)}
                                 </svg>
                                 <!-- Container for bottom shapes -->
                                 <div>
                                     <svg class="source-container" viewBox="0 0 100 100">
-                                        ${renderShape(trial.selected_goal[1])}
+                                        ${renderShape(trial.selected_goal[1], uniqueId)}
                                     </svg>
                                     <svg class="source-container" viewBox="0 0 100 100">
-                                        ${renderShape(trial.selected_goal[2])}
+                                        ${renderShape(trial.selected_goal[2], uniqueId)}
                                     </svg>
                                 </div>
                             ` : trial.selected_goal.type === 'goal-star' 
                                 ? `<svg class="source-container" viewBox="0 0 100 100">
                                     <g class="shape-group ${trial.selected_goal.shapeClass.split(' ')[1]}">
                                         <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                                            class="${trial.selected_goal.shapeClass}"/>
+                                            class="${trial.selected_goal.shapeClass}"
+                                            style="fill: ${getPatternFill(trial.selected_goal.shapeClass.split(' ')[2], trial.selected_goal.shapeClass.split(' ')[1], uniqueId)}"/>
                                         <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     </g>
@@ -190,14 +286,16 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     ? `<svg class="source-container" viewBox="0 0 100 100">
                                         <g class="shape-group ${trial.selected_goal.shapeClass.split(' ')[1]}">
                                             <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
-                                                class="${trial.selected_goal.shapeClass}"/>
+                                                class="${trial.selected_goal.shapeClass}"
+                                                style="fill: ${getPatternFill(trial.selected_goal.shapeClass.split(' ')[2], trial.selected_goal.shapeClass.split(' ')[1], uniqueId)}"/>
                                             <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
                                                 class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                         </g>
                                     </svg>`
                                     : `<svg class="source-container" viewBox="0 0 100 100">
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
-                                            class="${trial.selected_goal.shapeClass}"/>
+                                            class="${trial.selected_goal.shapeClass}"
+                                            style="fill: ${getPatternFill(trial.selected_goal.shapeClass.split(' ')[2], trial.selected_goal.shapeClass.split(' ')[1], uniqueId)}"/>
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     </svg>`
@@ -216,15 +314,15 @@ var jsPsychGoalDisplay = (function (jspsych) {
                 <div class="workspace-shapes">
                     <!-- Top shape -->
                     <svg class="workspace-shape" viewBox="0 0 100 100">
-                        ${renderWorkspaceShape(workspaceShapes[0])}
+                        ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
                     </svg>
                     <!-- Container for bottom shapes -->
                     <div class="workspace-bottom-shapes">
                         <svg class="workspace-shape" viewBox="0 0 100 100">
-                            ${renderWorkspaceShape(workspaceShapes[1])}
+                            ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
                         </svg>
                         <svg class="workspace-shape" viewBox="0 0 100 100">
-                            ${renderWorkspaceShape(workspaceShapes[2])}
+                            ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
                         </svg>
                     </div>
                 </div>
@@ -320,21 +418,33 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
                                 
                                 // Define texture cycle order
-                                const textureCycle = ['striped', 'dotted', 'plain'];
+                                const textureCycle = ['plain', 'striped', 'dotted'];
                                 
                                 // Find next texture in cycle
                                 let nextTexture;
                                 const currentIndex = textureCycle.indexOf(currentTexture);
                                 if (currentIndex === -1 || currentIndex === textureCycle.length - 1) {
-                                    nextTexture = textureCycle[0]; // Start with stripes if current texture not found or at end
+                                    nextTexture = textureCycle[0];
                                 } else {
                                     nextTexture = textureCycle[currentIndex + 1];
                                 }
                                 
-                                // Remove existing texture
+                                // Remove existing texture class and add new one
                                 recipientElement.classList.remove('plain', 'striped', 'dotted');
-                                // Add next texture in cycle
                                 recipientElement.classList.add(nextTexture);
+                                
+                                // Update the fill style with the new pattern
+                                const shadeClass = Array.from(recipientShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
+                                recipientElement.style.fill = getPatternFill(nextTexture, shadeClass, uniqueId);
+
+                                // Add to pursuit actions
+                                this.pursuitActions.push({
+                                    feature: 'texture',
+                                    actor_index: Array.from(shapeElements).indexOf(actorShape),
+                                    recipient_index: Array.from(shapeElements).indexOf(recipientShape),
+                                    result: nextTexture
+                                });
 
                                 // Add interaction animation
                                 shape.classList.add('interaction-animation');
@@ -470,9 +580,15 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     }
                                 }, 1000);
                             } else if (feature === 'shape') {
-                                // Get shape type and path data
+                                // Get the path/rect elements first
                                 const actorPath = actorShape.querySelector('path, rect');
                                 const recipientPath = recipientShape.querySelector('path, rect');
+                                
+                                // Then get current texture and shade
+                                const currentTexture = Array.from(recipientPath.classList)
+                                    .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
+                                const currentShade = Array.from(recipientShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
                                 
                                 // Get actor's shape type
                                 const actorShapeType = Array.from(actorPath.classList)
@@ -498,63 +614,26 @@ var jsPsychGoalDisplay = (function (jspsych) {
                                     newPathData = "M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z";
                                 } else if (newShapeType === 'goal-cloud') {
                                     newPathData = "M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z";
-                                } else {
-                                    // For square, we'll use rect element instead of path
-                                    newPathData = null;
                                 }
-                                
-                                // Get current classes except shape type
-                                const currentClasses = Array.from(recipientPath.classList)
-                                    .filter(cls => !cls.startsWith('goal-'))
-                                    .join(' ');
                                 
                                 // Apply new shape
+                                const currentGroup = recipientPath.closest('.shape-group');
                                 if (newShapeType === 'goal-square') {
-                                    // Handle square (rect element)
-                                    const currentGroup = recipientPath.closest('.shape-group');
-                                    const currentShade = Array.from(currentGroup.classList)
-                                        .find(cls => cls.startsWith('shade-'));
-                                    
-                                    // Update the entire group's HTML for square
                                     currentGroup.innerHTML = `
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
-                                            class="${newShapeType} ${currentClasses}"/>
+                                            class="${newShapeType} ${currentTexture}"
+                                            style="fill: ${getPatternFill(currentTexture, currentShade, uniqueId)}"/>
                                         <rect x="20" y="20" width="60" height="60" rx="10" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     `;
                                 } else {
-                                    // Handle star or cloud (path element)
-                                    const currentGroup = recipientPath.closest('.shape-group');
-                                    const currentShade = Array.from(currentGroup.classList)
-                                        .find(cls => cls.startsWith('shade-'));
-                                    
-                                    // Update the entire group's HTML for star/cloud
                                     currentGroup.innerHTML = `
                                         <path d="${newPathData}" 
-                                            class="${newShapeType} ${currentClasses}"/>
+                                            class="${newShapeType} ${currentTexture}"
+                                            style="fill: ${getPatternFill(currentTexture, currentShade, uniqueId)}"/>
                                         <path d="${newPathData}" 
                                             class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
                                     `;
-                                }
-                                
-                                // Update outline path if it exists
-                                const recipientOutline = recipientShape.querySelector('.shape-outline');
-                                if (recipientOutline) {
-                                    if (newShapeType === 'goal-square') {
-                                        recipientOutline.removeAttribute('d');
-                                        recipientOutline.setAttribute('x', '20');
-                                        recipientOutline.setAttribute('y', '20');
-                                        recipientOutline.setAttribute('width', '60');
-                                        recipientOutline.setAttribute('height', '60');
-                                        recipientOutline.setAttribute('rx', '10');
-                                    } else {
-                                        recipientOutline.setAttribute('d', newPathData);
-                                        recipientOutline.removeAttribute('x');
-                                        recipientOutline.removeAttribute('y');
-                                        recipientOutline.removeAttribute('width');
-                                        recipientOutline.removeAttribute('height');
-                                        recipientOutline.removeAttribute('rx');
-                                    }
                                 }
 
                                 // Add interaction animation
@@ -626,35 +705,3 @@ var jsPsychGoalDisplay = (function (jspsych) {
     return GoalDisplayPlugin;
   
 })(jsPsychModule); 
-
-// Helper function to render shape (add this to the class)
-function renderShape(shapeData) {
-    if (!shapeData) return '';
-    
-    const shapeType = shapeData.type;
-    const shapeClasses = shapeData.shapeClass;
-    const shadeClass = shapeClasses.split(' ')[1]; // Get the shade class
-
-    if (shapeType === 'goal-star') {
-        return `<g class="shape-group ${shadeClass}">
-            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                class="${shapeClasses}"/>
-            <path d="M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z" 
-                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-        </g>`;
-    } else if (shapeType === 'goal-cloud') {
-        return `<g class="shape-group ${shadeClass}">
-            <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
-                class="${shapeClasses}"/>
-            <path d="M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z" 
-                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-        </g>`;
-    } else {
-        return `<g class="shape-group ${shadeClass}">
-            <rect x="20" y="20" width="60" height="60" rx="10" 
-                class="${shapeClasses}"/>
-            <rect x="20" y="20" width="60" height="60" rx="10" 
-                class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
-        </g>`;
-    }
-} 

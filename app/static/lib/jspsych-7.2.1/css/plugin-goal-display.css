@@ -357,4 +357,37 @@
 
 .rules-content li {
     margin: 3px 0;
+}
+
+/* Update shape group colors to use color instead of fill */
+.shape-group.shade-light {
+    color: #b3d7ff;
+}
+
+.shape-group.shade-medium {
+    color: #007bff;
+}
+
+.shape-group.shade-dark {
+    color: #004080;
+}
+
+/* Remove any direct fill definitions that might interfere with patterns */
+.goal-square, .goal-circle, .goal-star, .goal-cloud {
+    /* remove fill: currentColor; */
+}
+
+/* Ensure dragged shapes maintain their appearance */
+.dragged-shape-container .shape-group {
+    animation: none; /* Prevent floating animation during drag */
+}
+
+.dragged-shape-container.dropped .shape-group {
+    animation: float 3s ease-in-out infinite; /* Restore animation after drop */
+}
+
+/* Make sure dragged shapes inherit colors correctly */
+.dragged-shape-container .goal-square,
+.dragged-shape-container .goal-cloud {
+    /* remove fill: currentColor; */
 } 
