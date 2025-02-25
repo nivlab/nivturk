@@ -33,6 +33,55 @@ var jsPsychGoalTutorial = (function (jspsych) {
             this.startTime = performance.now();
             this.pursuitActions = [];
 
+            // Add pattern definitions at the start
+            const uniqueId = Date.now();
+            const svgDefs = `
+                <svg width="0" height="0" style="position: absolute;">
+                    <defs>
+                        <!-- Light shade patterns -->
+                        <pattern id="striped-pattern-light-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#b3d7ff"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-light-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#b3d7ff"/>
+                        </pattern>
+
+                        <!-- Medium shade patterns -->
+                        <pattern id="striped-pattern-medium-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#007bff"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-medium-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#007bff"/>
+                        </pattern>
+
+                        <!-- Dark shade patterns -->
+                        <pattern id="striped-pattern-dark-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="20" height="20"
+                            patternTransform="rotate(45)">
+                            <rect width="10" height="20" fill="#004080"/>
+                        </pattern>
+                        <pattern id="dotted-pattern-dark-${uniqueId}" 
+                            patternUnits="userSpaceOnUse"
+                            width="12" height="12">
+                            <circle cx="6" cy="6" r="2.5" fill="#004080"/>
+                        </pattern>
+                    </defs>
+                </svg>
+            `;
+            
+            document.body.insertAdjacentHTML('afterbegin', svgDefs);
+
             // Predefined goal state
             const goalShapes = [
                 { type: 'goal-square', shadeClass: 'shade-dark', textureClass: 'striped' },
@@ -80,14 +129,14 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         <h3>Goal Configuration:</h3>
                         <div class="goal-display-shapes">
                             <svg class="source-container" viewBox="0 0 100 100">
-                                ${renderWorkspaceShape(goalShapes[0])}
+                                ${renderWorkspaceShape(goalShapes[0], uniqueId)}
                             </svg>
                             <div>
                                 <svg class="source-container" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(goalShapes[1])}
+                                    ${renderWorkspaceShape(goalShapes[1], uniqueId)}
                                 </svg>
                                 <svg class="source-container" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(goalShapes[2])}
+                                    ${renderWorkspaceShape(goalShapes[2], uniqueId)}
                                 </svg>
                             </div>
                         </div>
@@ -100,16 +149,22 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         <button class="feature-btn" data-feature="color">shade</button>
                     </div>
                     <div class="workspace-shapes">
-                        <svg class="workspace-shape" viewBox="0 0 100 100">
-                            ${renderWorkspaceShape(workspaceShapes[0])}
-                        </svg>
+                        <div class="workspace-shape-wrapper">
+                            <svg class="workspace-shape" viewBox="0 0 100 100">
+                                ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
+                            </svg>
+                        </div>
                         <div class="workspace-bottom-shapes">
-                            <svg class="workspace-shape" viewBox="0 0 100 100">
-                                ${renderWorkspaceShape(workspaceShapes[1])}
-                            </svg>
-                            <svg class="workspace-shape" viewBox="0 0 100 100">
-                                ${renderWorkspaceShape(workspaceShapes[2])}
-                            </svg>
+                            <div class="workspace-shape-wrapper">
+                                <svg class="workspace-shape" viewBox="0 0 100 100">
+                                    ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
+                                </svg>
+                            </div>
+                            <div class="workspace-shape-wrapper">
+                                <svg class="workspace-shape" viewBox="0 0 100 100">
+                                    ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,7 +223,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
             let recipientShape = null;
 
             // Handle workspace shape clicks with action tracking
-            const shapeElements = display_element.querySelectorAll('.workspace-shape');
+            const shapeElements = display_element.querySelectorAll('.workspace-shape-wrapper');
             shapeElements.forEach((shape, index) => {
                 shape.addEventListener('click', () => {
                     // Prevent interactions during animations
@@ -214,11 +269,15 @@ var jsPsychGoalTutorial = (function (jspsych) {
                             
                             // Transfer the feature from actor to recipient
                             if (feature === 'texture') {
+                                // Get current texture of recipient
                                 const recipientElement = recipientShape.querySelector('path, rect');
                                 const currentTexture = Array.from(recipientElement.classList)
                                     .find(cls => ['plain', 'striped', 'dotted'].includes(cls));
                                 
-                                const textureCycle = ['striped', 'dotted', 'plain'];
+                                // Define texture cycle order
+                                const textureCycle = ['plain', 'striped', 'dotted'];
+                                
+                                // Find next texture in cycle
                                 let nextTexture;
                                 const currentIndex = textureCycle.indexOf(currentTexture);
                                 if (currentIndex === -1 || currentIndex === textureCycle.length - 1) {
@@ -227,8 +286,22 @@ var jsPsychGoalTutorial = (function (jspsych) {
                                     nextTexture = textureCycle[currentIndex + 1];
                                 }
                                 
+                                // Remove existing texture class and add new one
                                 recipientElement.classList.remove('plain', 'striped', 'dotted');
                                 recipientElement.classList.add(nextTexture);
+                                
+                                // Update the fill style with the new pattern
+                                const shadeClass = Array.from(recipientShape.querySelector('.shape-group').classList)
+                                    .find(cls => cls.startsWith('shade-'));
+                                recipientElement.style.fill = getPatternFill(nextTexture, shadeClass, uniqueId);
+
+                                // Add to pursuit actions
+                                this.pursuitActions.push({
+                                    feature: 'texture',
+                                    actor_index: Array.from(shapeElements).indexOf(actorShape),
+                                    recipient_index: Array.from(shapeElements).indexOf(recipientShape),
+                                    result: nextTexture
+                                });
                             } else if (feature === 'color') {
                                 const actorShade = Array.from(actorShape.querySelector('.shape-group').classList)
                                     .find(cls => cls.startsWith('shade-'));
@@ -443,8 +516,16 @@ var jsPsychGoalTutorial = (function (jspsych) {
   
 })(jsPsychModule);
 
-// Copy all helper functions from goal-display plugin
-function renderWorkspaceShape(shapeData) {
+// Add getPatternFill at the top level
+function getPatternFill(texture, shade, uniqueId) {
+    const shadeName = shade.split('-')[1];
+    return texture === 'striped' ? `url(#striped-pattern-${shadeName}-${uniqueId})` : 
+           texture === 'dotted' ? `url(#dotted-pattern-${shadeName}-${uniqueId})` : 
+           'currentColor';
+}
+
+// Update renderWorkspaceShape to use patterns
+function renderWorkspaceShape(shapeData, uniqueId) {
     const pathData = {
         'goal-star': "M50 10 L58 35 L85 35 L63 50 L72 75 L50 60 L28 75 L37 50 L15 35 L42 35 Z",
         'goal-cloud': "M35,45 a20,20 1 0,0 0,40 h30 a20,20 1 0,0 0,-40 a10,10 1 0,0 -10,-10 a15,15 1 0,0 -20,10 z"
@@ -452,17 +533,19 @@ function renderWorkspaceShape(shapeData) {
 
     if (shapeData.type === 'goal-square') {
         return `
-            <g class="shape-group ${shapeData.shadeClass}">
+            <g class="shape-group ${shapeData.shadeClass}" style="fill: none;">
                 <rect x="20" y="20" width="60" height="60" rx="10" 
-                    class="${shapeData.type} ${shapeData.textureClass}"/>
+                    class="${shapeData.type} ${shapeData.textureClass}"
+                    style="fill: ${getPatternFill(shapeData.textureClass, shapeData.shadeClass, uniqueId)}"/>
                 <rect x="20" y="20" width="60" height="60" rx="10" 
                     class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
             </g>`;
     } else {
         return `
-            <g class="shape-group ${shapeData.shadeClass}">
+            <g class="shape-group ${shapeData.shadeClass}" style="fill: none;">
                 <path d="${pathData[shapeData.type]}" 
-                    class="${shapeData.type} ${shapeData.textureClass}"/>
+                    class="${shapeData.type} ${shapeData.textureClass}"
+                    style="fill: ${getPatternFill(shapeData.textureClass, shapeData.shadeClass, uniqueId)}"/>
                 <path d="${pathData[shapeData.type]}" 
                     class="shape-outline" fill="none" stroke="currentColor" stroke-width="2"/>
             </g>`;
