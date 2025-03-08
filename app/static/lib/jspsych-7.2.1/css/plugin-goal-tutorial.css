@@ -355,4 +355,43 @@
     .workspace-container {
         padding-bottom: clamp(0.5rem, 2vw, 1.5rem);
     }
+}
+
+/* Update the pulsing animation for instruction text */
+@keyframes instructionPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 236, 107, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 236, 107, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 236, 107, 0);
+    }
+}
+
+/* Apply the animation to the instruction text elements */
+.instruction-text.pulse {
+    animation: instructionPulse 2s infinite;
+    background-color: rgba(255, 250, 220, 0.8);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 1rem;
+}
+
+/* Add a highlight class for when instructions are completed */
+.instruction-text.completed {
+    animation: none;
+    background-color: rgba(240, 255, 240, 0.8);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    transition: all 0.5s ease;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 1rem;
+}
+
+/* Ensure the hidden class doesn't interfere with our styling */
+.instruction-text.hidden {
+    display: none !important;
 } 

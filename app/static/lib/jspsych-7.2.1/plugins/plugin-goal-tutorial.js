@@ -451,6 +451,15 @@ var jsPsychGoalTutorial = (function (jspsych) {
             const prevBtn = display_element.querySelector('.prev-btn');
             const nextBtn = display_element.querySelector('.next-btn');
 
+            // Add pulsing effect to all instruction texts
+            display_element.querySelectorAll('.instruction-text').forEach(text => {
+                text.classList.add('pulse');
+            });
+
+            // Track if instructions have been completed
+            let instructionsCompleted = false;
+
+            // Update the instruction visibility function to handle the pulsing effect
             function updateInstructionVisibility() {
                 // Hide all instruction texts
                 display_element.querySelectorAll('.instruction-text').forEach(text => {
@@ -461,6 +470,12 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 const currentText = display_element.querySelector(`.instruction-text[data-page="${currentPage}"]`);
                 if (currentText) {
                     currentText.classList.remove('hidden');
+                    
+                    // If we're on the last page and it's been viewed before, show completed style
+                    if (currentPage === totalPages && instructionsCompleted) {
+                        currentText.classList.remove('pulse');
+                        currentText.classList.add('completed');
+                    }
                 }
                 
                 // Update button states
@@ -468,16 +483,28 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 nextBtn.disabled = currentPage === totalPages;
             }
 
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    updateInstructionVisibility();
-                }
-            });
-
+            // Update the nextBtn click handler
             nextBtn.addEventListener('click', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
+                    updateInstructionVisibility();
+                }
+                
+                // If we've reached the last page, mark instructions as completed
+                if (currentPage === totalPages) {
+                    instructionsCompleted = true;
+                    const lastText = display_element.querySelector(`.instruction-text[data-page="${totalPages}"]`);
+                    if (lastText) {
+                        lastText.classList.remove('pulse');
+                        lastText.classList.add('completed');
+                    }
+                }
+            });
+
+            // Update the prevBtn click handler
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
                     updateInstructionVisibility();
                 }
             });
