@@ -488,24 +488,33 @@ var jsPsychGoalTutorial = (function (jspsych) {
             // Function to adjust workspace scale based on available space
             function adjustWorkspaceScale() {
                 const container = display_element.querySelector('.workspace-container');
+                const goalContainer = display_element.querySelector('.jspsych-goal-display-container');
                 const availableHeight = window.innerHeight - 
                     (display_element.querySelector('.instruction-text-container')?.offsetHeight || 0) - 
-                    (display_element.querySelector('.instruction-nav-container')?.offsetHeight || 0) - 40; // Extra padding
+                    (display_element.querySelector('.instruction-nav-container')?.offsetHeight || 0) - 40;
                 
-                // Get the container's current dimensions
+                // Calculate workspace scale
                 const containerWidth = container.offsetWidth;
                 const containerHeight = container.offsetHeight;
-                
-                // Calculate scale factors based on available space
                 const widthScale = Math.min(1, window.innerWidth / (containerWidth + 40) * 0.9);
                 const heightScale = Math.min(1, availableHeight / containerHeight * 0.9);
+                const workspaceScale = Math.min(widthScale, heightScale);
                 
-                // Use the smaller scale factor to ensure it fits both dimensions
-                const scale = Math.min(widthScale, heightScale);
+                // Calculate goal display scale
+                let goalScale = workspaceScale;
+                if (goalContainer) {
+                    const goalWidth = goalContainer.offsetWidth;
+                    const goalHeight = goalContainer.offsetHeight;
+                    const goalWidthScale = Math.min(1, window.innerWidth / (goalWidth + 40) * 0.9);
+                    const goalHeightScale = Math.min(1, availableHeight / goalHeight * 0.9);
+                    goalScale = Math.min(goalWidthScale, goalHeightScale, workspaceScale);
+                }
                 
-                // Apply the scale through CSS variable
+                // Apply scales through CSS variables
                 document.documentElement.style.setProperty('--workspace-scale', 
-                    scale < 0.5 ? 0.5 : scale); // Don't go below 0.5 scale
+                    workspaceScale < 0.5 ? 0.5 : workspaceScale);
+                document.documentElement.style.setProperty('--goal-display-scale', 
+                    goalScale < 0.5 ? 0.5 : goalScale);
             }
 
             // Call initially and on window resize

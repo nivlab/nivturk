@@ -76,11 +76,19 @@
 :root {
     --shape-size: clamp(60px, 10vw, 80px);
     --workspace-scale: 1;
+    --goal-display-scale: 1;
 }
 
 /* Apply the scale to all workspace elements */
 .workspace-shapes {
     transform: scale(var(--workspace-scale));
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+}
+
+/* Apply scaling to goal display shapes */
+.goal-display-shapes {
+    transform: scale(var(--goal-display-scale));
     transform-origin: center center;
     transition: transform 0.3s ease;
 }
@@ -162,10 +170,15 @@
     :root {
         --shape-size: clamp(40px, 7vw, 60px);
         --workspace-scale: 0.8;
+        --goal-display-scale: 0.8;
     }
     
     .workspace-container {
         width: min(400px, 95%);
+    }
+    
+    .jspsych-goal-display-container {
+        width: min(240px, 95%);
     }
 }
 
@@ -196,6 +209,7 @@
 :root {
     --shape-size: clamp(60px, 10vw, 80px);
     --workspace-scale: 1;
+    --goal-display-scale: 1;
 }
 
 /* Responsive media queries for different screen sizes */
@@ -203,10 +217,15 @@
     :root {
         --shape-size: clamp(50px, 8vw, 70px);
         --workspace-scale: 0.9;
+        --goal-display-scale: 0.9;
     }
     
     .workspace-container {
         width: min(450px, 90%);
+    }
+    
+    .jspsych-goal-display-container {
+        width: min(270px, 95%);
     }
 }
 
@@ -214,10 +233,15 @@
     :root {
         --shape-size: clamp(40px, 7vw, 60px);
         --workspace-scale: 0.8;
+        --goal-display-scale: 0.8;
     }
     
     .workspace-container {
         width: min(400px, 95%);
+    }
+    
+    .jspsych-goal-display-container {
+        width: min(240px, 95%);
     }
     
     .feature-menu {
@@ -236,6 +260,7 @@
 @media (max-height: 700px) {
     :root {
         --workspace-scale: 0.85;
+        --goal-display-scale: 0.85;
     }
     
     .workspace-container {
@@ -246,6 +271,7 @@
 @media (max-height: 550px) {
     :root {
         --workspace-scale: 0.75;
+        --goal-display-scale: 0.75;
         --shape-size: clamp(40px, 6vw, 55px);
     }
     
@@ -260,6 +286,7 @@
 @media (max-width: 576px) and (max-height: 700px) {
     :root {
         --workspace-scale: 0.7;
+        --goal-display-scale: 0.7;
         --shape-size: clamp(35px, 6vw, 50px);
     }
     
@@ -272,6 +299,7 @@
 @media (max-width: 400px), (max-height: 500px) {
     :root {
         --workspace-scale: 0.6;
+        --goal-display-scale: 0.6;
         --shape-size: clamp(30px, 5vw, 45px);
     }
     
