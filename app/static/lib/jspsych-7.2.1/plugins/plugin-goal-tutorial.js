@@ -499,6 +499,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         lastText.classList.add('completed');
                     }
                 }
+                setTimeout(ensureButtonsVisible, 10);
             });
 
             // Update the prevBtn click handler
@@ -507,6 +508,7 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     currentPage--;
                     updateInstructionVisibility();
                 }
+                setTimeout(ensureButtonsVisible, 10);
             });
 
             // Initialize the visibility
@@ -547,6 +549,52 @@ var jsPsychGoalTutorial = (function (jspsych) {
             // Call initially and on window resize
             adjustWorkspaceScale();
             window.addEventListener('resize', adjustWorkspaceScale);
+
+            // Function to ensure navigation buttons are visible
+            function ensureButtonsVisible() {
+                const navContainer = display_element.querySelector('.instruction-nav-container');
+                const buttons = display_element.querySelectorAll('.instruction-btn');
+                
+                // Check if buttons are visible in the viewport
+                const containerRect = navContainer.getBoundingClientRect();
+                const isVisible = (
+                    containerRect.top >= 0 &&
+                    containerRect.left >= 0 &&
+                    containerRect.bottom <= window.innerHeight &&
+                    containerRect.right <= window.innerWidth
+                );
+                
+                // If not fully visible, adjust the container
+                if (!isVisible) {
+                    // If we're at the bottom of the page, make the container sticky
+                    if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100) {
+                        navContainer.style.position = 'sticky';
+                    } else {
+                        // Otherwise, make it fixed at the bottom
+                        navContainer.style.position = 'fixed';
+                        navContainer.style.bottom = '0';
+                        navContainer.style.left = '0';
+                    }
+                    
+                    // Add a highlight effect to make buttons more noticeable
+                    buttons.forEach(btn => {
+                        if (!btn.disabled) {
+                            btn.classList.add('highlight');
+                        }
+                    });
+                } else {
+                    // Reset to default if visible
+                    navContainer.style.position = 'sticky';
+                    buttons.forEach(btn => btn.classList.remove('highlight'));
+                }
+            }
+
+            // Call this function on scroll and resize
+            window.addEventListener('scroll', ensureButtonsVisible);
+            window.addEventListener('resize', ensureButtonsVisible);
+
+            // Initial call
+            ensureButtonsVisible();
         }
 
         // Copy helper methods from goal-display

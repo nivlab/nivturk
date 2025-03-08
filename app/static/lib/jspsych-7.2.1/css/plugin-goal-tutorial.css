@@ -112,39 +112,95 @@
     width: 100%;
     margin: 1rem auto 0 auto;
     padding: 0.5rem 0;
-    position: relative; /* Change from fixed to relative */
-    z-index: 5;
+    position: sticky; /* Use sticky positioning instead of fixed */
+    bottom: 0;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .instruction-nav {
     display: flex;
     justify-content: center;
-    gap: clamp(2rem, 10vw, 6rem);
-    width: min(600px, 90%);
+    gap: clamp(1rem, 5vw, 4rem);
+    width: min(600px, 95%);
     margin: 0 auto;
-    padding: clamp(0.5rem, 2vw, 1rem);
+    padding: clamp(0.3rem, 1vw, 0.8rem);
 }
 
 .instruction-btn {
-    font-size: clamp(0.9rem, 1.2vw, 1rem);
-    padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 2rem);
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    padding: clamp(0.4rem, 0.8vw, 0.8rem) clamp(0.8rem, 1.5vw, 1.5rem);
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    min-width: max(100px, 15vw);
+    transition: all 0.2s;
+    min-width: max(80px, 12vw);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform-origin: center;
 }
 
-.instruction-btn:hover {
-    background-color: #0056b3;
+/* Add a scaling effect for very small screens */
+@media (max-height: 500px), (max-width: 400px) {
+    .instruction-nav-container {
+        padding: 0.3rem 0;
+    }
+    
+    .instruction-nav {
+        gap: 0.8rem;
+        padding: 0.2rem;
+    }
+    
+    .instruction-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+        min-width: 70px;
+        transform: scale(0.9);
+    }
 }
 
-.instruction-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+/* Ensure buttons are visible on extremely small screens */
+@media (max-height: 400px), (max-width: 350px) {
+    .instruction-nav-container {
+        position: fixed; /* Switch to fixed for extremely small screens */
+        bottom: 0;
+        left: 0;
+        padding: 0.2rem 0;
+    }
+    
+    .instruction-btn {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        min-width: 60px;
+        transform: scale(0.85);
+    }
+    
+    /* Add padding to the bottom of the content to prevent overlap */
+    .jspsych-content {
+        padding-bottom: 3.5rem;
+    }
+}
+
+/* Add a class to make buttons more prominent when needed */
+.instruction-btn.highlight {
+    animation: buttonPulse 2s infinite;
+}
+
+@keyframes buttonPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 5px rgba(0, 123, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
 }
 
 /* Responsive layout adjustments */
