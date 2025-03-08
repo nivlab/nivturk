@@ -499,4 +499,76 @@
 /* Ensure the button pulse doesn't conflict with the highlight animation */
 .instruction-btn.next-btn.pulse-next.highlight {
     animation: nextButtonPulse 2s infinite;
+}
+
+/* Add pulsing animation for the rules container */
+@keyframes rulesPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.8);
+        background-color: rgba(255, 250, 220, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 15px 0 rgba(255, 193, 7, 0.6);
+        background-color: rgba(255, 245, 157, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.8);
+        background-color: rgba(255, 250, 220, 0.8);
+    }
+}
+
+/* Apply the animation to the rules container when activated */
+.rules-container.pulse {
+    animation: rulesPulse 2s infinite;
+    background-color: rgba(255, 250, 220, 0.8);
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for rules title when pulsing */
+.rules-container.pulse .rules-title {
+    color: #d68c00;
+    font-weight: bold;
+}
+
+/* Add pulsing animation for the feature menu */
+@keyframes featureMenuPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.8);
+        background-color: rgba(255, 250, 220, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 15px 0 rgba(255, 193, 7, 0.6);
+        background-color: rgba(255, 245, 157, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.8);
+        background-color: rgba(255, 250, 220, 0.8);
+    }
+}
+
+/* Apply the animation to the feature menu when activated */
+.feature-menu.pulse {
+    animation: featureMenuPulse 2s infinite;
+    background-color: rgba(255, 250, 220, 0.95);
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for feature buttons when menu is pulsing */
+.feature-menu.pulse .feature-btn {
+    border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+/* Add a title to the feature menu when pulsing */
+.feature-menu.pulse::before {
+    content: 'Tools';
+    display: block;
+    color: #d68c00;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
 } 

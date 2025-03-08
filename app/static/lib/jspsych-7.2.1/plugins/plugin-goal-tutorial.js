@@ -507,6 +507,26 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     // Update Next button styling
                     nextBtn.classList.remove('pulse-next');
                     nextBtn.classList.add('completed-next');
+                    
+                    // Start pulsing the rules container
+                    const rulesContainer = display_element.querySelector('.rules-container');
+                    if (rulesContainer) {
+                        rulesContainer.classList.add('pulse');
+                        
+                        // Add a title if it doesn't exist
+                        if (!rulesContainer.querySelector('.rules-title')) {
+                            const rulesTitle = document.createElement('h3');
+                            rulesTitle.className = 'rules-title';
+                            rulesTitle.textContent = 'Rules (Read Me!)';
+                            rulesContainer.insertBefore(rulesTitle, rulesContainer.firstChild);
+                        }
+                    }
+                    
+                    // Start pulsing the feature menu
+                    const featureMenu = display_element.querySelector('.feature-menu');
+                    if (featureMenu) {
+                        featureMenu.classList.add('pulse');
+                    }
                 }
                 
                 setTimeout(ensureButtonsVisible, 10);
