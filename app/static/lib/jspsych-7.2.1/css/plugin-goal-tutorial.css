@@ -46,20 +46,34 @@
     aspect-ratio: 1;
     margin: 0 auto;
     padding: clamp(0.5rem, 2vw, 1.5rem);
-    transition: all 0.3s ease; /* Smooth transition when size changes */
+    padding-left: 60px; /* Add padding on the left for the menu */
+    transition: all 0.3s ease;
+    position: relative; /* Needed for absolute positioning of the menu */
 }
 
 /* Feature menu */
 .feature-menu {
     display: flex;
-    gap: clamp(0.5rem, 2vw, 1.5rem);
-    padding: clamp(0.5rem, 1vw, 1rem);
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+    padding: clamp(0.5rem, 1vw, 0.8rem);
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%) translateX(-100%);
+    align-items: flex-end;
+    z-index: 5;
+    background-color: rgba(248, 249, 250, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .feature-btn {
-    font-size: clamp(0.8rem, 1.2vw, 1rem);
-    padding: clamp(0.4rem, 1vw, 0.8rem) clamp(0.8rem, 2vw, 1.6rem);
-    min-width: max(80px, 10vw);
+    font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+    padding: clamp(0.4rem, 0.8vw, 0.7rem) clamp(0.6rem, 1.2vw, 1.2rem);
+    min-width: max(70px, 8vw);
+    text-align: center;
+    margin-bottom: 5px;
 }
 
 /* Rules container */
@@ -318,4 +332,34 @@
     }
 }
 
-/* Add JavaScript to dynamically adjust scale based on container size */ 
+/* Add JavaScript to dynamically adjust scale based on container size */
+
+/* Add a media query for short screens */
+@media (max-height: 650px) {
+    /* Move the feature menu to the side of the workspace instead of above it */
+    .feature-menu {
+        padding: 8px;
+    }
+    
+    .feature-btn {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
+
+/* For extremely short screens, make further adjustments */
+@media (max-height: 500px) {
+    /* Move the feature menu to the bottom of the workspace */
+    .feature-menu {
+        padding: 5px;
+    }
+    
+    .feature-btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    .workspace-container {
+        padding-bottom: clamp(0.5rem, 2vw, 1.5rem);
+    }
+} 
