@@ -458,11 +458,14 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 });
                 
                 // Show current page
-                display_element.querySelector(`.instruction-text[data-page="${currentPage}"]`).classList.remove('hidden');
+                const currentText = display_element.querySelector(`.instruction-text[data-page="${currentPage}"]`);
+                if (currentText) {
+                    currentText.classList.remove('hidden');
+                }
                 
                 // Update button states
                 prevBtn.disabled = currentPage === 1;
-                nextBtn.disabled = currentPage === totalPages;  // Disable next button on last page instead of changing text
+                nextBtn.disabled = currentPage === totalPages;
             }
 
             prevBtn.addEventListener('click', () => {
@@ -478,6 +481,9 @@ var jsPsychGoalTutorial = (function (jspsych) {
                     updateInstructionVisibility();
                 }
             });
+
+            // Initialize the visibility
+            updateInstructionVisibility();
         }
 
         // Copy helper methods from goal-display

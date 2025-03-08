@@ -8,6 +8,7 @@
     min-height: 100vh;
     padding: clamp(10px, 3vw, 30px);  /* Fluid padding */
     gap: clamp(1rem, 3vh, 2rem);      /* Fluid gap between sections */
+    padding-bottom: clamp(4rem, 10vh, 6rem);
 }
 
 /* Instructions container */
@@ -75,15 +76,46 @@
     --shape-size: clamp(60px, 10vw, 80px);  /* Fluid shape size */
 }
 
-/* Navigation buttons */
+/* Navigation container and buttons */
+.instruction-nav-container {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: clamp(0.5rem, 2vh, 1rem) 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
 .instruction-nav {
-    gap: clamp(2rem, 10vw, 6rem);     /* Fluid gap between buttons */
+    display: flex;
+    justify-content: center;
+    gap: clamp(2rem, 10vw, 6rem);
+    width: min(600px, 90%);
+    margin: 0 auto;
     padding: clamp(0.5rem, 2vw, 1rem);
 }
 
 .instruction-btn {
     font-size: clamp(0.9rem, 1.2vw, 1rem);
     padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 2rem);
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-width: max(100px, 15vw);
+}
+
+.instruction-btn:hover {
+    background-color: #0056b3;
+}
+
+.instruction-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /* Responsive layout adjustments */
@@ -119,4 +151,27 @@
     :root {
         --shape-size: clamp(40px, 15vw, 60px);  /* Smaller shapes on mobile */
     }
+}
+
+/* Adjust for very small screens */
+@media (max-height: 500px) {
+    .instruction-nav-container {
+        position: static; /* Don't fix on very small screens to prevent overlap */
+        margin-top: 1rem;
+    }
+    
+    .instruction-btn {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .jspsych-content {
+        padding-bottom: clamp(1rem, 3vh, 2rem);
+    }
+}
+
+/* Add this to your CSS if it's not already there */
+.hidden {
+    display: none !important;
 } 
