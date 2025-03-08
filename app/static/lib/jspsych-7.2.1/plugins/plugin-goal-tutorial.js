@@ -124,74 +124,82 @@ var jsPsychGoalTutorial = (function (jspsych) {
                         </div>
                     </div>
                 </div>
-                <div class="jspsych-goal-display-container">
-                    <div class="goal-display">
-                        <h3>Goal Configuration:</h3>
-                        <div class="goal-display-shapes">
-                            <svg class="source-container" viewBox="0 0 100 100">
-                                ${renderWorkspaceShape(goalShapes[0], uniqueId)}
-                            </svg>
-                            <div>
-                                <svg class="source-container" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(goalShapes[1], uniqueId)}
-                                </svg>
-                                <svg class="source-container" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(goalShapes[2], uniqueId)}
-                                </svg>
+                <div class="content-area">
+                    <div class="left-column">
+                        <div class="jspsych-goal-display-container">
+                            <div class="goal-display">
+                                <h3>Goal Configuration:</h3>
+                                <div class="goal-display-shapes">
+                                    <svg class="source-container" viewBox="0 0 100 100">
+                                        ${renderWorkspaceShape(goalShapes[0], uniqueId)}
+                                    </svg>
+                                    <div>
+                                        <svg class="source-container" viewBox="0 0 100 100">
+                                            ${renderWorkspaceShape(goalShapes[1], uniqueId)}
+                                        </svg>
+                                        <svg class="source-container" viewBox="0 0 100 100">
+                                            ${renderWorkspaceShape(goalShapes[2], uniqueId)}
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="workspace-container">
-                    <div class="feature-menu">
-                        <button class="feature-btn active" data-feature="texture">texture</button>
-                        <button class="feature-btn" data-feature="shape">shape</button>
-                        <button class="feature-btn" data-feature="color">shade</button>
-                    </div>
-                    <div class="workspace-shapes">
-                        <div class="workspace-shape-wrapper">
-                            <svg class="workspace-shape" viewBox="0 0 100 100">
-                                ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
-                            </svg>
-                        </div>
-                        <div class="workspace-bottom-shapes">
-                            <div class="workspace-shape-wrapper">
-                                <svg class="workspace-shape" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
-                                </svg>
+                    <div class="center-column">
+                        <div class="workspace-container">
+                            <div class="feature-menu">
+                                <button class="feature-btn active" data-feature="texture">texture</button>
+                                <button class="feature-btn" data-feature="shape">shape</button>
+                                <button class="feature-btn" data-feature="color">shade</button>
                             </div>
-                            <div class="workspace-shape-wrapper">
-                                <svg class="workspace-shape" viewBox="0 0 100 100">
-                                    ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
-                                </svg>
+                            <div class="workspace-shapes">
+                                <div class="workspace-shape-wrapper">
+                                    <svg class="workspace-shape" viewBox="0 0 100 100">
+                                        ${renderWorkspaceShape(workspaceShapes[0], uniqueId)}
+                                    </svg>
+                                </div>
+                                <div class="workspace-bottom-shapes">
+                                    <div class="workspace-shape-wrapper">
+                                        <svg class="workspace-shape" viewBox="0 0 100 100">
+                                            ${renderWorkspaceShape(workspaceShapes[1], uniqueId)}
+                                        </svg>
+                                    </div>
+                                    <div class="workspace-shape-wrapper">
+                                        <svg class="workspace-shape" viewBox="0 0 100 100">
+                                            ${renderWorkspaceShape(workspaceShapes[2], uniqueId)}
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="rules-container">
-                    <div class="rules-content">
-                        <h3>Rules:</h3>
-                        
-                        <h4>Texture:</h4>
-                        <ul>
-                            <li>The recipient item texture cycles between plain, striped, and dotted in that order when acted on.</li>
-                        </ul>
-                        
-                        <h4>Shape:</h4>
-                        <ul>
-                            <li>Most of the time, the recipient item will take on the shape of the actor item.</li>
-                            <li>Sometimes, the recipient item will change to a random shape that is not the actor shape.</li>
-                        </ul>
-                        
-                        <h4>Shade:</h4>
-                        <ul>
-                            <li>If the two items have different shades, the recipient item will become more like the actor item by one step (e.g., dark to medium).</li>
-                            <li>If the two items have the same shade, most of the time the recipient item will become medium shade, but sometimes:</li>
-                            <ul>
-                                <li>If both items are medium shade, the recipient will change to either high or low shade.</li>
-                                <li>If both items are high shade or both are low shade, the recipient won't change.</li>
-                            </ul>
-                        </ul>
+                    <div class="right-column">
+                        <div class="rules-container">
+                            <div class="rules-content">
+                                <h3>Rules:</h3>
+                                
+                                <h4>Texture:</h4>
+                                <ul>
+                                    <li>The recipient item texture cycles between plain, striped, and dotted in that order when acted on.</li>
+                                </ul>
+                                
+                                <h4>Shape:</h4>
+                                <ul>
+                                    <li>Most of the time, the recipient item will take on the shape of the actor item.</li>
+                                    <li>Sometimes, the recipient item will change to a random shape that is not the actor shape.</li>
+                                </ul>
+                                
+                                <h4>Shade:</h4>
+                                <ul>
+                                    <li>If the two items have different shades, the recipient item will become more like the actor item by one step (e.g., dark to medium).</li>
+                                    <li>If the two items have the same shade, most of the time the recipient item will become medium shade, but sometimes:</li>
+                                    <ul>
+                                        <li>If both items are medium shade, the recipient will change to either high or low shade.</li>
+                                        <li>If both items are high shade or both are low shade, the recipient won't change.</li>
+                                    </ul>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="celebration-overlay hidden">
