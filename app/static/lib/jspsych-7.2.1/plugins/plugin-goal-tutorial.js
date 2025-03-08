@@ -484,6 +484,33 @@ var jsPsychGoalTutorial = (function (jspsych) {
 
             // Initialize the visibility
             updateInstructionVisibility();
+
+            // Function to adjust workspace scale based on available space
+            function adjustWorkspaceScale() {
+                const container = display_element.querySelector('.workspace-container');
+                const availableHeight = window.innerHeight - 
+                    (display_element.querySelector('.instruction-text-container')?.offsetHeight || 0) - 
+                    (display_element.querySelector('.instruction-nav-container')?.offsetHeight || 0) - 40; // Extra padding
+                
+                // Get the container's current dimensions
+                const containerWidth = container.offsetWidth;
+                const containerHeight = container.offsetHeight;
+                
+                // Calculate scale factors based on available space
+                const widthScale = Math.min(1, window.innerWidth / (containerWidth + 40) * 0.9);
+                const heightScale = Math.min(1, availableHeight / containerHeight * 0.9);
+                
+                // Use the smaller scale factor to ensure it fits both dimensions
+                const scale = Math.min(widthScale, heightScale);
+                
+                // Apply the scale through CSS variable
+                document.documentElement.style.setProperty('--workspace-scale', 
+                    scale < 0.5 ? 0.5 : scale); // Don't go below 0.5 scale
+            }
+
+            // Call initially and on window resize
+            adjustWorkspaceScale();
+            window.addEventListener('resize', adjustWorkspaceScale);
         }
 
         // Copy helper methods from goal-display
