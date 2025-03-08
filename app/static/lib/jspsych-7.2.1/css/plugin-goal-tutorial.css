@@ -450,4 +450,42 @@
 /* Ensure the hidden class doesn't interfere with our styling */
 .instruction-text.hidden {
     display: none !important;
+}
+
+/* Add pulsing animation for the Next button */
+@keyframes nextButtonPulse {
+    0% {
+        background-color: #007bff;
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+    50% {
+        background-color: #ffc107;
+        box-shadow: 0 0 0 8px rgba(255, 193, 7, 0);
+    }
+    100% {
+        background-color: #007bff;
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+/* Apply the animation to the Next button when instructions are not completed */
+.instruction-btn.next-btn.pulse-next {
+    animation: nextButtonPulse 2s infinite;
+    position: relative;
+    z-index: 6;
+}
+
+/* Style for the Next button when instructions are completed */
+.instruction-btn.next-btn.completed-next {
+    background-color: #28a745;
+    transition: background-color 0.5s ease;
+}
+
+.instruction-btn.next-btn.completed-next:hover {
+    background-color: #218838;
+}
+
+/* Ensure the button pulse doesn't conflict with the highlight animation */
+.instruction-btn.next-btn.pulse-next.highlight {
+    animation: nextButtonPulse 2s infinite;
 } 

@@ -483,31 +483,46 @@ var jsPsychGoalTutorial = (function (jspsych) {
                 nextBtn.disabled = currentPage === totalPages;
             }
 
-            // Update the nextBtn click handler
+            // Add pulsing effect to the Next button until instructions are completed
+            nextBtn.classList.add('pulse-next');
+
+            // Update the nextBtn click handler to check if we've reached the last page
             nextBtn.addEventListener('click', () => {
                 if (currentPage < totalPages) {
                     currentPage++;
                     updateInstructionVisibility();
                 }
                 
-                // If we've reached the last page, mark instructions as completed
+                // If we've reached the last page, remove the pulsing effect and add completed class
                 if (currentPage === totalPages) {
-                    instructionsCompleted = true;
-                    const lastText = display_element.querySelector(`.instruction-text[data-page="${totalPages}"]`);
-                    if (lastText) {
-                        lastText.classList.remove('pulse');
-                        lastText.classList.add('completed');
-                    }
+                    instructionContainer.classList.remove('pulse');
+                    instructionContainer.classList.add('completed');
+                    
+                    // Update Next button styling
+                    nextBtn.classList.remove('pulse-next');
+                    nextBtn.classList.add('completed-next');
                 }
+                
                 setTimeout(ensureButtonsVisible, 10);
             });
 
-            // Update the prevBtn click handler
+            // Also update the prevBtn click handler to restore pulsing if going back from last page
             prevBtn.addEventListener('click', () => {
                 if (currentPage > 1) {
+                    // If we're moving back from the last page, restore the pulse
+                    if (currentPage === totalPages) {
+                        instructionContainer.classList.remove('completed');
+                        instructionContainer.classList.add('pulse');
+                        
+                        // Restore Next button pulsing
+                        nextBtn.classList.remove('completed-next');
+                        nextBtn.classList.add('pulse-next');
+                    }
+                    
                     currentPage--;
                     updateInstructionVisibility();
                 }
+                
                 setTimeout(ensureButtonsVisible, 10);
             });
 
