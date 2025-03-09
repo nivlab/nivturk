@@ -61,7 +61,7 @@
 /* Workspace styles */
 .workspace-container {
     position: absolute;
-    top: 50%;
+    top: 30%; /* Changed from 50% to 40% to move it higher */
     left: 50%;
     transform: translate(-50%, -50%);
     width: 500px;
