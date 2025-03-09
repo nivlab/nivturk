@@ -422,4 +422,11 @@
     justify-content: center;
     gap: 10px;
     padding: 5px;
-} 
+}
+
+/* Target only the goal-display workspace */
+.workspace-container.goal-display-workspace {
+    top: 30%; /* This will only apply to the goal-display plugin */
+}
+
+/* The original .workspace-container style remains at 50% for the tutorial */ 

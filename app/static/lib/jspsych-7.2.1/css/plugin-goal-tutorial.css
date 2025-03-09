@@ -8,7 +8,7 @@
     min-height: 100vh;
     padding: clamp(10px, 3vw, 30px);  /* Fluid padding */
     gap: clamp(1rem, 3vh, 2rem);      /* Fluid gap between sections */
-    padding-bottom: clamp(1rem, 3vh, 2rem); /* Reduce bottom padding */
+    padding-bottom: calc(clamp(1rem, 3vh, 2rem) + 60px); /* Add extra padding to account for nav height */
 }
 
 /* Instructions container */
@@ -48,7 +48,9 @@
     padding: clamp(0.5rem, 2vw, 1.5rem);
     padding-left: 60px; /* Add padding on the left for the menu */
     transition: all 0.3s ease;
-    position: relative; /* Needed for absolute positioning of the menu */
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Feature menu */
@@ -112,8 +114,10 @@
     width: 100%;
     margin: 1rem auto 0 auto;
     padding: 0.5rem 0;
-    position: sticky; /* Use sticky positioning instead of fixed */
+    position: fixed; /* Change from sticky to fixed */
     bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 10;
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
@@ -571,4 +575,48 @@
     text-align: center;
     margin-bottom: 8px;
     font-size: 0.9rem;
+}
+
+/* Override the workspace container position specifically for the tutorial */
+.jspsych-goal-tutorial-content .workspace-container,
+.jspsych-content .workspace-container {
+    position: absolute;
+    top: 50%; /* Reset to original 50% for the tutorial */
+    transform: translate(-50%, -50%);
+    margin-bottom: 60px; /* Add margin to avoid overlap with nav */
+}
+
+/* Override the instruction text position for the tutorial */
+.jspsych-goal-tutorial-content .instruction-text,
+.instruction-text-container + .content-area + .instruction-text {
+    top: 5%; /* Reset to original 5% for the tutorial */
+}
+
+/* Fix the navigation buttons position - make it more specific */
+body .instruction-nav-container {
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem 0;
+    position: fixed !important; /* Use !important to override any other styles */
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important; /* Higher z-index to ensure it's on top */
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the content has enough bottom padding */
+body .jspsych-content {
+    padding-bottom: 80px !important; /* Force enough padding at the bottom */
+}
+
+/* Make sure the workspace doesn't overlap with the nav */
+body .workspace-container {
+    margin-bottom: 80px;
+}
+
+/* Ensure the celebration overlay appears above the nav */
+.celebration-overlay {
+    z-index: 2000 !important;
 } 
