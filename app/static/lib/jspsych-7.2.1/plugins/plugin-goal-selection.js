@@ -72,34 +72,42 @@ var jsPsychGoalSelection = (function (jspsych) {
             // Get previous goals from jsPsych data and convert to array
             const previousTrials = this.jsPsych.data.get().filter({trial_type: 'goal-selection'}).values();
             
-            // Format current goal for comparison
+            // Format current goal for comparison - keep position information
             const currentGoal = selections
                 .filter(sel => sel.position && sel.item)
                 .map(sel => ({
+                    position: sel.position,
                     type: sel.item.type,
                     shade: sel.item.shade,
                     texture: sel.item.texture
-                }))
-                .sort((a, b) => // Sort to ensure consistent comparison
-                    `${a.type}${a.shade}${a.texture}`.localeCompare(`${b.type}${b.shade}${b.texture}`)
-                );
+                }));
                 
-            // Check against previous goals
+            // Check against previous goals - must match exactly including positions
             return previousTrials.some(trial => {
                 if (!trial.final_goal) return false;
                 
                 const previousGoal = trial.final_goal
                     .filter(sel => sel.position && sel.item)
                     .map(sel => ({
+                        position: sel.position,
                         type: sel.item.type,
                         shade: sel.item.shade,
                         texture: sel.item.texture
-                    }))
-                    .sort((a, b) => 
-                        `${a.type}${a.shade}${a.texture}`.localeCompare(`${b.type}${b.shade}${b.texture}`)
-                    );
+                    }));
                     
-                return JSON.stringify(currentGoal) === JSON.stringify(previousGoal);
+                // Compare each position individually
+                if (previousGoal.length !== currentGoal.length) return false;
+                
+                // Check if each position matches exactly
+                return previousGoal.every(prevItem => {
+                    const matchingItem = currentGoal.find(currItem => 
+                        currItem.position === prevItem.position);
+                        
+                    return matchingItem && 
+                           matchingItem.type === prevItem.type && 
+                           matchingItem.shade === prevItem.shade && 
+                           matchingItem.texture === prevItem.texture;
+                });
             });
         }
 
