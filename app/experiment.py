@@ -1,8 +1,42 @@
 from flask import (Blueprint, redirect, render_template, request, session, url_for)
 from .io import write_data, write_metadata
+import json
 
 ## Initialize blueprint.
 bp = Blueprint('experiment', __name__)
+
+
+
+@bp.route('/postlogin', methods=['POST'])
+def post_login():
+    """Write jsPsych message to metadata."""
+
+    ## Retrieve experiment.
+    timestamp = request.args.get('timestamp')
+    
+    if request.is_json:
+        
+        ## Retrieve jsPsych data.
+        data = json.loads(request.get_json())
+        workerId = data[0]['response']['Q0']
+        
+        ## Update participant id.
+        session['workerId'] = workerId
+        session['timestamp'] = timestamp
+        print(session)
+
+
+        ## Update metadata.
+        write_metadata(session, ['subId','address','user_agent','code_success','code_reject'], 'w')
+
+
+
+
+        # Optional: You might want to write initial metadata here
+        # write_metadata(session, ['workerId','timestamp'], 'w')
+
+    return ('', 200)
+
 
 @bp.route('/experiment')
 def experiment():
@@ -10,19 +44,16 @@ def experiment():
 
     ## Error-catching: screen for missing session.
     if not 'workerId' in session:
-
         ## Redirect participant to error (missing workerId).
         return redirect(url_for('error.error', errornum=1000))
 
     ## Case 1: previously completed experiment.
     elif 'complete' in session:
-
         ## Redirect participant to complete page.
         return redirect(url_for('complete.complete'))
 
     ## Case 2: repeat visit.
     elif not session['allow_restart'] and 'experiment' in session:
-
         ## Update participant metadata.
         session['ERROR'] = "1004: Revisited experiment."
         session['complete'] = 'error'
@@ -33,13 +64,14 @@ def experiment():
 
     ## Case 3: first visit.
     else:
-
         ## Update participant metadata.
         session['experiment'] = True
         write_metadata(session, ['experiment'], 'a')
 
         ## Present experiment.
-        return render_template('experiment.html', workerId=session['workerId'], assignmentId=session['assignmentId'], hitId=session['hitId'], code_success=session['code_success'], code_reject=session['code_reject'])
+        return render_template('experiment.html', workerId=session['workerId'],
+                                code_success=session['code_success'],
+                                code_reject=session['code_reject'])
 
 @bp.route('/experiment', methods=['POST'])
 def pass_message():
@@ -87,7 +119,6 @@ def incomplete_save():
 @bp.route('/redirect_success', methods = ['POST'])
 def redirect_success():
     """Save complete jsPsych dataset to disk."""
-
     if request.is_json:
 
         ## Retrieve jsPsych data.
@@ -108,29 +139,29 @@ def redirect_success():
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
     return ('', 200)
 
-@bp.route('/redirect_reject', methods = ['POST'])
-def redirect_reject():
-    """Save rejected jsPsych dataset to disk."""
+# @bp.route('/redirect_reject', methods = ['POST'])
+# def redirect_reject():
+#     """Save rejected jsPsych dataset to disk."""
 
-    if request.is_json:
+#     if request.is_json:
 
-        ## Retrieve jsPsych data.
-        JSON = request.get_json()
+#         ## Retrieve jsPsych data.
+#         JSON = request.get_json()
 
-        ## Save jsPsch data to disk.
-        write_data(session, JSON, method='reject')
+#         ## Save jsPsch data to disk.
+#         write_data(session, JSON, method='reject')
 
-    ## Flag experiment as complete.
-    session['complete'] = 'reject'
-    write_metadata(session, ['complete','code_reject'], 'a')
+#     ## Flag experiment as complete.
+#     session['complete'] = 'reject'
+#     write_metadata(session, ['complete','code_reject'], 'a')
 
-    ## DEV NOTE:
-    ## This function returns the HTTP response status code: 200
-    ## Code 200 signifies the POST request has succeeded.
-    ## The corresponding jsPsych function handles the redirect.
-    ## For a full list of status codes, see:
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    return ('', 200)
+#     ## DEV NOTE:
+#     ## This function returns the HTTP response status code: 200
+#     ## Code 200 signifies the POST request has succeeded.
+#     ## The corresponding jsPsych function handles the redirect.
+#     ## For a full list of status codes, see:
+#     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+#     return ('', 200)
 
 @bp.route('/redirect_error', methods = ['POST'])
 def redirect_error():

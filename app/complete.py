@@ -6,6 +6,7 @@ bp = Blueprint('complete', __name__)
 
 @bp.route('/complete')
 def complete():
+    print
     """Present completion screen to participant."""
 
     ## Error-catching: screen for missing session.
@@ -22,29 +23,18 @@ def complete():
         session['complete'] = 'reject'
         write_metadata(session, ['ERROR','complete','code_reject'], 'a')
 
-        ## Redirect participant with decoy code.
-        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_reject']
-        return redirect(url)
+        ## Redirect participant with err code - NOT COMPLETE.
+        return redirect(url_for('error.error', errornum=1005))
 
     ## Case 2: visit complete page with previous rejection.
     elif session['complete'] == 'reject':
 
-        ## Redirect participant with decoy code.
-        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_reject']
-        return redirect(url)
+        session['ERROR'] = "1006: visit complete page with previous rejection"
+        ## Redirect participant with err code - PREV REJECT.
+        return redirect(url_for('error.error', errornum=1006))
 
-    ## Case 3: visit complete page with previous rejection.
+    ## Case 3: visit complete page with previous success.
     elif session['complete'] == 'success':
 
-        ## Redirect participant with completion code.
-        url = "https://app.prolific.co/submissions/complete?cc=" + session['code_success']
-        return redirect(url)
-
-    ## Case 4: visit complete page with previous error.
-    else:
-
-        ## Determine error code.
-        errornum = 1002 if not session['consent'] else 1005
-
-        ## Redirect participant to error (unusual activity).
-        return redirect(url_for('error.error', errornum=errornum))
+        ## Redirect participant to complete
+        return render_template('complete.html')
