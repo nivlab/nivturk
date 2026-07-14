@@ -113,7 +113,7 @@ callouts:
     color: yellow
   custom:
     title: Custom
-    color: pink
+    color: purple
     opacity: 0.3
   danger:
     title: Danger
