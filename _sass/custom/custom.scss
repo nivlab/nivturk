@@ -442,6 +442,10 @@ a:hover {
 
 .search-results {
   position: absolute;
+  left: 50%;
+  width: 100vw;
+  max-width: none;
+  transform: translateX(-50%);
   z-index: 10003;
 }
 
