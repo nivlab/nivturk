@@ -441,12 +441,7 @@ a:hover {
 }
 
 .search-results {
-  position: fixed;
-  left: 0;
-  top: auto;
-  width: 100vw;
-  max-width: none;
-  transform: none;
+  position: absolute;
   z-index: 10003;
 }
 
