@@ -455,3 +455,52 @@ a:hover {
   position: relative;
   z-index: 1;
 }
+
+/* ------ Overriding search on Mobile * ------- */
+@media (max-width: 900px) {
+
+  .main-header {
+    display: block !important;
+    height: auto !important;
+    padding: 1rem !important;
+  }
+
+  .search {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 48px !important;
+    padding: 0 !important;
+  }
+
+  .search-input-wrap {
+    position: relative !important;
+    width: 100% !important;
+    height: 48px !important;
+  }
+
+  .search-input {
+    display: block !important;
+  }
+
+    .search-results {
+    width: calc(100vw - 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 60vh;
+    border-radius: 12px;
+  }
+
+  .search-result {
+    padding: 10px 14px;
+  }
+
+  .search-result-title {
+    font-size: 15px;
+  }
+
+  .search-result-previews {
+    font-size: 13px;
+  }
+
+}
