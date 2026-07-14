@@ -62,6 +62,12 @@ a:hover {
   object-fit: cover;
 }
 
+@media (max-width: 768px) {
+  .nivlab-banner {
+    height: 200px;
+  }
+}
+
 
 /* ---------- Navigation ---------- */
 
@@ -483,7 +489,7 @@ a:hover {
     display: block !important;
   }
 
-    .search-results {
+  .search-results {
     width: calc(100vw - 2rem);
     left: 50%;
     transform: translateX(-50%);
