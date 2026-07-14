@@ -80,11 +80,15 @@ a:hover {
 }
 
 .main,
-.main-header,
 .main-content-wrap,
 .main-content {
   position: relative;
-  z-index: 0 !important;
+  z-index: 1;
+}
+
+.main-header {
+  position: relative;
+  z-index: 10001;
 }
 
 
@@ -427,4 +431,27 @@ a:hover {
     transform: none !important;
   }
 
+}
+
+/* Keep search results above the page overlay */
+
+.search {
+  position: relative;
+  z-index: 10002;
+}
+
+.search-results {
+  position: absolute;
+  z-index: 10003;
+}
+
+.search-overlay {
+  z-index: 10000;
+}
+
+/* Keep normal page content below search only */
+.main-content-wrap,
+.main-content {
+  position: relative;
+  z-index: 1;
 }
