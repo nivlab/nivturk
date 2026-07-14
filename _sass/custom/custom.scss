@@ -441,11 +441,12 @@ a:hover {
 }
 
 .search-results {
-  position: absolute;
-  left: 50%;
+  position: fixed;
+  left: 0;
+  top: auto;
   width: 100vw;
   max-width: none;
-  transform: translateX(-50%);
+  transform: none;
   z-index: 10003;
 }
 
