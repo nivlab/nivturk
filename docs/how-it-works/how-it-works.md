@@ -6,4 +6,4 @@ has_children: true
 permalink: /docs/how-it-works
 ---
 
-# Overview
+# How it works

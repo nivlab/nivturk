@@ -15,9 +15,19 @@ body {
   overflow-x: visible !important;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 70px;
+}
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: 60px;
+  }
+}
+
 body {
   font-family: "Montserrat", Arial, sans-serif;
-  font-size: 16px;
+  font-size: clamp(14px, 1.2vw, 16px);
   line-height: 1.6;
   color: #333;
 }
@@ -29,6 +39,15 @@ body {
   font-family: "Montserrat", Arial, sans-serif;
 }
 
+.doc-image {
+  display: block;
+  width: min(700px, 90%);
+  height: 400px;
+  object-fit: contain;
+  margin: 0 auto;
+  cursor: zoom-in;
+}
+
 h1,
 h2,
 h3,
@@ -36,19 +55,33 @@ h4,
 h5,
 h6 {
   font-weight: 700;
-  color: #1d2d50;
+  color: #222;
+  scroll-margin-top: 70px;
+}
+@media (max-width: 900px) {
+  h1[id],
+  h2[id],
+  h3[id],
+  h4[id],
+  h5[id],
+  h6[id] {
+    scroll-margin-top: 45px;
+  }
 }
 
 
 /* ---------- Links ---------- */
 
 a {
-  color: #e77500;
-  text-decoration: none;
+  color: #b85c00;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  font-weight: 500;
 }
 
 a:hover {
-  color: #b85c00;
+  color: #e77500;
   text-decoration: underline;
 }
 
@@ -68,14 +101,18 @@ a:hover {
   }
 }
 
+@media (max-width: 400px) {
+  .nivlab-banner {
+    height: 120px;
+  }
+}
+
 
 /* ---------- Navigation ---------- */
 
 .top-nav,
 .site-nav {
   width: 100%;
-  position: relative;
-  isolation: isolate;
   z-index: 999999;
   overflow: visible !important;
 }
@@ -83,6 +120,9 @@ a:hover {
 .top-nav {
   background: white;
   border-bottom: 1px solid #ddd;
+  position: sticky !important;
+  top: 0;
+  z-index: 999999;
 }
 
 .main,
@@ -131,7 +171,7 @@ a:hover {
 .site-nav a:hover {
   color: #000;
   text-decoration: none;
-  border-bottom: 2px solid #e77500;
+  background: rgba(231, 117, 0, 0.15) !important;
 }
 
 .site-nav .nav-list .nav-list-link {
@@ -139,6 +179,7 @@ a:hover {
   padding-left: clamp(6px, .8vw, 20px);
   padding-right: clamp(6px, .8vw, 20px);
   white-space: nowrap;
+  width: 100%;
 }
 
 
@@ -181,14 +222,12 @@ a:hover {
 .site-nav .nav-list-item.active>.nav-list-link {
   color: #000 !important;
   font-weight: 700;
-  border-bottom: 2px solid #e77500;
-  background: transparent !important;
+  background: rgba(231, 117, 0, 0.15) !important;
   box-shadow: none !important;
 }
 
-.site-nav .nav-list-item:hover,
 .site-nav .nav-list-link:hover {
-  background: transparent !important;
+  background: rgba(231, 117, 0, 0.15) !important;
 }
 
 
@@ -205,6 +244,23 @@ a:hover {
   display: none;
 }
 
+@media (max-width: 1100px) {
+
+  .site-nav>.nav-list {
+    gap: 0.25rem;
+    padding: 4px 0.5rem;
+  }
+
+  .site-nav a {
+    font-size: 13px;
+  }
+
+  .site-nav .nav-list .nav-list-link {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+}
 
 @media (max-width: 900px) {
 
@@ -313,8 +369,7 @@ a:hover {
     text-align: center;
   }
 
-
-  /* Expand all mobile menus */
+  /* ---------- Expand mobile menus ---------- */
 
   .site-nav .nav-list-item>.nav-list {
     display: flex !important;
@@ -360,7 +415,7 @@ a:hover {
   .site-nav .nav-list-link.active,
   .site-nav .nav-list-item.active>.nav-list-link {
     background: transparent !important;
-    border-bottom: 2px solid #e77500;
+    background: rgba(231, 117, 0, 0.15) !important;
     font-weight: 700;
   }
 
@@ -378,7 +433,7 @@ a:hover {
   }
 
 
-  /* Scroll indicator */
+  /* ---------- Scroll indicator ---------- */
 
   .site-nav.open::after {
     content: "↓";
@@ -421,7 +476,7 @@ a:hover {
     opacity: 0;
   }
 
-  /* ---------- Force all mobile dropdowns permanently open ---------- */
+  /* ---------- Dropdown menus permanently open ---------- */
 
   .site-nav .nav-list-item>.nav-list,
   .site-nav .nav-list-item.active>.nav-list,
@@ -439,7 +494,7 @@ a:hover {
 
 }
 
-/* Keep search results above the page overlay */
+/* ---------- Search results on top ---------- */
 
 .search {
   position: relative;
@@ -455,14 +510,14 @@ a:hover {
   z-index: 10000;
 }
 
-/* Keep normal page content below search only */
+/* ---------- Other content below search results ---------- */
 .main-content-wrap,
 .main-content {
   position: relative;
   z-index: 1;
 }
 
-/* ------ Overriding search on Mobile * ------- */
+/* ---------- Search visibility on mobile ---------- */
 @media (max-width: 900px) {
 
   .main-header {
@@ -509,4 +564,16 @@ a:hover {
     font-size: 13px;
   }
 
+}
+
+/* ---------- Image hover settings ---------- */
+
+.doc-image {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.doc-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }

@@ -6,4 +6,4 @@ has_children: true
 permalink: /docs/basic-usage
 ---
 
-# Overview
+# Basic usage
