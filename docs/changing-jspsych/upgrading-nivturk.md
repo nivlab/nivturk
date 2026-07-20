@@ -72,6 +72,41 @@ And here's what to expect without it:
     <img src="{{ site.baseurl }}/assets/images/nivturk-image7.png" alt="Site without .min" class="doc-image">
 </a>
 
+## Testing
+- Download a local copy of the current version of NivTurk:<br>
+[Prolific](https://github.com/nivlab/nivturk/archive/refs/heads/prolific.zip) | [MTurk](https://github.com/nivlab/nivturk/archive/refs/heads/mturk.zip) | [SONA](https://github.com/nivlab/nivturk/archive/refs/heads/sona.zip)
+- Replace the old jsPsych folder with the new one you have created
+- Open the jspsych-demos codebase and chose an experiment you want to test with (in this case, Modified Risk Sensitivity Task)
+- Follow the guidelines in [Developing experiments](https://nivlab.github.io/nivturk/docs/basic-usage/development/) to make the experiment compatible with NivTurk. Make sure to:
+    - Move the files from the css, img, and js folders into the corresponding folders in app/static
+    - Copy experiment.html from jspsych-demos into experiment.html in NivTurk
+
+    <a href="{{ site.baseurl }}/assets/images/nivturk-image8.png" target="_blank">
+        <img src="{{ site.baseurl }}/assets/images/nivturk-image8.png" alt="Mrst folder" class="doc-image">
+    </a>
+
+    <a href="{{ site.baseurl }}/assets/images/nivturk-image9.png" target="_blank">
+        <img src="{{ site.baseurl }}/assets/images/nivturk-image9.png" alt="Mrst folder ported into NivTurk" class="doc-image">
+    </a>
+
+    - Ensure that the local scripts are pointing to the correct location.
+
+    <a href="{{ site.baseurl }}/assets/images/nivturk-image10.png" target="_blank">
+        <img src="{{ site.baseurl }}/assets/images/nivturk-image10.png" alt="Updating local script locations" class="doc-image">
+    </a>
+
+    - For jsPsych related imports, update experiment.html to use local scripts and not unpkg.com. 
+
+    <a href="{{ site.baseurl }}/assets/images/nivturk-image11.png" target="_blank">
+        <img src="{{ site.baseurl }}/assets/images/nivturk-image11.png" alt="Updating jspsych plugin locations" class="doc-image">
+    </a>
+- Run the experiment using guidelines in [Developing experiments](https://nivlab.github.io/nivturk/docs/basic-usage/development/) and ensure that everything works correctly.
+- Repeat for a few more demos as well as other experiments in the lab to ensure that everything is working correctly. Note that any experiment you are testing on needs to be ported over to jsPsych v8 beforehand.
+
+## Pushing changes
+- Once everything is working correctly, create a new branch on the NivTurk repository. 
+- Commit and push the updated jsPsych folder to this repository. **Do not push to the main branch** - people are still using the previous version of jsPsych!
+- Notify people about the change, and hold an info session on what changed with the new version on jsPsych, as well as how to port experiments over. 
 
 
 
