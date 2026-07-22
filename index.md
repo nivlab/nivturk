@@ -25,4 +25,4 @@ This site has five sections. New users should start with the [getting started](/
 
 [Resources](/nivturk/docs/resources/): various helpful things for collecting data, such as our reputation info, consent forms, etc.
 
-[Changing jsPsych Versions](/docs/changing-jspsych): instruction for updating jsPsych versions.
+[Changing jsPsych Versions](/nivturk/docs/changing-jspsych): instructions for updating jsPsych versions.
