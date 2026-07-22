@@ -24,3 +24,5 @@ This site has five sections. New users should start with the [getting started](/
 [Cookbook](/nivturk/docs/quickstart): recipes for more advanced NivTurk usage (e.g. message passing, multi-stage experiments, longitudinal experiments)
 
 [Resources](/nivturk/docs/resources/): various helpful things for collecting data, such as our reputation info, consent forms, etc.
+
+[Changing jsPsych Versions](/docs/changing-jspsych): instruction for updating jsPsych versions.
