@@ -8,6 +8,8 @@ permalink: /docs/changing-jspsych/nivturk
 # Upgrading NivTurk to a new version of jsPsych
 {: .no_toc }
 
+**Last updated:** {{ page.last_modified_at | date: "%B %d, %Y" }} 
+
 ## Table of contents
 {: .no_toc .text-delta }
 
@@ -17,7 +19,7 @@ permalink: /docs/changing-jspsych/nivturk
 ---
 ## When is (and isn't) a good time to upgrade
 
-- The version currently in NivTurk is **7.2.1**. We are upgrading to **8.2.3**. There is not much use in upgrading every time a new update is released, with the only exception being specific bugs that were resolved. You should upgrade when a new version is released, because those mark larger changes in the framework. Plan to upgrade when **version 9** (marked by 9.x.x) is published.
+- The version currently in NivTurk is **7.2.1** in the Prolific branch (**8.2.3** in the v8 branch, release to main branch pending). There is not much use in upgrading every time a new update is released, with the only exception being specific bugs that were resolved. You should upgrade when a new version is released, because those mark larger changes in the framework. Plan to upgrade when **version 9** (marked by 9.x.x) is published.
 
 ## Finding the correct version
 - Download the latest version of jsPsych from the [jsPsych releases](https://github.com/jspsych/jsPsych/releases). Look up the version number, there’s a lot of releases and it can be hard to locate!
@@ -101,7 +103,6 @@ And here's what to expect without it:
         <img src="{{ site.baseurl }}/assets/images/nivturk-image11.png" alt="Updating jspsych plugin locations" class="doc-image">
     </a>
 - Run the experiment using guidelines in [Developing experiments](https://nivlab.github.io/nivturk/docs/basic-usage/development/) and ensure that everything works correctly.
-- Repeat for a few more demos as well as other experiments in the lab to ensure that everything is working correctly. Note that any experiment you are testing on needs to be ported over to jsPsych v8 beforehand.
 
 ## Pushing changes
 - Once everything is working correctly, create a new branch on the NivTurk repository. 

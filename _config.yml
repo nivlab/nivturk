@@ -150,6 +150,7 @@ color_scheme: "nivturk"
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-last-modified-at
 
 compress_html:
   clippings: all

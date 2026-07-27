@@ -32,7 +32,7 @@ First you will need to clone or download NivTurk. For details, please see the do
 
 Next you need to copy your files into the NivTurk `app` folder. In general, we recommend sorting your files according to the predefined folder directories (e.g. place JavaScript files in `/app/static/js`), but this is not required.
 
-Note that by default NivTurk ships with jsPsych v6.3.1. You may upgrade or downgrade the default copy of jsPsych as needed (though of course we recommend using later versions).
+Note that by default NivTurk ships with jsPsych v7.2.1. You may upgrade or downgrade the default copy of jsPsych as needed (though of course we recommend using later versions).
 
 ### Copy your timeline
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Citation
-nav_order: 9
+nav_order: 91 # lexicographic sorting, so it needs to be 91 to be the last (if it were 10, it would be 2nd)
 has_children: false
 permalink: /docs/citation
 ---

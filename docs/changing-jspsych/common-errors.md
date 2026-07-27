@@ -9,6 +9,8 @@ permalink: /docs/changing-jspsych/common-errors
 # Common errors when migrating from v7 to v8
 {: .no_toc }
 
+**Last updated:** {{ page.last_modified_at | date: "%B %d, %Y" }} 
+
 ## Table of contents
 {: .no_toc .text-delta }
 
@@ -45,6 +47,7 @@ permalink: /docs/changing-jspsych/common-errors
 </a>
 
 ## Pass and assign correct values to parameters
+- You can find a full list of supported parameter types [here](https://www.jspsych.org/latest/developers/plugin-development/?utm_source=chatgpt.com#parameter-types).
 - If a parameter is expecting a numeric value, you have to pass a numeric value. Similar principles apply to every value type. These errors will show up as, for example “a non-numeric value was provided for the numeric parameter” in your warnings.
 - Check for numbers in character/string form, such as ‘10’ instead of 10.
 - Assign your value types correctly. If we’re passing “up”/”down” to a parameter, it should be a string parameter rather than a numeric parameter.
@@ -60,31 +63,51 @@ permalink: /docs/changing-jspsych/common-errors
 </a>
 
 ## Normalize key presses
-- If your key press isn’t doing anything in your experiment, it might be that you’re not normalizing key presses. Sometimes, the left arrow key may be tagged as ArrowLeft instead of arrowleft. Your program should be able to take both in as valid inputs. You might also see an error indicating that there might be something wrong with your key presses.
+- If a key press is not working in your experiment, the issue may be that different browsers or devices label the same key in different ways. For example, the left arrow key might be recorded as "ArrowLeft" in one case and "arrowleft" in another. To avoid this, normalize key presses by converting all key inputs to the same format before checking them.
 - Make the default responses lowercase, and set user inputs to lowercase before further analysis.
 
 <a href="{{ site.baseurl }}/assets/images/errors-image7.png" target="_blank">
     <img src="{{ site.baseurl }}/assets/images/errors-image7.png" alt="Normalizing key presses." class="doc-image">
 </a>
 
-## Change endExperiment() to abortExperiment()
-- endExperiment() is no longer supported as a function. If you’re having this problem, you might see something like this in your developer console:
+## Change `endExperiment()` to `abortExperiment()`
+- `endExperiment()` is no longer supported as a function. If you’re having this problem, you might see something like this in your developer console:
 
 <a href="{{ site.baseurl }}/assets/images/errors-image8.png" target="_blank">
     <img src="{{ site.baseurl }}/assets/images/errors-image8.png" alt="End experiment error." class="doc-image">
 </a>
 
-- Change endExperiment() to abortExperiment() in your code. Same applies to endCurrentTimeline(). Change it to abortCurrentTimeline().
+- Change `endExperiment()` to `abortExperiment()` in your code. Same applies to `endCurrentTimeline()`. Change it to `abortCurrentTimeline()`.
 
 ## Changes to playing audio
-- getAudioBuffer() is no longer supported as a function. If you’re still using it, you will see an error in your developer console. Make the following changes in your code:
+- No need for `audioContext()` anymore, code is much simpler.
+- `getAudioBuffer()` is no longer supported as a function. If you’re still using it, you will see an error in your developer console. Make the following changes in your code:
 
-<a href="{{ site.baseurl }}/assets/images/errors-image9.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/errors-image9.png" alt="Get audio buffer error." class="doc-image">
-</a>
+```javascript
+// *** initialization ***
+// var context = jsPsych.pluginAPI.audioContext(); 
+// No need for audioContext anymore, remove it.
 
+var audio_ix = jsPsych.randomization.sampleWithReplacement([0,1,2,3], 1);
+var audio = null;
+var starttime;
 
+// *** load audio file ***
+jsPsych.pluginAPI.getAudioPlayer(trial.stimulus[audio_ix])
+  .then(function (player){
+      audio = player;
+  })
+  .catch(function (err){
+      console.error("Failed to load audio file");
+      console.error(err);
+  });
 
+// *** start audio ***
+audio.play();
+
+// *** stop audio ***
+audio.stop();
+```
 
 ## Optional for v8: change the outline of your plugins
 <video width="400" controls style="display: block; margin: 0 auto;">

@@ -27,7 +27,7 @@ In the Niv & Daw labs, we have several virtual machines (VMs) available for the 
 ssh <user-name>@<server-name>.princeton.edu
 ```
 
-For security reasons, we will not list the server names here. Please ask an administrator (e.g., Sam or Dan) for the server names. Note: you need to be on the Princeton VPN to access the VMs.
+For security reasons, we will not list the server names here. Please ask an administrator (e.g. Caroline) for the server names. Note: you need to be on the Princeton VPN to access the VMs.
 
 ### All other users
 {: .no_toc }

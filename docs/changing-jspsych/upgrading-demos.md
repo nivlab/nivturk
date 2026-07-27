@@ -1,12 +1,14 @@
 ---
 layout: default
-title: Upgrading jsPsych-demos
+title: Upgrading experiments
 nav_order: 2
 parent: Changing jsPsych versions
 permalink: /docs/changing-jspsych/demos
 ---
-# Upgrading jsPsych Demos to a new version of jsPsych
+# Upgrading experiments to a new version of jsPsych
 {: .no_toc}
+
+**Last updated:** {{ page.last_modified_at | date: "%B %d, %Y" }} 
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -17,35 +19,9 @@ permalink: /docs/changing-jspsych/demos
 ---
 
 ## Before you upgrade
-- The version currently in NivTurk is **8.2.3**. There is not much use in upgrading every time a new update is released, with the only exception being specific bugs that were resolved. You should upgrade when a new version is released, because those mark larger changes in the framework. Plan to upgrade when **version 9** (marked by 9.x.x) is published.
+- The version currently in NivTurk is **7.2.1** in the Prolific branch (**8.2.3** in the v8 branch, release to main branch pending). There is not much use in upgrading every time a new update is released, with the only exception being specific bugs that were resolved. You should upgrade when a new version is released, because those mark larger changes in the framework. Plan to upgrade when **version 9** (marked by 9.x.x) is published.
 
-- Set up a meeting with Yael to discuss the current state of jspsych-demos. Are there any demos that should be deprecated? Are there any demos that should be added? Make a list of proposed changes.
-
-## Structure of the jspych-demos repository
-- If you’re a new lab member, Yael for access to the [NivLab GitHub](https://github.com/nivlab). Once you have access, you can use GitHub Desktop and Visual Studio Code for easy access on your local device.
-- Navigate to the [jspsych-demos repository](https://github.com/nivlab/jspsych-demos) - this is where the jsPsych changes will take place. 
-- The main code for the tasks is located in **jspsych-demos/tasks/task-name**. You will be making changes to the **experiment.html** file, as well as **files in the js folder**. Here’s an example of what files to pay attention to for one of the tasks:
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image1.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image1.png" alt="Example of what files to look for" class="doc-image">
-</a>
-
-## Cloning the repository and editing in Visual Studio Code
-- **Clone the repository** onto your local device using GitHub Desktop.
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image2.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image2.png" alt="Cloning the repository part 1" class="doc-image">
-</a>
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image3.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image3.png" alt="Cloning the repository part 2" class="doc-image">
-</a>
-
-- Once the repository is cloned, you can **open it in VS Code**, which will allow you to edit code and push changes. Make sure your current repository is jspsych-demos.
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image4.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image4.png" alt="Open in Visual Studio Code" class="doc-image">
-</a>
+- If you're working on upgrading jspsych-demos, set up a meeting with Yael to discuss them. Are there any demos that should be deprecated? Are there any demos that should be added? Make a list of proposed changes. The example seen below is taken from jspsych-demos.
 
 ## Making changes in the experiment.html file
 - The main changes you will be making are to the **&lt;script&gt;** tags. 
@@ -90,35 +66,6 @@ Save these changes.
 </a>
 
 - Inspect for **suspicious behavior**. See the [common errors]({{ site.baseurl }}/docs/changing-jspsych/common-errors) page for debugging ideas and potential fixes.
-
-## Testing changes locally
-- If you don’t have **Ruby**, install it. Make sure to get 3.x, 4.x doesn’t support some of the things we need
-- Open **PowerShell** if you’re on Windows or **Terminal** if you’re on Mac.
-- Type in **gem install bundler**
-- Navigate to your project folder using **cd your-project-path**
-- Type in **dir Gemfile**
-- Type in **bundle install**
-- Type in **bundle exec jekyll serve --baseurl "/jspsych-demos"**
-- After this, you should be able to see an address hosting the website with the changes you’ve made.
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image9.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image9.png" alt="The generated address" class="doc-image">
-</a>
-
-- Once you open the link, you should see a page like this:
-
-<a href="{{ site.baseurl }}/assets/images/jspsych-image10.png" target="_blank">
-    <img src="{{ site.baseurl }}/assets/images/jspsych-image10.png" alt="The demos website" class="doc-image">
-</a>
-
-### Subsequent testing
-- Once everything is installed, it is enough to just open PowerShell/Terminal, cd into the correct folder, and run **bundle exec jekyll serve --baseurl "/jspsych-demos"**
-
-## Adding changes to the website
-- If there are any changes you would like to make to the overall website content, use **index.md**
-- If there are navigation bar changes you would like to make, use **nav.html**
-- For stylistic changes, use **style.scss** and **custom.js** in the assets folder.
-- Run **bundle exec jekyll build** to test the production build. You won’t be able to see the website locally. What you’re looking for is changes in the **_site** folder and whether they reflect what you would expect to see.
 
 
 

@@ -23,7 +23,7 @@ The Niv lab maintains a collection of articles on best practices for (online) be
 
 ## jsPsych-demos
 
-The Niv & Daw labs host a library of lab-made jsPsych experiments and plugins at [jspsych-demos](https://github.com/nivlab/jspsych-demos){:target="_blank"}.
+The Niv & Daw labs host a library of lab-made jsPsych experiments and plugins at [jspsych-demos](https://nivlab.github.io/jspsych-demos){:target="_blank"}.
 
 ## Reputation
 
@@ -36,10 +36,7 @@ Sites for MTurk participants:
 
 * [TurkerView](https://turkerview.com){:target="_blank"} \| [Niv lab](https://turkerview.com/requesters/A3RR9T5E327UK4-niv-lab){:target="_blank"} \| [CCNP](https://turkerview.com/requesters/AM1AURPCUOXG1-yael-niv){:target="_blank"}
 * [TurkerView forum](https://forum.turkerview.com/forums/daily-mturk-hits-threads.2/){:target="_blank"}
-* [Turkopticon](https://turkopticon.info/){:target="_blank"}
-* [Turker Nation](http://www.turker-nation.com/){:target="_blank"}
 * [r/mturk](https://www.reddit.com/r/mturk/){:target="_blank"}
-* [r/HITsWorthTurkingFor](https://www.reddit.com/r/HITsWorthTurkingFor/){:target="_blank"}
 
 ### Reputation on Prolific
 {: .no_toc }
