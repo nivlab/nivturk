@@ -18,10 +18,20 @@ permalink: /docs/updating-websites
 {:toc}
 
 ## Video Overview
-<video id="tutorial-video" width="900" controls style="display: block; margin: 0 auto;">
-  <source src="/nivturk/assets/videos/updating-websites.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+## Video Overview
+
+<iframe
+  id="tutorial-video"
+  width="900"
+  height="506"
+  src="https://www.youtube.com/embed/pLOdAZhIhrk?enablejsapi=1"
+  title="Updating Websites Tutorial"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+  style="display: block; margin: 0 auto;">
+</iframe>
+
 
 ### Contents
 
@@ -57,10 +67,17 @@ permalink: /docs/updating-websites
 ### Subsequent testing
 - Once everything is installed, it is enough to just open PowerShell/Terminal, cd into the correct folder, and run **bundle exec jekyll serve --baseurl "/jspsych-demos"**
 
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
+let player;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('tutorial-video');
+}
+
 function seekTo(seconds) {
-  const video = document.getElementById('tutorial-video');
-  video.currentTime = seconds;
-  video.play();
+  player.seekTo(seconds, true);
+  player.playVideo();
 }
 </script>
