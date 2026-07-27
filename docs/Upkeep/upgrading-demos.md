@@ -9,8 +9,6 @@ permalink: /docs/upkeep/changing-jspsych/demos
 # Upgrading experiments to a new version of jsPsych
 {: .no_toc}
 
-**Last updated:** {{ page.last_modified_at | date: "%B %d, %Y" }} 
-
 ## Table of contents
 {: .no_toc .text-delta }
 

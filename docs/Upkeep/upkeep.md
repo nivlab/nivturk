@@ -9,8 +9,6 @@ permalink: /docs/upkeep
 # Upkeep
 {: .no_toc }
 
-**Last updated:** {{ page.last_modified_at | date: "%B %d, %Y" }} 
-
 ## Table of contents
 {: .no_toc .text-delta }
 
