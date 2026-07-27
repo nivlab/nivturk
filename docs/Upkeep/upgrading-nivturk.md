@@ -3,7 +3,8 @@ layout: default
 title: Upgrading NivTurk
 nav_order: 1
 parent: Changing jsPsych versions
-permalink: /docs/changing-jspsych/nivturk
+grand_parent: Upkeep
+permalink: /docs/upkeep/changing-jspsych/nivturk
 ---
 # Upgrading NivTurk to a new version of jsPsych
 {: .no_toc }

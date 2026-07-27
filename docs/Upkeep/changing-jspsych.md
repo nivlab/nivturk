@@ -1,9 +1,10 @@
 ---
 layout: default
 title: Changing jsPsych versions
-nav_order: 8
+nav_order: 2
 has_children: true
-permalink: /docs/changing-jspsych
+parent: Upkeep
+permalink: /docs/upkeep/changing-jspsych
 ---
 
 # Changing jsPsych versions

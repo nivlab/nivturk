@@ -1,9 +1,10 @@
 ---
 layout: default
 title: Updating websites
-nav_order: 9
+nav_order: 1
 has_children: false
-permalink: /docs/updating-websites
+parent: Upkeep
+permalink: /docs/upkeep/updating-websites
 ---
 
 # Updating websites
@@ -17,7 +18,6 @@ permalink: /docs/updating-websites
 1. TOC
 {:toc}
 
-## Video Overview
 ## Video Overview
 
 <iframe

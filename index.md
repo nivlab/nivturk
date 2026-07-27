@@ -27,6 +27,6 @@ This site has five sections. New users should start with the [getting started](/
 
 [Contributing](/nivturk/docs/contribute): ways to contribute to the project.
 
-[Changing jsPsych Versions](/nivturk/docs/changing-jspsych): instructions for updating jsPsych versions.
+[Upkeep](/nivturk/docs/upkeep): Upkeep instructions, including website updates and migrating to a new version of jsPsych
 
 [Updating websites](/nivturk/docs/updating-websites): guide for updating NivTurk, jsPsych demos, and technical resources websites.

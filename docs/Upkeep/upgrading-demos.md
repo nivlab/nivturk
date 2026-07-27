@@ -3,7 +3,8 @@ layout: default
 title: Upgrading experiments
 nav_order: 2
 parent: Changing jsPsych versions
-permalink: /docs/changing-jspsych/demos
+grand_parent: Upkeep
+permalink: /docs/upkeep/changing-jspsych/demos
 ---
 # Upgrading experiments to a new version of jsPsych
 {: .no_toc}
@@ -65,7 +66,7 @@ Save these changes.
     <img src="{{ site.baseurl }}/assets/images/jspsych-image8.png" alt="How to inspect" class="doc-image">
 </a>
 
-- Inspect for **suspicious behavior**. See the [common errors]({{ site.baseurl }}/docs/changing-jspsych/common-errors) page for debugging ideas and potential fixes.
+- Inspect for **suspicious behavior**. See the [common errors]({{ site.baseurl }}/docs/upkeep/changing-jspsych/common-errors) page for debugging ideas and potential fixes.
 
 
 
