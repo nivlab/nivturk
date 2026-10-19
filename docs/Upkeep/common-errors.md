@@ -113,7 +113,7 @@ audio.stop();
   id="tutorial-video"
   width="900"
   height="506"
-  src="https://youtu.be/embed/sLPUqe3v9V0?enablejsapi=1"
+  src="https://www.youtube.com/embed/sLPUqe3v9V0?enablejsapi=1"
   title="Updating Websites Tutorial"
   frameborder="0"
   allow="autoplay; encrypted-media"
