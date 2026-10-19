@@ -116,7 +116,7 @@ audio.stop();
   src="https://www.youtube.com/embed/sLPUqe3v9V0?enablejsapi=1"
   title="Updating Websites Tutorial"
   frameborder="0"
-  allow="autoplay; encrypted-media"
+  allow="autoplay; encrypted-media; picture-in-picture"
   allowfullscreen
   style="display: block; margin: 0 auto;">
 </iframe>
