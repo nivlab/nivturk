@@ -109,7 +109,14 @@ audio.stop();
 ```
 
 ## Optional for v8: change the outline of your plugins
-<video width="400" controls style="display: block; margin: 0 auto;">
-  <source src="/nivturk/assets/videos/outline-video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<iframe
+  id="tutorial-video"
+  width="900"
+  height="506"
+  src="https://youtu.be/embed/sLPUqe3v9V0?enablejsapi=1"
+  title="Updating Websites Tutorial"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+  style="display: block; margin: 0 auto;">
+</iframe>

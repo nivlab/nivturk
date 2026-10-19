@@ -1,0 +1,12 @@
+2026-07-27 16:38:29	workerId	24242
+2026-07-27 16:38:29	hitId	None
+2026-07-27 16:38:29	assignmentId	None
+2026-07-27 16:38:29	subId	rs9v74ekih7vx1qsrbs2pwyc
+2026-07-27 16:38:29	address	127.0.0.1
+2026-07-27 16:38:29	user_agent	Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:153.0) Gecko/20100101 Firefox/153.0
+2026-07-27 16:38:33	consent	True
+2026-07-27 16:38:33	alert	True
+2026-07-27 16:38:34	experiment	True
+2026-07-27 16:38:35	MESSAGE	Starting goal selection
+2026-07-27 16:38:42	complete	success
+2026-07-27 16:38:42	code_success	PROLIFIC_CODE_GOES_HERE
